@@ -11,6 +11,7 @@ namespace BetterInfoCards.Export
     {
         private static InfoCardWidgets curICWidgets;
         private static List<InfoCardWidgets> icWidgets = new();
+        private static Type widgetEntryType;
 
         static ExportWidgets()
         {
@@ -18,10 +19,16 @@ namespace BetterInfoCards.Export
             var poolType = FindWidgetPoolType(hoverTextDrawerType, out var entryType);
             if (poolType == null)
             {
+                Debug.LogWarning("[BetterInfoCards] Unable to locate HoverTextDrawer widget pool via reflection; falling back to Pool<MonoBehaviour>.");
+                var fallback = GetFallbackPoolType(hoverTextDrawerType);
+                poolType = fallback.poolType;
                 if (entryType == null)
-                    Debug.LogWarning("[BetterInfoCards] Unable to locate HoverTextDrawer widget entry type; skipping widget export patch.");
-                else
-                    Debug.LogWarning("[BetterInfoCards] Unable to locate HoverTextDrawer widget pool; skipping widget export patch.");
+                    entryType = fallback.entryType;
+            }
+
+            if (poolType == null)
+            {
+                Debug.LogWarning("[BetterInfoCards] Unable to locate HoverTextDrawer widget pool; skipping widget export patch.");
                 return;
             }
 
@@ -31,6 +38,17 @@ namespace BetterInfoCards.Export
                 Debug.LogWarning($"[BetterInfoCards] Unable to locate Draw() on '{poolType.FullName}'; skipping widget export patch.");
                 return;
             }
+
+            if (entryType == null)
+            {
+                entryType = poolType.GetNestedType("Entry", BindingFlags.NonPublic | BindingFlags.Public) ??
+                            FindWidgetEntryTypeRecursive(poolType);
+
+                if (entryType == null)
+                    Debug.LogWarning($"[BetterInfoCards] Unable to resolve widget entry type from '{poolType.FullName}'; attempting runtime inference.");
+            }
+
+            widgetEntryType = entryType;
 
             var postfix = AccessTools.Method(typeof(ExportWidgets), nameof(GetWidget_Postfix));
             if (postfix == null)
@@ -143,6 +161,33 @@ namespace BetterInfoCards.Export
             return false;
         }
 
+        private static (Type poolType, Type entryType) GetFallbackPoolType(Type hoverTextDrawerType)
+        {
+            const BindingFlags nestedFlags = BindingFlags.NonPublic | BindingFlags.Public;
+
+            var genericPool = hoverTextDrawerType.GetNestedType("Pool`1", nestedFlags);
+            if (genericPool != null)
+            {
+                try
+                {
+                    var monoPool = genericPool.MakeGenericType(typeof(MonoBehaviour));
+                    var entryType = monoPool.GetNestedType("Entry", nestedFlags) ?? FindWidgetEntryTypeRecursive(monoPool);
+
+                    if (entryType != null && HasRectMember(entryType))
+                        return (monoPool, entryType);
+
+                    if (HasRectTransformEntry(monoPool))
+                        return (monoPool, entryType);
+                }
+                catch (ArgumentException)
+                {
+                    // Ignore incompatible generic definitions.
+                }
+            }
+
+            return (null, null);
+        }
+
         private static bool HasRectTransformEntry(Type poolType)
         {
             var entryType = poolType.GetNestedType("Entry", BindingFlags.NonPublic | BindingFlags.Public);
@@ -198,15 +243,36 @@ namespace BetterInfoCards.Export
         // This method will be used as a postfix for the Draw method via reflection.
         private static void GetWidget_Postfix(object __result, object ___prefab)
         {
-            // Use reflection to access the Entry struct and its fields, since Pool<T> is private
-            if (__result != null && ___prefab is GameObject prefab)
+            if (__result == null || ___prefab is not GameObject prefab)
+                return;
+
+            if (curICWidgets == null)
+                return;
+
+            if (!ShouldProcessEntry(__result))
+                return;
+
+            curICWidgets.AddWidget(__result, prefab);
+        }
+
+        private static bool ShouldProcessEntry(object entry)
+        {
+            var type = entry.GetType();
+
+            if (widgetEntryType != null)
             {
-                var entryType = __result.GetType();
-                if (entryType.Name == "Entry")
-                {
-                    curICWidgets.AddWidget(__result, prefab);
-                }
+                if (widgetEntryType.IsInstanceOfType(entry))
+                    return true;
+
+                if (widgetEntryType == type)
+                    return true;
             }
+
+            if (!HasRectMember(type))
+                return false;
+
+            widgetEntryType ??= type;
+            return true;
         }
     }
 }
