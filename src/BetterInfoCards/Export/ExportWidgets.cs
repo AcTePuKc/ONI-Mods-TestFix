@@ -294,6 +294,9 @@ namespace BetterInfoCards.Export
 
         private static bool ShouldProcessEntry(object entry)
         {
+            if (entry == null)
+                return false;
+
             var type = entry.GetType();
 
             if (widgetEntryType != null)
@@ -301,16 +304,25 @@ namespace BetterInfoCards.Export
                 if (widgetEntryType.IsInstanceOfType(entry))
                     return true;
 
-                if (widgetEntryType == type)
+                if (type.IsAssignableFrom(widgetEntryType))
                     return true;
             }
 
             var rectMember = GetRectTransformMember(type);
-            if (rectMember == null)
-                return false;
+            if (rectMember != null)
+            {
+                widgetEntryType ??= rectMember.DeclaringType ?? type;
+                return true;
+            }
 
-            widgetEntryType ??= rectMember.DeclaringType ?? type;
-            return true;
+            if (typeof(Component).IsAssignableFrom(type))
+            {
+                if (widgetEntryType == null || typeof(Component).IsAssignableFrom(widgetEntryType))
+                    widgetEntryType = type;
+                return true;
+            }
+
+            return false;
         }
     }
 }

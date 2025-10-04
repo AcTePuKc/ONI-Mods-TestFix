@@ -78,3 +78,8 @@
 - Expanded the widget export reflection to capture any `RectTransform` field or property regardless of name and cache the `MemberInfo` so fallback pool entries can still be processed.
 - Updated `InfoCardWidgets` to honour the cached metadata, probe `rectTransform`, and fall back to component lookups when necessary so hover cards recover the shadow bar rect even when pools emit raw components.
 - Build and in-game verification remain blocked in this container due to the missing ONI-managed assemblies and `dotnet`; please rebuild via `dotnet build src/oniMods.sln` and validate hover cards wrap across columns after syncing these changes.
+
+## 2025-10-19 - BetterInfoCards component widget handling
+- Adjusted `ExportWidgets.ShouldProcessEntry` to accept component-based entries even when they lack a cached `RectTransform` member and cache the resolved type for subsequent calls so hover widgets exported via component fallbacks remain captured.
+- Hardened `InfoCardWidgets.ExtractRect`'s component accessor to guard against destroyed Unity objects before invoking `GetComponent<RectTransform>()`.
+- Unable to rebuild `BetterInfoCards` or perform the in-game hover wrap validation here because the container still lacks the ONI-managed assemblies and a .NET runtime; maintainers should run `dotnet build src/oniMods.sln` and confirm hover cards wrap into additional columns once the viewport is filled.

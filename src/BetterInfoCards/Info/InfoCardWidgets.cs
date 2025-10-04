@@ -206,8 +206,8 @@ namespace BetterInfoCards
             if (typeof(Component).IsAssignableFrom(type))
                 return entry =>
                 {
-                    if (entry is Component component)
-                        return component != null ? component.GetComponent<RectTransform>() : null;
+                    if (entry is Component component && component != null)
+                        return component.GetComponent<RectTransform>();
 
                     return null;
                 };
