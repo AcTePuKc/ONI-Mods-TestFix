@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BetterInfoCards.Export;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -184,15 +185,82 @@ namespace BetterInfoCards
 
         private static Func<object, RectTransform> CreateAccessor(Type type)
         {
-            var rectField = type.GetField("rect", memberBindingFlags);
-            if (rectField != null && typeof(RectTransform).IsAssignableFrom(rectField.FieldType))
-                return entry => (RectTransform)rectField.GetValue(entry);
+            if (typeof(RectTransform).IsAssignableFrom(type))
+                return entry => entry as RectTransform;
 
-            var rectProperty = type.GetProperty("rect", memberBindingFlags);
-            if (rectProperty != null && typeof(RectTransform).IsAssignableFrom(rectProperty.PropertyType))
-                return entry => (RectTransform)rectProperty.GetValue(entry);
+            if (TryCreateAccessorFromMember(ExportWidgets.GetRectTransformMember(type), out var accessor))
+                return accessor;
+
+            if (TryCreateAccessorFromMember(type.GetField("rect", memberBindingFlags), out accessor))
+                return accessor;
+
+            if (TryCreateAccessorFromMember(type.GetField("rectTransform", memberBindingFlags), out accessor))
+                return accessor;
+
+            if (TryCreateAccessorFromMember(type.GetProperty("rect", memberBindingFlags), out accessor))
+                return accessor;
+
+            if (TryCreateAccessorFromMember(type.GetProperty("rectTransform", memberBindingFlags), out accessor))
+                return accessor;
+
+            if (typeof(Component).IsAssignableFrom(type))
+                return entry =>
+                {
+                    if (entry is Component component)
+                        return component != null ? component.GetComponent<RectTransform>() : null;
+
+                    return null;
+                };
 
             return _ => null;
+        }
+
+        private static bool TryCreateAccessorFromMember(MemberInfo member, out Func<object, RectTransform> accessor)
+        {
+            accessor = null;
+
+            switch (member)
+            {
+                case FieldInfo field when typeof(RectTransform).IsAssignableFrom(field.FieldType):
+                    accessor = entry =>
+                    {
+                        if (entry == null)
+                            return null;
+
+                        return field.GetValue(entry) as RectTransform;
+                    };
+                    return true;
+
+                case PropertyInfo property when IsRectTransformProperty(property):
+                    var getter = property.GetGetMethod(true);
+                    if (getter == null)
+                        return false;
+
+                    accessor = entry =>
+                    {
+                        if (entry == null)
+                            return null;
+
+                        return getter.Invoke(entry, null) as RectTransform;
+                    };
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static bool IsRectTransformProperty(PropertyInfo property)
+        {
+            if (property == null)
+                return false;
+
+            if (property.GetIndexParameters().Length > 0)
+                return false;
+
+            if (!typeof(RectTransform).IsAssignableFrom(property.PropertyType))
+                return false;
+
+            return true;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -12,6 +11,8 @@ namespace BetterInfoCards.Export
         private static InfoCardWidgets curICWidgets;
         private static List<InfoCardWidgets> icWidgets = new();
         private static Type widgetEntryType;
+        private static readonly Dictionary<Type, MemberInfo> rectMemberCache = new();
+        private static readonly object rectMemberCacheLock = new();
 
         static ExportWidgets()
         {
@@ -135,7 +136,7 @@ namespace BetterInfoCards.Export
             const BindingFlags nestedFlags = BindingFlags.NonPublic | BindingFlags.Public;
             foreach (var nestedType in declaringType.GetNestedTypes(nestedFlags))
             {
-                if (nestedType.IsValueType && !string.Equals(nestedType.Name, "Entry", StringComparison.Ordinal) && HasRectMember(nestedType))
+                if (nestedType.IsValueType && !string.Equals(nestedType.Name, "Entry", StringComparison.Ordinal) && GetRectTransformMember(nestedType) != null)
                     return nestedType;
 
                 var child = FindWidgetEntryTypeRecursive(nestedType);
@@ -146,19 +147,52 @@ namespace BetterInfoCards.Export
             return null;
         }
 
-        private static bool HasRectMember(Type type)
+        private static MemberInfo FindRectTransformMember(Type type)
         {
-            const BindingFlags memberFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            if (type == null)
+                return null;
 
-            var rectField = type.GetField("rect", memberFlags);
-            if (rectField != null && typeof(RectTransform).IsAssignableFrom(rectField.FieldType))
-                return true;
+            const BindingFlags declaredFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
-            var rectProperty = type.GetProperty("rect", memberFlags);
-            if (rectProperty != null && typeof(RectTransform).IsAssignableFrom(rectProperty.PropertyType))
-                return true;
+            for (var current = type; current != null; current = current.BaseType)
+            {
+                foreach (var field in current.GetFields(declaredFlags))
+                {
+                    if (typeof(RectTransform).IsAssignableFrom(field.FieldType))
+                        return field;
+                }
 
-            return false;
+                foreach (var property in current.GetProperties(declaredFlags))
+                {
+                    if (!property.CanRead)
+                        continue;
+
+                    if (property.GetIndexParameters().Length > 0)
+                        continue;
+
+                    if (typeof(RectTransform).IsAssignableFrom(property.PropertyType))
+                        return property;
+                }
+            }
+
+            return null;
+        }
+
+        internal static MemberInfo GetRectTransformMember(Type type)
+        {
+            if (type == null)
+                return null;
+
+            lock (rectMemberCacheLock)
+            {
+                if (!rectMemberCache.TryGetValue(type, out var member))
+                {
+                    member = FindRectTransformMember(type);
+                    rectMemberCache[type] = member;
+                }
+
+                return member;
+            }
         }
 
         private static (Type poolType, Type entryType) GetFallbackPoolType(Type hoverTextDrawerType)
@@ -173,7 +207,7 @@ namespace BetterInfoCards.Export
                     var monoPool = genericPool.MakeGenericType(typeof(MonoBehaviour));
                     var entryType = monoPool.GetNestedType("Entry", nestedFlags) ?? FindWidgetEntryTypeRecursive(monoPool);
 
-                    if (entryType != null && HasRectMember(entryType))
+                    if (entryType != null && GetRectTransformMember(entryType) != null)
                         return (monoPool, entryType);
 
                     if (HasRectTransformEntry(monoPool))
@@ -194,21 +228,7 @@ namespace BetterInfoCards.Export
             if (entryType == null)
                 return false;
 
-            if (entryType
-                .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Any(field => typeof(RectTransform).IsAssignableFrom(field.FieldType)))
-            {
-                return true;
-            }
-
-            if (entryType
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Any(property => typeof(RectTransform).IsAssignableFrom(property.PropertyType)))
-            {
-                return true;
-            }
-
-            return false;
+            return GetRectTransformMember(entryType) != null;
         }
 
         public static List<InfoCardWidgets> ConsumeWidgets()
@@ -285,10 +305,11 @@ namespace BetterInfoCards.Export
                     return true;
             }
 
-            if (!HasRectMember(type))
+            var rectMember = GetRectTransformMember(type);
+            if (rectMember == null)
                 return false;
 
-            widgetEntryType ??= type;
+            widgetEntryType ??= rectMember.DeclaringType ?? type;
             return true;
         }
     }

@@ -73,3 +73,8 @@
 ## 2025-10-17 - BetterInfoCards prefab normalization
 - Normalized the widget prefab reference captured by `ExportWidgets` so Harmony fallbacks that expose `Component` instances still map back to the underlying `GameObject`, keeping the `shadowBar` match logic intact.
 - Unable to rebuild `BetterInfoCards` or confirm the fallback captures non-null shadow bar rects in-game because the container lacks the ONI assemblies and runtime; maintainers should run `dotnet build src/oniMods.sln` and validate hover cards wrap across multiple columns locally.
+
+## 2025-10-18 - BetterInfoCards rect metadata fallbacks
+- Expanded the widget export reflection to capture any `RectTransform` field or property regardless of name and cache the `MemberInfo` so fallback pool entries can still be processed.
+- Updated `InfoCardWidgets` to honour the cached metadata, probe `rectTransform`, and fall back to component lookups when necessary so hover cards recover the shadow bar rect even when pools emit raw components.
+- Build and in-game verification remain blocked in this container due to the missing ONI-managed assemblies and `dotnet`; please rebuild via `dotnet build src/oniMods.sln` and validate hover cards wrap across columns after syncing these changes.
