@@ -1,0 +1,22 @@
+﻿using System;
+using STRINGS;
+using System.Collections.Generic;
+
+namespace RoomsExpanded
+{
+    class RoomTypeAgriculturalData : RoomTypeAbstractData
+    {
+        public static readonly string RoomId = "CreaturePen";
+        public static readonly string AgriculturalStation = "AgriculturalStation";
+
+        public static RoomConstraints.Constraint MODIFIED_CONSTRAINT = new RoomConstraints.Constraint(
+                                                                            bc => bc.HasTag(RoomConstraints.ConstraintTags.RanchStationType)
+                                                                                || bc.HasTag(RoomConstraints.ConstraintTags.FarmStationType),
+                                                                            null,
+                                                                            name: STRINGS.ROOMS.CRITERIA.AGRICULTURAL.NAME,
+                                                                            description: STRINGS.ROOMS.CRITERIA.AGRICULTURAL.DESCRIPTION,
+                                                                            stomp_in_conflict: new List<RoomConstraints.Constraint>() 
+                                                                                { RoomConstraints.FARM_STATION });
+
+    }
+}
