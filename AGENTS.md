@@ -46,6 +46,7 @@
 - **Mod code changes** — Rebuild the affected projects. When feasible, run automated tests under `tests/` or perform manual validation in-game. Document any blocked testing (e.g., missing runtime) in `NOTES.md` so maintainers can follow up (`NOTES.md` demonstrates how to record unexecuted diagnostics and next steps).
 - **Localization changes** — Follow the translation testing workflow to confirm strings render correctly. If game-level validation is impossible, call that out explicitly in your PR and in `NOTES.md`.
 - **Diagnostics/Instrumentation** — If adding diagnostics that cannot be executed in the current environment, record the required follow-up steps in `NOTES.md` and create or update entries in `ToDo.md` when action is needed.
+- **Runtime verification** — In-game validation steps for features such as *Better Info Cards* are documented so maintainers can execute them in their local ONI installations outside the hosted workspace. Automation agents must continue to flag these runtime checks as skipped and mark them for manual follow-up rather than attempting to reproduce them here.
 
 ## Coordination
 - After completing work, commit changes and prepare a PR that references this playbook so other maintainers are aware. Use the documented workflows above to keep the knowledge base consistent.
