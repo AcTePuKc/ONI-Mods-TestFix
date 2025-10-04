@@ -89,12 +89,8 @@ namespace BetterInfoCards
             var referenceRect = reference.rect;
 
             const float heightTolerance = 0.01f;
-            const float widthTolerance = 1f;
 
             if (Mathf.Abs(candidateRect.height - referenceRect.height) > heightTolerance)
-                return false;
-
-            if (Mathf.Abs(candidateRect.width - referenceRect.width) > widthTolerance && referenceRect.width > 0f)
                 return false;
 
             return HasMatchingComponents(candidate.gameObject, reference.gameObject);

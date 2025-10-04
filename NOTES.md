@@ -96,3 +96,7 @@
 ## 2025-10-22 - BetterInfoCards widget rect tolerance
 - Relaxed the `MatchesWidgetRect` comparison to require matching prefab names, component layouts, and rect heights while tolerating minor width differences so fallback-captured shadow bars are recognized.
 - Compilation and in-game verification remain blocked here because the container lacks the ONI-managed assemblies and the `dotnet` runtime; please rebuild via `dotnet build src/oniMods.sln` and confirm multi-column hover wrapping returns with shadow bars detected.
+
+## 2025-10-23 - BetterInfoCards dynamic shadow bar width
+- Removed the strict width comparison inside `InfoCardWidgets.MatchesWidgetRect` so dynamically resized shadow bars still match when names and component layouts align.
+- Unable to rebuild `BetterInfoCards` or perform the in-game hover test here because the container lacks the ONI-managed assemblies and a `dotnet` host; maintainers should run `dotnet build src/oniMods.sln` and validate hover cards wrap into extra columns once wider shadow bars are detected.
