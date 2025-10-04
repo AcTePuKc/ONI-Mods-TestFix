@@ -83,3 +83,8 @@
 - Adjusted `ExportWidgets.ShouldProcessEntry` to accept component-based entries even when they lack a cached `RectTransform` member and cache the resolved type for subsequent calls so hover widgets exported via component fallbacks remain captured.
 - Hardened `InfoCardWidgets.ExtractRect`'s component accessor to guard against destroyed Unity objects before invoking `GetComponent<RectTransform>()`.
 - Unable to rebuild `BetterInfoCards` or perform the in-game hover wrap validation here because the container still lacks the ONI-managed assemblies and a .NET runtime; maintainers should run `dotnet build src/oniMods.sln` and confirm hover cards wrap into additional columns once the viewport is filled.
+
+## 2025-10-20 - BetterInfoCards rect-based widget fallback
+- Added a rect-level comparison in `InfoCardWidgets.AddWidget` so shadow bar and select border assignments succeed even when the prefab clone carries additional components that previously caused the prefab match to fail.
+- The container image still lacks the ONI-managed assemblies and a .NET runtime, so `BetterInfoCards` could not be rebuilt locally. Please run `dotnet build src/oniMods.sln` on a workstation with the full toolchain.
+- In-game validation of multi-column hover wrapping also remains pending for the same reason; once rebuilt, hover a fully populated info card to confirm the second column appears when the viewport fills.

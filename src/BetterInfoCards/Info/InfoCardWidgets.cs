@@ -41,9 +41,11 @@ namespace BetterInfoCards
 
             var skin = HoverTextScreen.Instance.drawer.skin;
 
-            if (MatchesWidgetPrefab(prefab, skin.shadowBarWidget?.gameObject))
+            if (MatchesWidgetPrefab(prefab, skin.shadowBarWidget?.gameObject) ||
+                MatchesWidgetRect(rect, skin.shadowBarWidget))
                 shadowBar = rect;
-            else if (MatchesWidgetPrefab(prefab, skin.selectBorderWidget?.gameObject))
+            else if (MatchesWidgetPrefab(prefab, skin.selectBorderWidget?.gameObject) ||
+                     MatchesWidgetRect(rect, skin.selectBorderWidget))
                 selectBorder = rect;
             else
                 widgets.Add(rect);
@@ -70,6 +72,23 @@ namespace BetterInfoCards
                 return false;
 
             return candidateRect.rect.size == referenceRect.rect.size;
+        }
+
+        private static bool MatchesWidgetRect(RectTransform candidate, RectTransform reference)
+        {
+            if (candidate == null || reference == null)
+                return false;
+
+            if (candidate == reference)
+                return true;
+
+            if (!string.Equals(StripCloneSuffix(candidate.name), StripCloneSuffix(reference.name), StringComparison.Ordinal))
+                return false;
+
+            if (candidate.rect.size != reference.rect.size)
+                return false;
+
+            return HasMatchingComponents(candidate.gameObject, reference.gameObject);
         }
 
         private static string StripCloneSuffix(string name)
