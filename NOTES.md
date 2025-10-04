@@ -106,3 +106,8 @@
 - Relaxed `MatchesWidgetRect` to accept candidates whose component lists are supersets of the prefab reference so fallback-captured shadow bars still register.
 - The ONI-managed assemblies and `dotnet` host remain unavailable in this container, so `BetterInfoCards` could not be rebuilt; run `dotnet build src/oniMods.sln` on a workstation with the game installed.
 - Multi-column hover wrapping still requires an in-game hover test after rebuilding to confirm the recovered shadow bar restores the second column.
+
+## 2025-10-25 - BetterInfoCards shadow bar height tolerance
+- Updated `InfoCardWidgets.MatchesWidgetRect` to treat taller shadow bars as valid matches so reflected widget entries no longer get rejected when their rect height exceeds the prefab default.
+- The hosted workspace still lacks the ONI-managed assemblies and a `dotnet` runtime, preventing a local rebuild of `BetterInfoCards`; maintainers should execute `dotnet build src/oniMods.sln` in a full environment.
+- In-game hover validation of multi-column wrapping also remains pending until the mod is rebuilt and tested alongside the game client.

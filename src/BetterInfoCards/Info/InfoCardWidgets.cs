@@ -90,7 +90,7 @@ namespace BetterInfoCards
 
             const float heightTolerance = 0.01f;
 
-            if (Mathf.Abs(candidateRect.height - referenceRect.height) > heightTolerance)
+            if (candidateRect.height + heightTolerance < referenceRect.height)
                 return false;
 
             if (HasMatchingComponents(candidate.gameObject, reference.gameObject))
