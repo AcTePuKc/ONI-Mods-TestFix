@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <AssemblyTitle>BetterInfoCards</AssemblyTitle>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>Better Info Cards</Title>
+    <Description>Overhauls info cards to be more powerful and user friendly.</Description>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="Export\README.md" />
+  </ItemGroup>
+  
+</Project>
