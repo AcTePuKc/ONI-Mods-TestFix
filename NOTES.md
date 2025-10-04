@@ -100,3 +100,9 @@
 ## 2025-10-23 - BetterInfoCards dynamic shadow bar width
 - Removed the strict width comparison inside `InfoCardWidgets.MatchesWidgetRect` so dynamically resized shadow bars still match when names and component layouts align.
 - Unable to rebuild `BetterInfoCards` or perform the in-game hover test here because the container lacks the ONI-managed assemblies and a `dotnet` host; maintainers should run `dotnet build src/oniMods.sln` and validate hover cards wrap into extra columns once wider shadow bars are detected.
+
+## 2025-10-24 - BetterInfoCards component child rect lookup
+- Extended the component accessor fallback in `InfoCardWidgets.CreateAccessor` to scan child `RectTransform` instances and reuse the skin shadow bar metadata when components only expose MonoBehaviour handles.
+- Relaxed `MatchesWidgetRect` to accept candidates whose component lists are supersets of the prefab reference so fallback-captured shadow bars still register.
+- The ONI-managed assemblies and `dotnet` host remain unavailable in this container, so `BetterInfoCards` could not be rebuilt; run `dotnet build src/oniMods.sln` on a workstation with the game installed.
+- Multi-column hover wrapping still requires an in-game hover test after rebuilding to confirm the recovered shadow bar restores the second column.

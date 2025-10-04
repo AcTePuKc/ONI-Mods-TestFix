@@ -93,7 +93,10 @@ namespace BetterInfoCards
             if (Mathf.Abs(candidateRect.height - referenceRect.height) > heightTolerance)
                 return false;
 
-            return HasMatchingComponents(candidate.gameObject, reference.gameObject);
+            if (HasMatchingComponents(candidate.gameObject, reference.gameObject))
+                return true;
+
+            return HasComponentSuperset(candidate.gameObject, reference.gameObject);
         }
 
         private static string StripCloneSuffix(string name)
@@ -127,6 +130,31 @@ namespace BetterInfoCards
             }
 
             return true;
+        }
+
+        private static bool HasComponentSuperset(GameObject candidate, GameObject reference)
+        {
+            var candidateComponents = candidate.GetComponents<Component>();
+            var referenceComponents = reference.GetComponents<Component>();
+
+            if (candidateComponents.Length < referenceComponents.Length)
+                return false;
+
+            int referenceIndex = 0;
+
+            for (int candidateIndex = 0; candidateIndex < candidateComponents.Length && referenceIndex < referenceComponents.Length; candidateIndex++)
+            {
+                var candidateComponent = candidateComponents[candidateIndex];
+                var referenceComponent = referenceComponents[referenceIndex];
+
+                if (candidateComponent == null || referenceComponent == null)
+                    return false;
+
+                if (candidateComponent.GetType() == referenceComponent.GetType())
+                    referenceIndex++;
+            }
+
+            return referenceIndex == referenceComponents.Length;
         }
 
         public void Translate(float x)
@@ -230,8 +258,27 @@ namespace BetterInfoCards
             if (typeof(Component).IsAssignableFrom(type))
                 return entry =>
                 {
-                    if (entry is Component component && component != null)
-                        return component.GetComponent<RectTransform>();
+                    if (entry is not Component component || component == null)
+                        return null;
+
+                    var rect = component.GetComponent<RectTransform>();
+                    if (rect != null)
+                        return rect;
+
+                    var skin = HoverTextScreen.Instance?.drawer?.skin;
+                    var referenceRect = skin?.shadowBarWidget?.rectTransform;
+                    if (referenceRect == null)
+                        return null;
+
+                    var candidates = component.GetComponentsInChildren<RectTransform>(includeInactive: true);
+                    foreach (var candidate in candidates)
+                    {
+                        if (candidate == null || candidate == rect)
+                            continue;
+
+                        if (MatchesWidgetRect(candidate, referenceRect))
+                            return candidate;
+                    }
 
                     return null;
                 };
