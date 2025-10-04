@@ -88,3 +88,7 @@
 - Added a rect-level comparison in `InfoCardWidgets.AddWidget` so shadow bar and select border assignments succeed even when the prefab clone carries additional components that previously caused the prefab match to fail.
 - The container image still lacks the ONI-managed assemblies and a .NET runtime, so `BetterInfoCards` could not be rebuilt locally. Please run `dotnet build src/oniMods.sln` on a workstation with the full toolchain.
 - In-game validation of multi-column hover wrapping also remains pending for the same reason; once rebuilt, hover a fully populated info card to confirm the second column appears when the viewport fills.
+
+## 2025-10-21 - BetterInfoCards rect transform comparison fix
+- Updated `InfoCardWidgets.AddWidget` to compare the extracted widget rects against the skin's `RectTransform` instances so component wrappers no longer trigger compile-time mismatches.
+- Attempted to rebuild via `dotnet build src/BetterInfoCards/BetterInfoCards.csproj`, but the container still lacks the `dotnet` host, so maintainers must recompile locally with the ONI-managed assemblies in place.

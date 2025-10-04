@@ -42,10 +42,10 @@ namespace BetterInfoCards
             var skin = HoverTextScreen.Instance.drawer.skin;
 
             if (MatchesWidgetPrefab(prefab, skin.shadowBarWidget?.gameObject) ||
-                MatchesWidgetRect(rect, skin.shadowBarWidget))
+                MatchesWidgetRect(rect, skin.shadowBarWidget?.rectTransform))
                 shadowBar = rect;
             else if (MatchesWidgetPrefab(prefab, skin.selectBorderWidget?.gameObject) ||
-                     MatchesWidgetRect(rect, skin.selectBorderWidget))
+                     MatchesWidgetRect(rect, skin.selectBorderWidget?.rectTransform))
                 selectBorder = rect;
             else
                 widgets.Add(rect);
