@@ -92,3 +92,7 @@
 ## 2025-10-21 - BetterInfoCards rect transform comparison fix
 - Updated `InfoCardWidgets.AddWidget` to compare the extracted widget rects against the skin's `RectTransform` instances so component wrappers no longer trigger compile-time mismatches.
 - Attempted to rebuild via `dotnet build src/BetterInfoCards/BetterInfoCards.csproj`, but the container still lacks the `dotnet` host, so maintainers must recompile locally with the ONI-managed assemblies in place.
+
+## 2025-10-22 - BetterInfoCards widget rect tolerance
+- Relaxed the `MatchesWidgetRect` comparison to require matching prefab names, component layouts, and rect heights while tolerating minor width differences so fallback-captured shadow bars are recognized.
+- Compilation and in-game verification remain blocked here because the container lacks the ONI-managed assemblies and the `dotnet` runtime; please rebuild via `dotnet build src/oniMods.sln` and confirm multi-column hover wrapping returns with shadow bars detected.
