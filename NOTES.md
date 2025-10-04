@@ -65,3 +65,7 @@
 ## 2025-10-15 - BetterInfoCards hover grid bounds adjustment
 - Updated the hover card grid to read the actual bottom edge of the hover text canvas so column wrapping matches the viewport height instead of the scaled pixel height.
 - Manual in-game verification of the wrapping behavior is blocked in this container because the ONI runtime and managed assemblies are unavailable; recompile the mod locally and confirm cards wrap into the second column at the correct threshold.
+
+## 2025-10-16 - BetterInfoCards hover widget pool fallback
+- Added a fallback that patches `HoverTextDrawer.Pool<MonoBehaviour>.Draw` when the widget pool type cannot be located via reflection and cache the resolved entry type so `InfoCardWidgets` continues to capture the shadow bar metadata.
+- Static-only validation here; rebuilding `BetterInfoCards` requires the ONI-managed assemblies and a .NET host (`dotnet`) that are not present in the container, and in-game hover card wrapping must be verified on a workstation with the full toolchain.
