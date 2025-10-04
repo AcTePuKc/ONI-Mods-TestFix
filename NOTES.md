@@ -69,3 +69,7 @@
 ## 2025-10-16 - BetterInfoCards hover widget pool fallback
 - Added a fallback that patches `HoverTextDrawer.Pool<MonoBehaviour>.Draw` when the widget pool type cannot be located via reflection and cache the resolved entry type so `InfoCardWidgets` continues to capture the shadow bar metadata.
 - Static-only validation here; rebuilding `BetterInfoCards` requires the ONI-managed assemblies and a .NET host (`dotnet`) that are not present in the container, and in-game hover card wrapping must be verified on a workstation with the full toolchain.
+
+## 2025-10-17 - BetterInfoCards prefab normalization
+- Normalized the widget prefab reference captured by `ExportWidgets` so Harmony fallbacks that expose `Component` instances still map back to the underlying `GameObject`, keeping the `shadowBar` match logic intact.
+- Unable to rebuild `BetterInfoCards` or confirm the fallback captures non-null shadow bar rects in-game because the container lacks the ONI assemblies and runtime; maintainers should run `dotnet build src/oniMods.sln` and validate hover cards wrap across multiple columns locally.
