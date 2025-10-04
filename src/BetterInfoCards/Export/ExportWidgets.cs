@@ -243,7 +243,11 @@ namespace BetterInfoCards.Export
         // This method will be used as a postfix for the Draw method via reflection.
         private static void GetWidget_Postfix(object __result, object ___prefab)
         {
-            if (__result == null || ___prefab is not GameObject prefab)
+            if (__result == null)
+                return;
+
+            var prefab = NormalizeToGameObject(___prefab);
+            if (prefab == null)
                 return;
 
             if (curICWidgets == null)
@@ -253,6 +257,19 @@ namespace BetterInfoCards.Export
                 return;
 
             curICWidgets.AddWidget(__result, prefab);
+        }
+
+        private static GameObject NormalizeToGameObject(object instance)
+        {
+            switch (instance)
+            {
+                case GameObject gameObject:
+                    return gameObject;
+                case Component component:
+                    return component != null ? component.gameObject : null;
+                default:
+                    return null;
+            }
         }
 
         private static bool ShouldProcessEntry(object entry)
