@@ -85,7 +85,16 @@ namespace BetterInfoCards
             if (!string.Equals(StripCloneSuffix(candidate.name), StripCloneSuffix(reference.name), StringComparison.Ordinal))
                 return false;
 
-            if (candidate.rect.size != reference.rect.size)
+            var candidateRect = candidate.rect;
+            var referenceRect = reference.rect;
+
+            const float heightTolerance = 0.01f;
+            const float widthTolerance = 1f;
+
+            if (Mathf.Abs(candidateRect.height - referenceRect.height) > heightTolerance)
+                return false;
+
+            if (Mathf.Abs(candidateRect.width - referenceRect.width) > widthTolerance && referenceRect.width > 0f)
                 return false;
 
             return HasMatchingComponents(candidate.gameObject, reference.gameObject);
