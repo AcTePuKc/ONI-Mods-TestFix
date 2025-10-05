@@ -9,7 +9,7 @@ namespace BetterInfoCards
 {
     public class InfoCardWidgets
     {
-        internal enum PendingShadowBarState
+        public enum PendingShadowBarState
         {
             None,
             Pending,
@@ -34,7 +34,7 @@ namespace BetterInfoCards
         public RectTransform selectBorder;
         public Vector2 offset = new();
         private readonly List<RectTransform> pendingShadowBars = new();
-        private readonly List<GameObject> pendingShadowBarPrefabs = new();
+        private readonly List<ShadowBarCandidate> pendingShadowBarCandidates = new();
 
         public float YMax => shadowBar != null ? shadowBar.anchoredPosition.y : 0f;
         public float YMin => YMax - Height;
@@ -74,10 +74,10 @@ namespace BetterInfoCards
             {
                 if (MatchesWidgetPrefab(prefab, skinShadowBar?.gameObject))
                 {
-                    if (TryResolveShadowBarFromPrefab(prefab))
+                    if (TryResolveShadowBarFromPrefab(entry, prefab))
                         return;
 
-                    CachePendingShadowBarPrefab(prefab);
+                    CachePendingShadowBarCandidate(entry, prefab);
                 }
 
                 return;
@@ -227,7 +227,7 @@ namespace BetterInfoCards
             if (HasUsableSize(rect))
             {
                 pendingShadowBars.Clear();
-                pendingShadowBarPrefabs.Clear();
+                pendingShadowBarCandidates.Clear();
                 DeferredShadowBarResolver.Unregister(this);
             }
             else
@@ -262,21 +262,21 @@ namespace BetterInfoCards
             }
         }
 
-        private void CachePendingShadowBarPrefab(GameObject prefab)
+        private void CachePendingShadowBarCandidate(object entry, GameObject prefab)
         {
-            if (prefab == null)
+            if (entry == null)
                 return;
 
-            if (!pendingShadowBarPrefabs.Contains(prefab))
-            {
-                pendingShadowBarPrefabs.Add(prefab);
-                DeferredShadowBarResolver.Register(this);
-            }
+            if (pendingShadowBarCandidates.Exists(candidate => ReferenceEquals(candidate.Entry, entry)))
+                return;
+
+            pendingShadowBarCandidates.Add(new ShadowBarCandidate(entry, prefab));
+            DeferredShadowBarResolver.Register(this);
         }
 
         private bool HasPendingShadowBarCandidates()
         {
-            return pendingShadowBars.Count > 0 || pendingShadowBarPrefabs.Count > 0;
+            return pendingShadowBars.Count > 0 || pendingShadowBarCandidates.Count > 0;
         }
 
         private static bool HasUsableSize(RectTransform rect)
@@ -297,23 +297,23 @@ namespace BetterInfoCards
 
             var state = PendingShadowBarState.None;
 
-            for (int i = pendingShadowBarPrefabs.Count - 1; i >= 0; i--)
+            for (int i = pendingShadowBarCandidates.Count - 1; i >= 0; i--)
             {
-                var prefab = pendingShadowBarPrefabs[i];
+                var candidate = pendingShadowBarCandidates[i];
 
-                if (prefab == null)
+                if (candidate.Entry == null)
                 {
-                    pendingShadowBarPrefabs.RemoveAt(i);
+                    pendingShadowBarCandidates.RemoveAt(i);
                     continue;
                 }
 
-                if (TryResolveShadowBarFromPrefab(prefab))
+                if (TryResolveShadowBarFromPrefab(candidate.Entry, candidate.Prefab))
                 {
-                    pendingShadowBarPrefabs.RemoveAt(i);
+                    pendingShadowBarCandidates.RemoveAt(i);
 
                     if (shadowBar != null)
                     {
-                        pendingShadowBarPrefabs.Clear();
+                        pendingShadowBarCandidates.Clear();
                         return PendingShadowBarState.Resolved;
                     }
 
@@ -330,7 +330,7 @@ namespace BetterInfoCards
                 {
                     shadowBar = candidate;
                     pendingShadowBars.Clear();
-                    pendingShadowBarPrefabs.Clear();
+                    pendingShadowBarCandidates.Clear();
                     return PendingShadowBarState.Resolved;
                 }
 
@@ -347,30 +347,81 @@ namespace BetterInfoCards
             return state;
         }
 
-        private bool TryResolveShadowBarFromPrefab(GameObject prefab)
+        private bool TryResolveShadowBarFromPrefab(object entry, GameObject prefab)
         {
-            if (prefab == null)
+            if (entry == null)
                 return false;
 
-            var prefabRect = prefab.GetComponentInChildren<RectTransform>(includeInactive: true);
+            var rect = ExtractRect(entry);
 
-            if (prefabRect == null)
+            if (rect == null)
+                rect = ResolveRectFromEntry(entry, prefab);
+
+            if (rect == null)
                 return false;
 
-            shadowBar = prefabRect;
+            shadowBar = rect;
 
-            if (HasUsableSize(prefabRect))
+            if (HasUsableSize(rect))
             {
                 pendingShadowBars.Clear();
-                pendingShadowBarPrefabs.Clear();
+                pendingShadowBarCandidates.Clear();
                 DeferredShadowBarResolver.Unregister(this);
             }
             else
             {
-                CachePendingShadowBar(prefabRect);
+                CachePendingShadowBar(rect);
             }
 
             return true;
+        }
+
+        private static RectTransform ResolveRectFromEntry(object entry, GameObject prefab)
+        {
+            var componentRoot = entry as Component;
+            var gameObject = componentRoot != null ? componentRoot.gameObject : entry as GameObject;
+
+            if (gameObject == null)
+                return null;
+
+            var referenceRect = HoverTextScreen.Instance?.drawer?.skin?.shadowBarWidget?.rectTransform;
+
+            if (referenceRect != null)
+            {
+                var ownRect = gameObject.GetComponent<RectTransform>();
+                if (MatchesWidgetRect(ownRect, referenceRect))
+                    return ownRect;
+
+                var candidates = gameObject.GetComponentsInChildren<RectTransform>(includeInactive: true);
+                foreach (var candidate in candidates)
+                {
+                    if (candidate == null)
+                        continue;
+
+                    if (MatchesWidgetRect(candidate, referenceRect))
+                        return candidate;
+                }
+            }
+
+            if (prefab != null)
+            {
+                var prefabRect = prefab.GetComponentInChildren<RectTransform>(includeInactive: true);
+                if (prefabRect != null)
+                {
+                    var targetName = StripCloneSuffix(prefabRect.name);
+                    var candidates = gameObject.GetComponentsInChildren<RectTransform>(includeInactive: true);
+                    foreach (var candidate in candidates)
+                    {
+                        if (candidate == null)
+                            continue;
+
+                        if (string.Equals(StripCloneSuffix(candidate.name), targetName, StringComparison.Ordinal))
+                            return candidate;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void Translate(float x)
@@ -549,6 +600,18 @@ namespace BetterInfoCards
                 return false;
 
             return true;
+        }
+
+        private sealed class ShadowBarCandidate
+        {
+            public ShadowBarCandidate(object entry, GameObject prefab)
+            {
+                Entry = entry;
+                Prefab = prefab;
+            }
+
+            public object Entry { get; }
+            public GameObject Prefab { get; }
         }
 
         private static class DeferredShadowBarResolver

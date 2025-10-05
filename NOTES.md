@@ -201,3 +201,8 @@
 - Updated `InfoCardWidgets.ResolvePendingWidgets` to expose the pending/resolved state so grid layout can detect when shadow bars are still sizing.
 - Reworked `Grid` to defer column measurement for pending cards, schedule a late-update relayout once the deferred resolver promotes them, and apply the final layout only after the shadow bar reports usable dimensions.
 - Unable to rebuild or run in-game validation because the container still lacks the ONI-managed assemblies and a `dotnet` runtime; maintainers should run `dotnet build src/oniMods.sln` locally and verify multi-column wrapping after the deferred pass completes.
+
+## 2025-11-12 - BetterInfoCards shadow bar instance resolution
+- Replaced the prefab-based `RectTransform` cache with live entry tracking so deferred resolution now probes instantiated hover card widgets before adjusting layout.
+- Updated the pending queues to store the captured entry alongside collapsed rects, ensuring late-update retries operate on scene objects and unregister once a usable rect is located.
+- Unable to rebuild or run in-game validation in this container because the ONI-managed assemblies and `dotnet` runtime remain unavailable; maintainers should run `dotnet build src/oniMods.sln` locally and hover a multi-widget card to confirm translations and width adjustments affect only the active instance.
