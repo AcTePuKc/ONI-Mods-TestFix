@@ -42,13 +42,12 @@ namespace BetterInfoCards
             this.trimSlack = trimSlack;
             idleTrimThreshold = ToStopwatchTicks(idleTrimAge ?? TimeSpan.FromSeconds(30));
 
-            System.Action resetHandler = Reset;
-            resetOn = (System.Action)Delegate.Combine(resetOn, resetHandler);
+            AttachResetHandler(ref resetOn);
         }
 
         public ResetPool(ref System.Action onBeginDrawing)
         {
-            OnBeginDrawing = onBeginDrawing;
+            AttachResetHandler(ref onBeginDrawing);
         }
 
         public int Count
@@ -68,7 +67,7 @@ namespace BetterInfoCards
 
         public int LastCycleUsage => Volatile.Read(ref lastCycleUsage);
 
-        public System.Action OnBeginDrawing { get; }
+        public System.Action OnBeginDrawing { get; private set; }
 
         public TimeSpan GetIdleTimeFor(int index)
         {
@@ -147,6 +146,13 @@ namespace BetterInfoCards
                     consecutiveLowUsageCycles = 0;
                 }
             }
+        }
+
+        private void AttachResetHandler(ref System.Action onBeginDrawing)
+        {
+            System.Action resetHandler = Reset;
+            onBeginDrawing = (System.Action)Delegate.Combine(onBeginDrawing, resetHandler);
+            OnBeginDrawing = onBeginDrawing;
         }
 
         private void TrimPool(long now, int requiredCount)
