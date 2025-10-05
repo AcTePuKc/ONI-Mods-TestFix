@@ -40,10 +40,9 @@ namespace BetterInfoCards
                 var card = cards[i];
 
                 // If the first one can't fit, put it down anyways otherwise they all get shifted over by the shadow bar spacing.
-                if (offset.y - card.Height < MinY && i > 0)
+                if (offset.y - card.Height < MinY + shadowBarSpacing && i > 0)
                 {
                     offset.x += col.maxXInCol + shadowBarSpacing;
-
                     columns.Add(col);
                     col = new() { offsetX = offset.x };
                     offset.y = topY;
