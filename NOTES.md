@@ -216,3 +216,8 @@
 - Ensured `ExportWidgets.GetWidget_Postfix` only enqueues a new `InfoCardWidgets` container the moment it is instantiated so hover cards contribute exactly one entry to the export list.
 - Re-reviewed other call sites that append to `icWidgets` and confirmed `BeginShadowBar` remains the sole allocation path during live draws, preventing duplicate containers when replaying captured widgets.
 - Runtime confirmation that `Grid` now receives a single container per card remains pending; the container environment still lacks the ONI-managed assemblies and `dotnet`, so maintainers should rebuild via `dotnet build src/oniMods.sln` and verify column translation offsets in-game.
+
+## 2025-11-15 - BetterInfoCards temperature converter guard
+- Hardened the temperature converter to reuse a cached `PrimaryElement` lookup, emit a one-time warning when the component is missing, and fall back to a safe default instead of dereferencing `null`.
+- Reviewed the existing title converter logging helper and mirrored its usage for temperature entries so missing-component spam stays suppressed after the first warning.
+- Compilation and in-game hover verification remain blocked in this environment due to missing ONI assemblies and `dotnet`; maintainers should run `dotnet build src/oniMods.sln` and hover affected buildings to confirm the hover card displays the fallback temperature text without crashing.
