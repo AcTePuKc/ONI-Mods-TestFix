@@ -146,3 +146,13 @@
 - Switched the shadow bar capture to allocate its widget container during the `BeginShadowBar` prefix so the subsequent `Draw()` call receives a ready list and no longer skips the first widget entry.
 - Added a replay-phase fallback in the widget postfix to lazily create the container when the prefix is bypassed, keeping the `IsInterceptMode` guard so live draws remain untouched.
 - The ONI-managed assemblies and runtime are still unavailable here, so `dotnet build src/oniMods.sln` and in-game hover validation of multi-column wrapping must be performed in a full environment.
+
+## 2025-11-02 - BetterInfoCards hover drawer null guards
+- Hardened the hover drawer patches so every `DrawIcon`, `DrawText`, `AddIndent`, `NewLine`, and `EndShadowBar` prefix verifies `curInfoCard` before replaying captured actions, logging and deferring to vanilla rendering when the card context is missing.
+- Reset `curInfoCard` whenever `BeginShadowBar` skips allocation to avoid replaying into a stale card when the intercept path is bypassed.
+- Compilation and in-game hover validation remain blocked in this container due to missing ONI-managed assemblies and the `dotnet` host; maintainers should rebuild via `dotnet build src/oniMods.sln` and confirm hover cards render safely when the drawer skips `BeginShadowBar`.
+
+## 2025-11-03 - BetterInfoCards shadow bar sizing guard
+- Added a collapse tolerance guard to `InfoCardWidgets.MatchesWidgetRect` so zero-height shadow bars stay pending until either the prefab or runtime rect expands past the threshold, preventing collapsed rects from short-circuiting the match.
+- Cached collapsed shadow bar candidates and re-checked them before grid layout, ensuring the grid only measures non-zero width/height rects and column wrapping resumes once Unity finishes sizing the widget.
+- The ONI-managed assemblies and `dotnet` host are still unavailable here, so rebuild `BetterInfoCards` via `dotnet build src/oniMods.sln` on a full workstation and validate in-game that the grid now captures positive shadow bar dimensions.

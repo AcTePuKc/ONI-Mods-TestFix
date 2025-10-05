@@ -42,6 +42,8 @@ namespace BetterInfoCards
             {
                 if (IsInterceptMode)
                     infoCards.Add(curInfoCard = pool.Get().Set(selected));
+                else
+                    curInfoCard = null;
                 return !IsInterceptMode;
             }
         }
@@ -54,9 +56,17 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix(Sprite icon, Color color, int image_size, int horizontal_spacing)
             {
-                if (IsInterceptMode)
-                    curInfoCard.AddDraw(pool.Get().Set(icon, color, image_size, horizontal_spacing));
-                return !IsInterceptMode;
+                if (!IsInterceptMode)
+                    return true;
+
+                if (curInfoCard == null)
+                {
+                    Debug.LogWarning("[BetterInfoCards] DrawIcon received without an active info card; falling back to HoverTextDrawer.");
+                    return true;
+                }
+
+                curInfoCard.AddDraw(pool.Get().Set(icon, color, image_size, horizontal_spacing));
+                return false;
             }
         }
 
@@ -70,13 +80,22 @@ namespace BetterInfoCards
             {
                 // Null check avoids crashes from drawing multiple empty strings.
                 // This appears to now occur when hovering neutromium tiles.
-                if (IsInterceptMode && !text.IsNullOrWhiteSpace())
+                if (!IsInterceptMode)
+                    return true;
+
+                if (curInfoCard == null)
+                {
+                    Debug.LogWarning("[BetterInfoCards] DrawText received without an active info card; falling back to HoverTextDrawer.");
+                    return true;
+                }
+
+                if (!text.IsNullOrWhiteSpace())
                 {
                     var (id, data) = ExportSelectToolData.ConsumeTextInfo();
                     var ti = TextInfo.Create(id, text, data);
                     curInfoCard.AddDraw(pool.Get().Set(ti, style, color, override_color), ti);
                 }
-                return !IsInterceptMode;
+                return false;
             }
         }
 
@@ -88,9 +107,17 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix(int width)
             {
-                if (IsInterceptMode)
-                    curInfoCard.AddDraw(pool.Get().Set(width));
-                return !IsInterceptMode;
+                if (!IsInterceptMode)
+                    return true;
+
+                if (curInfoCard == null)
+                {
+                    Debug.LogWarning("[BetterInfoCards] AddIndent received without an active info card; falling back to HoverTextDrawer.");
+                    return true;
+                }
+
+                curInfoCard.AddDraw(pool.Get().Set(width));
+                return false;
             }
         }
 
@@ -102,9 +129,17 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix(int min_height)
             {
-                if (IsInterceptMode)
-                    curInfoCard.AddDraw(pool.Get().Set(min_height));
-                return !IsInterceptMode;
+                if (!IsInterceptMode)
+                    return true;
+
+                if (curInfoCard == null)
+                {
+                    Debug.LogWarning("[BetterInfoCards] NewLine received without an active info card; falling back to HoverTextDrawer.");
+                    return true;
+                }
+
+                curInfoCard.AddDraw(pool.Get().Set(min_height));
+                return false;
             }
         }
 
@@ -114,9 +149,17 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix()
             {
-                if (IsInterceptMode)
-                    curInfoCard.selectable = ExportSelectToolData.ConsumeSelectable();
-                return !IsInterceptMode;
+                if (!IsInterceptMode)
+                    return true;
+
+                if (curInfoCard == null)
+                {
+                    Debug.LogWarning("[BetterInfoCards] EndShadowBar received without an active info card; falling back to HoverTextDrawer.");
+                    return true;
+                }
+
+                curInfoCard.selectable = ExportSelectToolData.ConsumeSelectable();
+                return false;
             }
         }
     }
