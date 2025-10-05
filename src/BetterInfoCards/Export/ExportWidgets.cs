@@ -65,45 +65,98 @@ namespace BetterInfoCards.Export
         private static Type FindWidgetPoolType(Type hoverTextDrawerType, out Type entryType)
         {
             entryType = FindWidgetEntryType(hoverTextDrawerType);
-            if (entryType == null)
-                return null;
 
-            foreach (var nestedType in hoverTextDrawerType.GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Public))
+            if (entryType != null)
             {
-                if (!nestedType.IsGenericTypeDefinition)
-                    continue;
-
-                if (nestedType.GetGenericArguments().Length != 1)
-                    continue;
-
-                if (!IsPoolTypeName(nestedType))
-                    continue;
-
-                try
+                foreach (var nestedType in hoverTextDrawerType.GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Public))
                 {
-                    var constructed = nestedType.MakeGenericType(entryType);
-                    if (HasRectTransformEntry(constructed))
-                        return constructed;
-                }
-                catch (ArgumentException)
-                {
-                    // Ignore incompatible generic definitions.
+                    if (!nestedType.IsGenericTypeDefinition)
+                        continue;
+
+                    if (nestedType.GetGenericArguments().Length != 1)
+                        continue;
+
+                    if (!IsPoolTypeName(nestedType))
+                        continue;
+
+                    try
+                    {
+                        var constructed = nestedType.MakeGenericType(entryType);
+                        if (HasRectTransformEntry(constructed))
+                        {
+                            entryType ??= ResolveEntryTypeFromPool(constructed);
+                            return constructed;
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        // Ignore incompatible generic definitions.
+                    }
                 }
             }
 
             const BindingFlags memberFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+            const string shadowBarsName = "shadowbars";
+
+            Type preferredFieldPool = null;
+            Type fallbackFieldPool = null;
+
             foreach (var field in hoverTextDrawerType.GetFields(memberFlags))
             {
                 var poolType = field.FieldType;
-                if (IsPoolType(poolType) && HasRectTransformEntry(poolType))
+                if (!IsPoolType(poolType) || !HasRectTransformEntry(poolType))
+                    continue;
+
+                if (!field.IsStatic && field.Name != null && field.Name.IndexOf(shadowBarsName, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    entryType ??= ResolveEntryTypeFromPool(poolType);
                     return poolType;
+                }
+
+                if (!field.IsStatic && preferredFieldPool == null)
+                {
+                    preferredFieldPool = poolType;
+                    continue;
+                }
+
+                if (fallbackFieldPool == null)
+                    fallbackFieldPool = poolType;
             }
+
+            if (preferredFieldPool != null)
+            {
+                entryType ??= ResolveEntryTypeFromPool(preferredFieldPool);
+                return preferredFieldPool;
+            }
+
+            if (fallbackFieldPool != null)
+            {
+                entryType ??= ResolveEntryTypeFromPool(fallbackFieldPool);
+                return fallbackFieldPool;
+            }
+
+            Type preferredPropertyPool = null;
 
             foreach (var property in hoverTextDrawerType.GetProperties(memberFlags))
             {
                 var poolType = property.PropertyType;
-                if (IsPoolType(poolType) && HasRectTransformEntry(poolType))
+                if (!IsPoolType(poolType) || !HasRectTransformEntry(poolType))
+                    continue;
+
+                if (property.Name != null && property.Name.IndexOf(shadowBarsName, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    entryType ??= ResolveEntryTypeFromPool(poolType);
                     return poolType;
+                }
+
+                if (preferredPropertyPool == null)
+                    preferredPropertyPool = poolType;
+            }
+
+            if (preferredPropertyPool != null)
+            {
+                entryType ??= ResolveEntryTypeFromPool(preferredPropertyPool);
+                return preferredPropertyPool;
             }
 
             return null;
@@ -229,6 +282,15 @@ namespace BetterInfoCards.Export
                 return false;
 
             return GetRectTransformMember(entryType) != null;
+        }
+
+        private static Type ResolveEntryTypeFromPool(Type poolType)
+        {
+            if (poolType == null)
+                return null;
+
+            const BindingFlags nestedFlags = BindingFlags.NonPublic | BindingFlags.Public;
+            return poolType.GetNestedType("Entry", nestedFlags) ?? FindWidgetEntryTypeRecursive(poolType);
         }
 
         public static List<InfoCardWidgets> ConsumeWidgets()
