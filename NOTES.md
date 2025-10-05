@@ -186,3 +186,8 @@
 - Added a deferred resolver that schedules collapsed shadow bar candidates for a `LateUpdate` retry so the grid promotes them once Unity expands their rects, ensuring width/height reflect the final layout before wrapping columns.
 - The new scheduler only reuses `ResolvePendingWidgets` and leaves the prefab/rect matching heuristics untouched, so existing comparisons against the hover drawer skin continue to behave as before.
 - Could not rebuild or run in-game validation here because the ONI-managed assemblies and `dotnet` runtime remain unavailable; please execute `dotnet build src/oniMods.sln` in a full environment and verify hover cards populate multi-column layouts after the deferred sizing pass.
+
+## 2025-11-09 - BetterInfoCards title converter null guard
+- Hardened the title converter so countable prefabs without a `PrimaryElement` return a safe default and emit a one-shot warning instead of crashing when `.Units` is missing.
+- Mirrored the ore status converter pattern by caching the component lookup before accessing aggregation data.
+- Unable to rebuild `BetterInfoCards` in this container because the ONI assemblies and `dotnet` host are absent; maintainers should run `dotnet build src/oniMods.sln` locally and confirm the hover title aggregation no longer throws when encountering prefabs without `PrimaryElement`.
