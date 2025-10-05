@@ -126,3 +126,8 @@
 - Updated `ExportWidgets.FindWidgetEntryTypeRecursive` so nested entry classes that expose a `RectTransform` are preferred over broader value types, ensuring the proper widget entry is discovered for shadow bar pooling.
 - Cached the resolved entry type before verifying the pool and now reconstruct `Pool<T>` with `MakeGenericType` to confirm the patch targets the hover text drawer's widget pool.
 - The container still lacks the ONI-managed assemblies and a `dotnet` runtime, preventing a local rebuild of `BetterInfoCards`; please run `dotnet build src/oniMods.sln` and validate that info card shadow bars regain their dimensions once the mod is rebuilt with the game client.
+
+## 2025-10-29 - BetterInfoCards collapsed shadow bar handling
+- Relaxed `InfoCardWidgets.MatchesWidgetRect` so shadow bars drawn from `Pool<MonoBehaviour>` still match while their runtime height remains collapsed, only rejecting candidates when both the prefab and runtime rects are effectively zero-height.
+- The container still lacks the ONI-managed assemblies and the `dotnet` host, so `BetterInfoCards` could not be rebuilt here; maintainers should run `dotnet build src/oniMods.sln` in a full environment.
+- In-game verification that hover card columns return once the shadow bar sizes update remains pending until the mod is rebuilt alongside the game client.
