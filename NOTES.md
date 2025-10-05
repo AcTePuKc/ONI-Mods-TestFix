@@ -111,3 +111,8 @@
 - Updated `InfoCardWidgets.MatchesWidgetRect` to treat taller shadow bars as valid matches so reflected widget entries no longer get rejected when their rect height exceeds the prefab default.
 - The hosted workspace still lacks the ONI-managed assemblies and a `dotnet` runtime, preventing a local rebuild of `BetterInfoCards`; maintainers should execute `dotnet build src/oniMods.sln` in a full environment.
 - In-game hover validation of multi-column wrapping also remains pending until the mod is rebuilt and tested alongside the game client.
+
+## 2025-10-26 - BetterInfoCards reduced-height shadow bar matching
+- Relaxed `InfoCardWidgets.MatchesWidgetRect` so reduced-height shadow bars that still share the prefab name and component layout are treated as matches instead of being rejected by the height check.
+- The container still lacks the ONI-managed assemblies and the `dotnet` runtime, so `BetterInfoCards` could not be rebuilt here; please run `dotnet build src/oniMods.sln` in a full environment.
+- Multi-column hover validation continues to require an in-game hover test after rebuilding to confirm shadow bars with smaller heights restore the secondary column.
