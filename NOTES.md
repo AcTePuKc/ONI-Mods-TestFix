@@ -196,3 +196,8 @@
 - Added a prefab-based fallback in `InfoCardWidgets.AddWidget` so the shadow bar rect is recovered directly from the instantiated prefab when the pool entry lacks an accessor.
 - Queued unresolved prefabs for deferred processing alongside collapsed rects, allowing `ResolvePendingWidgets` to revisit them once Unity finishes the layout pass and the rect reports a usable size.
 - Compilation and in-game verification remain blocked here because the container lacks the ONI-managed assemblies and `dotnet`; maintainers should rebuild via `dotnet build src/oniMods.sln` and confirm captured cards regain non-zero dimensions and column wrapping in-game.
+
+## 2025-11-11 - BetterInfoCards deferred grid relayout
+- Updated `InfoCardWidgets.ResolvePendingWidgets` to expose the pending/resolved state so grid layout can detect when shadow bars are still sizing.
+- Reworked `Grid` to defer column measurement for pending cards, schedule a late-update relayout once the deferred resolver promotes them, and apply the final layout only after the shadow bar reports usable dimensions.
+- Unable to rebuild or run in-game validation because the container still lacks the ONI-managed assemblies and a `dotnet` runtime; maintainers should run `dotnet build src/oniMods.sln` locally and verify multi-column wrapping after the deferred pass completes.
