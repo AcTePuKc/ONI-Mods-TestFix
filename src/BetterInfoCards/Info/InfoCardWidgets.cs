@@ -90,8 +90,12 @@ namespace BetterInfoCards
 
             const float heightTolerance = 0.01f;
 
-            // Allow shorter runtime instances so long as they are not completely collapsed.
-            if (candidateRect.height <= 0f && referenceRect.height > heightTolerance)
+            // Allow pooled runtime instances that have not yet expanded while still filtering
+            // out placeholder widgets that never acquire a visible height.
+            bool candidateCollapsed = candidateRect.height <= heightTolerance;
+            bool referenceCollapsed = referenceRect.height <= heightTolerance;
+
+            if (candidateCollapsed && referenceCollapsed)
                 return false;
 
             if (HasMatchingComponents(candidate.gameObject, reference.gameObject))
