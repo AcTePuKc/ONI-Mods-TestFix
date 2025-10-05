@@ -61,6 +61,9 @@ namespace BetterInfoCards
                 if (ShouldDeferToVanilla(nameof(DrawIcon)))
                     return true;
 
+                if (curInfoCard == null)
+                    return ForceVanillaFallback(nameof(DrawIcon));
+
                 curInfoCard.AddDraw(pool.Get().Set(icon, color, image_size, horizontal_spacing));
                 return false;
             }
@@ -78,6 +81,9 @@ namespace BetterInfoCards
                 // This appears to now occur when hovering neutromium tiles.
                 if (ShouldDeferToVanilla(nameof(DrawText)))
                     return true;
+
+                if (curInfoCard == null)
+                    return ForceVanillaFallback(nameof(DrawText));
 
                 if (!text.IsNullOrWhiteSpace())
                 {
@@ -100,6 +106,9 @@ namespace BetterInfoCards
                 if (ShouldDeferToVanilla(nameof(AddIndent)))
                     return true;
 
+                if (curInfoCard == null)
+                    return ForceVanillaFallback(nameof(AddIndent));
+
                 curInfoCard.AddDraw(pool.Get().Set(width));
                 return false;
             }
@@ -116,6 +125,9 @@ namespace BetterInfoCards
                 if (ShouldDeferToVanilla(nameof(NewLine)))
                     return true;
 
+                if (curInfoCard == null)
+                    return ForceVanillaFallback(nameof(NewLine));
+
                 curInfoCard.AddDraw(pool.Get().Set(min_height));
                 return false;
             }
@@ -130,6 +142,9 @@ namespace BetterInfoCards
                 if (ShouldDeferToVanilla(nameof(EndShadowBar)))
                     return true;
 
+                if (curInfoCard == null)
+                    return ForceVanillaFallback(nameof(EndShadowBar));
+
                 curInfoCard.selectable = ExportSelectToolData.ConsumeSelectable();
                 return false;
             }
@@ -143,6 +158,11 @@ namespace BetterInfoCards
             if (curInfoCard != null)
                 return false;
 
+            return ForceVanillaFallback(caller);
+        }
+
+        private static bool ForceVanillaFallback(string caller)
+        {
             if (!loggedMissingCard)
             {
                 Debug.LogWarning($"[BetterInfoCards] {caller} received without an active info card; falling back to HoverTextDrawer.");
@@ -150,6 +170,7 @@ namespace BetterInfoCards
             }
 
             IsInterceptMode = false;
+            curInfoCard = null;
             return true;
         }
     }
