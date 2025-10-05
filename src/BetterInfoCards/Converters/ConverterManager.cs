@@ -38,7 +38,7 @@ namespace BetterInfoCards
                     KPrefabID prefabID = go?.GetComponent<KPrefabID>();
                     if (prefabID != null && Assets.IsTagCountable(prefabID.PrefabTag))
                     {
-                        var primaryElement = go.GetComponent<PrimaryElement>();
+                        var primaryElement = go?.GetComponent<PrimaryElement>();
                         if (primaryElement == null)
                         {
                             LogMissingPrimaryElementOnce(ref hasLoggedMissingPrimaryElementForTitle, go, title);
@@ -173,7 +173,8 @@ namespace BetterInfoCards
                 return;
 
             hasLogged = true;
-            Debug.LogWarning($"[BetterInfoCards] Missing PrimaryElement for converter '{converterId}' on object '{go?.name ?? \"<null>\"}'. Using a safe default.");
+            string objectName = go != null ? go.name : "<null>";
+            Debug.LogWarning(string.Format("[BetterInfoCards] Missing PrimaryElement for converter '{0}' on object '{1}'. Using a safe default.", converterId, objectName));
         }
     }
 }
