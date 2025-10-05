@@ -171,3 +171,8 @@
 - Updated `ResetPool` so the single-parameter constructor now combines `HoverTextDrawer.BeginDrawing` with the `Reset` handler, matching the multiparameter overload.
 - Centralized the delegate hookup through `AttachResetHandler` to keep both constructors in sync and expose the combined delegate via `OnBeginDrawing` for telemetry consumers.
 - Rebuild and hover replay verification remain blocked here because the ONI-managed assemblies and `dotnet` runtime are unavailable; please run `dotnet build src/oniMods.sln` and confirm pooled draw actions reset on each `HoverTextDrawer.BeginDrawing` in a full environment.
+
+## 2025-11-06 - BetterInfoCards shadow bar rect filtering
+- Tightened the component fallback in `InfoCardWidgets.CreateAccessor` so only the component's own `RectTransform` that matches the skin's shadow bar is returned, otherwise descendants are scanned and unmatched entries report `null`.
+- Updated `InfoCardWidgets.AddWidget` and `TryAssignShadowBar` to tolerate null rect accessors, keep probing for later matches, and cache the resolved rect (even while collapsed) as `shadowBar`.
+- Could not rebuild `BetterInfoCards` inside this container because the ONI-managed assemblies and `dotnet` runtime are still missing; maintainers should run `dotnet build src/oniMods.sln` locally and confirm hover cards regain positive widths and wrap into additional columns in-game once rebuilt.

@@ -38,15 +38,15 @@ namespace BetterInfoCards
                 return;
 
             var rect = ExtractRect(entry);
-            if (rect == null)
-                return;
-
             EnsureShadowBarUsable();
 
             var skin = HoverTextScreen.Instance.drawer.skin;
             var skinShadowBar = skin?.shadowBarWidget;
 
             if (TryAssignShadowBar(rect, prefab, skinShadowBar?.gameObject, skinShadowBar?.rectTransform))
+                return;
+
+            if (rect == null)
                 return;
 
             if (MatchesWidgetPrefab(prefab, skin.selectBorderWidget?.gameObject) ||
@@ -178,18 +178,22 @@ namespace BetterInfoCards
 
         private bool TryAssignShadowBar(RectTransform rect, GameObject prefab, GameObject referenceObject, RectTransform referenceRect)
         {
-            if (rect == null)
-                return false;
-
             if (shadowBar != null && HasUsableSize(shadowBar))
                 return true;
 
-            if (!MatchesWidgetPrefab(prefab, referenceObject) && !MatchesWidgetRect(rect, referenceRect))
+            var matchesShadowBarPrefab = MatchesWidgetPrefab(prefab, referenceObject);
+            var matchesShadowBarRect = MatchesWidgetRect(rect, referenceRect);
+
+            if (!matchesShadowBarPrefab && !matchesShadowBarRect)
                 return false;
+
+            if (rect == null)
+                return shadowBar != null;
+
+            shadowBar = rect;
 
             if (HasUsableSize(rect))
             {
-                shadowBar = rect;
                 pendingShadowBars.Clear();
             }
             else
@@ -337,27 +341,24 @@ namespace BetterInfoCards
                     var skin = HoverTextScreen.Instance?.drawer?.skin;
                     var referenceRect = skin?.shadowBarWidget?.rectTransform;
 
-                    var rect = component.GetComponent<RectTransform>();
-                    if (rect != null)
-                    {
-                        if (referenceRect == null)
-                            return rect;
+                    if (referenceRect == null)
+                        return null;
 
-                        if (MatchesWidgetRect(rect, referenceRect))
-                            return rect;
-                    }
+                    var ownRect = component.GetComponent<RectTransform>();
+                    if (ownRect != null && MatchesWidgetRect(ownRect, referenceRect))
+                        return ownRect;
 
                     var candidates = component.GetComponentsInChildren<RectTransform>(includeInactive: true);
                     foreach (var candidate in candidates)
                     {
-                        if (candidate == null || candidate == rect)
+                        if (candidate == null || candidate == ownRect)
                             continue;
 
                         if (MatchesWidgetRect(candidate, referenceRect))
                             return candidate;
                     }
 
-                    return rect;
+                    return null;
                 };
 
             return _ => null;
