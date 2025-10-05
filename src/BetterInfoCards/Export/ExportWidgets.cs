@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace BetterInfoCards.Export
@@ -38,11 +39,22 @@ namespace BetterInfoCards.Export
             }
         }
 
-        [HarmonyPatch(typeof(HoverTextDrawer.Pool<MonoBehaviour>), nameof(HoverTextDrawer.Pool<MonoBehaviour>.Draw))]
+        [HarmonyPatch]
         class GetWidget_Patch
         {
-            static void Postfix(HoverTextDrawer.Pool<MonoBehaviour>.Entry __result, GameObject ___prefab)
+            static MethodBase TargetMethod()
             {
+                var method = HoverTextEntryAccess.DrawMethod;
+                if (method == null)
+                    throw new System.MissingMethodException("[BetterInfoCards] Unable to locate HoverTextDrawer.Pool<MonoBehaviour>.Draw via reflection.");
+                return method;
+            }
+
+            static void Postfix(object __result, GameObject ___prefab)
+            {
+                if (__result == null)
+                    return;
+
                 if (curICWidgets == null)
                 {
                     if (InterceptHoverDrawer.IsInterceptMode)
@@ -52,7 +64,8 @@ namespace BetterInfoCards.Export
                     icWidgets.Add(curICWidgets);
                 }
 
-                curICWidgets.AddWidget(__result, ___prefab);
+                var rect = HoverTextEntryAccess.GetRect(__result);
+                curICWidgets.AddWidget(__result, rect, ___prefab);
             }
         }
     }
