@@ -107,18 +107,9 @@ namespace BetterInfoCards
                 return false;
 
             if (candidate == reference)
-                return candidate.rect.height > collapseTolerance;
+                return true;
 
             if (!string.Equals(StripCloneSuffix(candidate.name), StripCloneSuffix(reference.name), StringComparison.Ordinal))
-                return false;
-
-            var candidateRect = candidate.rect;
-            var referenceRect = reference.rect;
-
-            bool candidateCollapsed = candidateRect.height <= collapseTolerance;
-            bool referenceCollapsed = referenceRect.height <= collapseTolerance;
-
-            if (candidateCollapsed && referenceCollapsed)
                 return false;
 
             if (HasMatchingComponents(candidate.gameObject, reference.gameObject))

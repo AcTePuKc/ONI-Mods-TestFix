@@ -156,3 +156,8 @@
 - Added a collapse tolerance guard to `InfoCardWidgets.MatchesWidgetRect` so zero-height shadow bars stay pending until either the prefab or runtime rect expands past the threshold, preventing collapsed rects from short-circuiting the match.
 - Cached collapsed shadow bar candidates and re-checked them before grid layout, ensuring the grid only measures non-zero width/height rects and column wrapping resumes once Unity finishes sizing the widget.
 - The ONI-managed assemblies and `dotnet` host are still unavailable here, so rebuild `BetterInfoCards` via `dotnet build src/oniMods.sln` on a full workstation and validate in-game that the grid now captures positive shadow bar dimensions.
+
+## 2025-11-04 - BetterInfoCards collapsed rect reuse
+- Relaxed `InfoCardWidgets.MatchesWidgetRect` so collapsed runtime rects still match the prefab when names and component layouts align, deferring to the existing capture heuristics once Unity sizes the widget.
+- Confirmed `TryAssignShadowBar` continues caching zero-sized matches in `pendingShadowBars`, letting `ResolvePendingWidgets` claim them after layout expands the rect.
+- Unable to rebuild `BetterInfoCards` or run the in-game hover verification in this container because the ONI-managed assemblies and `dotnet` runtime are missing; please execute `dotnet build src/oniMods.sln` and perform the hover test on a full workstation.
