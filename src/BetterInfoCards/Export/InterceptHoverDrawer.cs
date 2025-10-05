@@ -89,6 +89,12 @@ namespace BetterInfoCards
                 {
                     var (id, data) = ExportSelectToolData.ConsumeTextInfo();
                     var ti = TextInfo.Create(id, text, data);
+                    if (ti == null)
+                    {
+                        Debug.LogWarning($"[BetterInfoCards] Text converter '{id ?? "<default>"}' returned null; skipping DrawText replay.");
+                        return false;
+                    }
+
                     curInfoCard.AddDraw(pool.Get().Set(ti, style, color, override_color), ti);
                 }
                 return false;

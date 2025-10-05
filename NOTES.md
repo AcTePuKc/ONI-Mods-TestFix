@@ -176,3 +176,8 @@
 - Tightened the component fallback in `InfoCardWidgets.CreateAccessor` so only the component's own `RectTransform` that matches the skin's shadow bar is returned, otherwise descendants are scanned and unmatched entries report `null`.
 - Updated `InfoCardWidgets.AddWidget` and `TryAssignShadowBar` to tolerate null rect accessors, keep probing for later matches, and cache the resolved rect (even while collapsed) as `shadowBar`.
 - Could not rebuild `BetterInfoCards` inside this container because the ONI-managed assemblies and `dotnet` runtime are still missing; maintainers should run `dotnet build src/oniMods.sln` locally and confirm hover cards regain positive widths and wrap into additional columns in-game once rebuilt.
+
+## 2025-11-07 - BetterInfoCards converter null guard
+- Added a null check around `TextInfo.Create` in the hover drawer intercept so converter failures log a warning and skip the draw instead of queuing a crashing replay action.
+- Ensured replayed text actions bail out when either the captured `TextInfo` or `TextStyleSetting` is unavailable so the hover text drawer is never invoked with missing data.
+- Compilation and in-game verification remain blocked in this container because the ONI-managed assemblies and `dotnet` runtime are unavailable; maintainers should rebuild via `dotnet build src/oniMods.sln` and hover a converted info card to confirm the warning path prevents crashes.
