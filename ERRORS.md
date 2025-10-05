@@ -17,3 +17,9 @@
 - **Issue:** Shadow bar prefabs captured as components without a resolved `RectTransform` left `InfoCardWidgets.shadowBar` null, so exported cards reported zero width/height and never triggered column wrapping.
 - **Resolution:** Added prefab-based rect discovery with deferred retries so shadow bars resolve after Unity finishes layout, restoring non-zero dimensions for captured cards.
 - **Status:** Fixed
+
+## 2025-11-12 - BetterInfoCards shadow bar instance resolution
+- **Module:** BetterInfoCards hover widget capture
+- **Issue:** Resolving `shadowBar` from prefab assets caused layout translations and width adjustments to mutate the prefab instead of the live hover card instance, so later draws inherited stale offsets and asset changes persisted across sessions.
+- **Resolution:** Track pending widget entries and re-resolve the `RectTransform` from instantiated scene objects, falling back to hierarchy scans so deferred sizing now operates on the live hover card rather than the prefab asset.
+- **Status:** Fixed
