@@ -29,6 +29,18 @@ namespace BetterInfoCards
 
             public override void Draw(List<InfoCard> cards, HoverTextDrawer drawer)
             {
+                if (ti == null)
+                {
+                    Debug.LogWarning("[BetterInfoCards] Skipping DrawText replay because the captured TextInfo is missing.");
+                    return;
+                }
+
+                if (style == null)
+                {
+                    Debug.LogWarning("[BetterInfoCards] Skipping DrawText replay because the captured TextStyleSetting is missing.");
+                    return;
+                }
+
                 drawer.DrawText(ti.GetTextOverride(cards), style, color, overrideColor);
             }
         }
