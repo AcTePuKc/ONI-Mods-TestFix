@@ -11,3 +11,9 @@
 - **Issue:** Countable prefabs missing a `PrimaryElement` caused the title converter to dereference a null component while computing `Units`, crashing the hover drawer replay.
 - **Resolution:** Cached the `PrimaryElement`, logged a one-shot warning when absent, and returned a safe default so the aggregation can continue without throwing.
 - **Status:** Fixed
+
+## 2025-11-10 - BetterInfoCards shadow bar prefab resolution
+- **Module:** BetterInfoCards hover widget capture
+- **Issue:** Shadow bar prefabs captured as components without a resolved `RectTransform` left `InfoCardWidgets.shadowBar` null, so exported cards reported zero width/height and never triggered column wrapping.
+- **Resolution:** Added prefab-based rect discovery with deferred retries so shadow bars resolve after Unity finishes layout, restoring non-zero dimensions for captured cards.
+- **Status:** Fixed
