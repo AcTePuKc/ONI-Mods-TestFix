@@ -1,55 +1,101 @@
-﻿using System.Collections.Generic;
+using HarmonyLib;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
-using Entry = HoverTextDrawer.Pool<UnityEngine.MonoBehaviour>.Entry;
 
 namespace BetterInfoCards
 {
+    public sealed class InfoCardWidgetHandle
+    {
+        public InfoCardWidgetHandle(object entry, RectTransform rect)
+        {
+            Entry = entry;
+            Rect = rect;
+        }
+
+        public object Entry { get; }
+        public RectTransform Rect { get; }
+    }
+
+    internal static class HoverTextEntryAccess
+    {
+        public static readonly System.Type PoolType = AccessTools.Inner(typeof(HoverTextDrawer), "Pool`1")?.MakeGenericType(typeof(MonoBehaviour));
+        public static readonly System.Type EntryType = PoolType != null ? AccessTools.Inner(PoolType, "Entry") : null;
+
+        private static readonly FieldInfo rectField = EntryType != null ? AccessTools.Field(EntryType, "rect") : null;
+        private static readonly MethodInfo drawMethod = PoolType != null ? AccessTools.Method(PoolType, "Draw") : null;
+
+        public static MethodInfo DrawMethod => drawMethod;
+
+        public static RectTransform GetRect(object entry)
+        {
+            if (entry == null)
+                return null;
+
+            if (rectField != null && rectField.GetValue(entry) is RectTransform rect)
+                return rect;
+
+            var traverse = Traverse.Create(entry);
+            return traverse?.Property("rect")?.GetValue<RectTransform>();
+        }
+    }
+
     public class InfoCardWidgets
     {
-        public List<Entry> widgets = new();
-        public Entry shadowBar;
-        public Entry selectBorder;
+        public List<InfoCardWidgetHandle> widgets = new();
+        public InfoCardWidgetHandle shadowBar;
+        public InfoCardWidgetHandle selectBorder;
         public Vector2 offset = new();
 
-        public float YMax => shadowBar.rect.anchoredPosition.y;
+        public float YMax => shadowBar?.Rect != null ? shadowBar.Rect.anchoredPosition.y : 0f;
         public float YMin => YMax - Height;
-        public float Width => shadowBar.rect.rect.width;
-        public float Height => shadowBar.rect.rect.height;
+        public float Width => shadowBar?.Rect != null ? shadowBar.Rect.rect.width : 0f;
+        public float Height => shadowBar?.Rect != null ? shadowBar.Rect.rect.height : 0f;
 
-        public void AddWidget(Entry entry, GameObject prefab)
+        public void AddWidget(object entry, RectTransform rect, GameObject prefab)
         {
             var skin = HoverTextScreen.Instance.drawer.skin;
 
+            rect ??= HoverTextEntryAccess.GetRect(entry);
+            var handle = new InfoCardWidgetHandle(entry, rect);
+
             if (prefab == skin.shadowBarWidget.gameObject)
-                shadowBar = entry;
+                shadowBar = handle;
             else if (prefab == skin.selectBorderWidget.gameObject)
-                selectBorder = entry;
+                selectBorder = handle;
             else
-                widgets.Add(entry);
+                widgets.Add(handle);
         }
 
         public void Translate(float x)
         {
             var shift = new Vector2(x, offset.y);
 
-            shadowBar.rect.anchoredPosition += shift;
+            if (shadowBar?.Rect != null)
+                shadowBar.Rect.anchoredPosition += shift;
 
-            if (selectBorder.rect != null)
-                selectBorder.rect.anchoredPosition += shift;
+            if (selectBorder?.Rect != null)
+                selectBorder.Rect.anchoredPosition += shift;
 
             foreach (var widget in widgets)
-                widget.rect.anchoredPosition += shift;
+                if (widget.Rect != null)
+                    widget.Rect.anchoredPosition += shift;
         }
 
         public void SetWidth(float width)
         {
+            if (shadowBar?.Rect == null)
+                return;
+
             // Modifying existing SBs triggers rebuilds somewhere and has a major impact on performance.
             // Genius idea from Peter to just add new ones to fill the gap.
-            var newSB = InterceptHoverDrawer.drawerInstance.shadowBars.Draw(shadowBar.rect.anchoredPosition + new Vector2(shadowBar.rect.sizeDelta.x, 0f));
-            newSB.rect.sizeDelta = new Vector2(width - shadowBar.rect.sizeDelta.x, shadowBar.rect.sizeDelta.y);
+            var rect = shadowBar.Rect;
+            var newSB = InterceptHoverDrawer.drawerInstance.shadowBars.Draw(rect.anchoredPosition + new Vector2(rect.sizeDelta.x, 0f));
+            var newRect = HoverTextEntryAccess.GetRect(newSB) ?? rect;
+            newRect.sizeDelta = new Vector2(width - rect.sizeDelta.x, rect.sizeDelta.y);
 
-            if (selectBorder.rect != null)
-                selectBorder.rect.sizeDelta = new Vector2(width + 2f, selectBorder.rect.sizeDelta.y);
+            if (selectBorder?.Rect != null)
+                selectBorder.Rect.sizeDelta = new Vector2(width + 2f, selectBorder.Rect.sizeDelta.y);
         }
     }
 }

@@ -231,3 +231,8 @@
 - Restored `ExportWidgets`, `InfoCardWidgets`, and `Grid` to the pre-refactor implementations so hover card capture once again records pool entries directly and reuses the simple postfix on `HoverTextDrawer.Pool<MonoBehaviour>.Draw`.
 - The older API contracts remove the deferred layout bookkeeping that was triggering the null-reference loop, keeping `Grid` column math aligned with the entry-based widgets.
 - Unable to rebuild or verify in-game because this workspace still lacks the ONI assemblies and `dotnet`; maintainers should run `dotnet build src/oniMods.sln` locally and smoke-test hover cards to confirm the null-reference loop no longer occurs.
+
+## 2025-11-18 - BetterInfoCards widget entry reflection update
+- Replaced the direct generic Harmony patch on `HoverTextDrawer.Pool<MonoBehaviour>.Draw` with a `TargetMethod` lookup that locates the closed pool type through `AccessTools.Inner` so the patch no longer references the inaccessible nested entry type.
+- Updated the widget export pipeline to cache `RectTransform` handles in lightweight wrappers, exposing a shared `HoverTextEntryAccess` helper for both the exporter and grid logic.
+- Attempted to rebuild via `dotnet build src/oniMods.sln -c Release`, but the container still lacks the `dotnet` host; maintainers should rebuild locally with the ONI-managed assemblies to verify compilation succeeds.
