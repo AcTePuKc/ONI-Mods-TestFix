@@ -262,14 +262,18 @@ namespace BetterInfoCards
                     if (entry is not Component component || component == null)
                         return null;
 
-                    var rect = component.GetComponent<RectTransform>();
-                    if (rect != null)
-                        return rect;
-
                     var skin = HoverTextScreen.Instance?.drawer?.skin;
                     var referenceRect = skin?.shadowBarWidget?.rectTransform;
-                    if (referenceRect == null)
-                        return null;
+
+                    var rect = component.GetComponent<RectTransform>();
+                    if (rect != null)
+                    {
+                        if (referenceRect == null)
+                            return rect;
+
+                        if (MatchesWidgetRect(rect, referenceRect))
+                            return rect;
+                    }
 
                     var candidates = component.GetComponentsInChildren<RectTransform>(includeInactive: true);
                     foreach (var candidate in candidates)
@@ -281,7 +285,7 @@ namespace BetterInfoCards
                             return candidate;
                     }
 
-                    return null;
+                    return rect;
                 };
 
             return _ => null;
