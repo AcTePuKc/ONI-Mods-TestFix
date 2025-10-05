@@ -121,3 +121,8 @@
 - Updated `ExportWidgets.FindWidgetPoolType` to continue scanning HoverTextDrawer members when the nested entry probe fails, prioritizing the shadow bar pool so the postfix captures the correct widgets.
 - Tried to rebuild `BetterInfoCards`, but the container still lacks the ONI-managed assemblies and a `dotnet` host; maintainers should run `dotnet build src/oniMods.sln` in a full environment.
 - In-game confirmation that multi-column hover wrapping now works again remains pending until the mod is rebuilt alongside the game client.
+
+## 2025-10-28 - BetterInfoCards entry type detection and caching
+- Updated `ExportWidgets.FindWidgetEntryTypeRecursive` so nested entry classes that expose a `RectTransform` are preferred over broader value types, ensuring the proper widget entry is discovered for shadow bar pooling.
+- Cached the resolved entry type before verifying the pool and now reconstruct `Pool<T>` with `MakeGenericType` to confirm the patch targets the hover text drawer's widget pool.
+- The container still lacks the ONI-managed assemblies and a `dotnet` runtime, preventing a local rebuild of `BetterInfoCards`; please run `dotnet build src/oniMods.sln` and validate that info card shadow bars regain their dimensions once the mod is rebuilt with the game client.

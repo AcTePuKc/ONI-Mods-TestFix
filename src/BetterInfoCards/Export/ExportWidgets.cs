@@ -17,19 +17,59 @@ namespace BetterInfoCards.Export
         static ExportWidgets()
         {
             var hoverTextDrawerType = typeof(HoverTextDrawer);
-            var poolType = FindWidgetPoolType(hoverTextDrawerType, out var entryType);
+            var entryType = FindWidgetEntryType(hoverTextDrawerType);
+            widgetEntryType = entryType;
+
+            var poolType = FindWidgetPoolType(hoverTextDrawerType, ref entryType);
             if (poolType == null)
             {
                 Debug.LogWarning("[BetterInfoCards] Unable to locate HoverTextDrawer widget pool via reflection; falling back to Pool<MonoBehaviour>.");
                 var fallback = GetFallbackPoolType(hoverTextDrawerType);
                 poolType = fallback.poolType;
-                if (entryType == null)
-                    entryType = fallback.entryType;
+                entryType ??= fallback.entryType;
             }
 
             if (poolType == null)
             {
                 Debug.LogWarning("[BetterInfoCards] Unable to locate HoverTextDrawer widget pool; skipping widget export patch.");
+                return;
+            }
+
+            widgetEntryType = entryType ?? widgetEntryType ?? ResolveEntryTypeFromPool(poolType);
+
+            if (widgetEntryType != null)
+            {
+                var poolDefinition = poolType.IsGenericTypeDefinition
+                    ? poolType
+                    : poolType.IsGenericType ? poolType.GetGenericTypeDefinition() : null;
+
+                if (poolDefinition != null)
+                {
+                    try
+                    {
+                        var constructed = poolDefinition.MakeGenericType(widgetEntryType);
+                        if (!ReferenceEquals(poolType, constructed))
+                        {
+                            if (!HasRectTransformEntry(constructed))
+                            {
+                                Debug.LogWarning($"[BetterInfoCards] Resolved pool '{constructed.FullName}' does not expose a RectTransform entry; skipping widget export patch.");
+                                return;
+                            }
+
+                            poolType = constructed;
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        Debug.LogWarning($"[BetterInfoCards] Entry type '{widgetEntryType.FullName}' is incompatible with pool '{poolDefinition.FullName}'; skipping widget export patch.");
+                        return;
+                    }
+                }
+            }
+
+            if (!HasRectTransformEntry(poolType))
+            {
+                Debug.LogWarning($"[BetterInfoCards] Unable to confirm RectTransform entry on pool '{poolType.FullName}'; skipping widget export patch.");
                 return;
             }
 
@@ -39,17 +79,6 @@ namespace BetterInfoCards.Export
                 Debug.LogWarning($"[BetterInfoCards] Unable to locate Draw() on '{poolType.FullName}'; skipping widget export patch.");
                 return;
             }
-
-            if (entryType == null)
-            {
-                entryType = poolType.GetNestedType("Entry", BindingFlags.NonPublic | BindingFlags.Public) ??
-                            FindWidgetEntryTypeRecursive(poolType);
-
-                if (entryType == null)
-                    Debug.LogWarning($"[BetterInfoCards] Unable to resolve widget entry type from '{poolType.FullName}'; attempting runtime inference.");
-            }
-
-            widgetEntryType = entryType;
 
             var postfix = AccessTools.Method(typeof(ExportWidgets), nameof(GetWidget_Postfix));
             if (postfix == null)
@@ -62,9 +91,9 @@ namespace BetterInfoCards.Export
             harmony.Patch(drawMethod, postfix: new HarmonyMethod(postfix));
         }
 
-        private static Type FindWidgetPoolType(Type hoverTextDrawerType, out Type entryType)
+        private static Type FindWidgetPoolType(Type hoverTextDrawerType, ref Type entryType)
         {
-            entryType = FindWidgetEntryType(hoverTextDrawerType);
+            entryType ??= FindWidgetEntryType(hoverTextDrawerType);
 
             if (entryType != null)
             {
@@ -187,17 +216,24 @@ namespace BetterInfoCards.Export
                 return null;
 
             const BindingFlags nestedFlags = BindingFlags.NonPublic | BindingFlags.Public;
+            Type fallback = null;
             foreach (var nestedType in declaringType.GetNestedTypes(nestedFlags))
             {
-                if (nestedType.IsValueType && !string.Equals(nestedType.Name, "Entry", StringComparison.Ordinal) && GetRectTransformMember(nestedType) != null)
-                    return nestedType;
+                var rectMember = GetRectTransformMember(nestedType);
+                if (rectMember != null)
+                {
+                    if (string.Equals(nestedType.Name, "Entry", StringComparison.Ordinal))
+                        return nestedType;
+
+                    fallback ??= nestedType;
+                }
 
                 var child = FindWidgetEntryTypeRecursive(nestedType);
                 if (child != null)
                     return child;
             }
 
-            return null;
+            return fallback;
         }
 
         private static MemberInfo FindRectTransformMember(Type type)
