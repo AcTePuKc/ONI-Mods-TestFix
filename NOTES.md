@@ -191,3 +191,8 @@
 - Hardened the title converter so countable prefabs without a `PrimaryElement` return a safe default and emit a one-shot warning instead of crashing when `.Units` is missing.
 - Mirrored the ore status converter pattern by caching the component lookup before accessing aggregation data.
 - Unable to rebuild `BetterInfoCards` in this container because the ONI assemblies and `dotnet` host are absent; maintainers should run `dotnet build src/oniMods.sln` locally and confirm the hover title aggregation no longer throws when encountering prefabs without `PrimaryElement`.
+
+## 2025-11-10 - BetterInfoCards shadow bar prefab resolution
+- Added a prefab-based fallback in `InfoCardWidgets.AddWidget` so the shadow bar rect is recovered directly from the instantiated prefab when the pool entry lacks an accessor.
+- Queued unresolved prefabs for deferred processing alongside collapsed rects, allowing `ResolvePendingWidgets` to revisit them once Unity finishes the layout pass and the rect reports a usable size.
+- Compilation and in-game verification remain blocked here because the container lacks the ONI-managed assemblies and `dotnet`; maintainers should rebuild via `dotnet build src/oniMods.sln` and confirm captured cards regain non-zero dimensions and column wrapping in-game.
