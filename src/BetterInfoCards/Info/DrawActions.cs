@@ -7,7 +7,7 @@ namespace BetterInfoCards
     // The interface would cause boxing, making performance even worse.
     public abstract class DrawActions
     {
-        public abstract void Draw(List<InfoCard> cards);
+        public abstract void Draw(List<InfoCard> cards, HoverTextDrawer drawer);
 
         public class Text : DrawActions
         {
@@ -27,9 +27,9 @@ namespace BetterInfoCards
                 return this;
             }
 
-            public override void Draw(List<InfoCard> cards)
+            public override void Draw(List<InfoCard> cards, HoverTextDrawer drawer)
             {
-                InterceptHoverDrawer.drawerInstance.DrawText(ti.GetTextOverride(cards), style, color, overrideColor);
+                drawer.DrawText(ti.GetTextOverride(cards), style, color, overrideColor);
             }
         }
 
@@ -49,9 +49,9 @@ namespace BetterInfoCards
                 return this;
             }
 
-            public override void Draw(List<InfoCard> _)
+            public override void Draw(List<InfoCard> _, HoverTextDrawer drawer)
             {
-                InterceptHoverDrawer.drawerInstance.DrawIcon(icon, color, imageSize, horizontalSpacing);
+                drawer.DrawIcon(icon, color, imageSize, horizontalSpacing);
             }
         }
 
@@ -65,9 +65,9 @@ namespace BetterInfoCards
                 return this;
             }
 
-            public override void Draw(List<InfoCard> _)
+            public override void Draw(List<InfoCard> _, HoverTextDrawer drawer)
             {
-                InterceptHoverDrawer.drawerInstance.AddIndent(width);
+                drawer.AddIndent(width);
             }
         }
 
@@ -81,9 +81,9 @@ namespace BetterInfoCards
                 return this;
             }
 
-            public override void Draw(List<InfoCard> _)
+            public override void Draw(List<InfoCard> _, HoverTextDrawer drawer)
             {
-                InterceptHoverDrawer.drawerInstance.NewLine(minHeight);
+                drawer.NewLine(minHeight);
             }
         }
     }

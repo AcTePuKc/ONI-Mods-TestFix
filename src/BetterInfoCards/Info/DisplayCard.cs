@@ -18,11 +18,11 @@ namespace BetterInfoCards
                 visCardIndex = 0;
         }
 
-        public void Draw()
+        public void Draw(HoverTextDrawer drawer)
         {
             // Explicitly drawing the VisCard is not necessary for 99% of cases.
             // However, custom converters could be created to group different values together.
-            VisCard.Draw(infoCards, visCardIndex);
+            VisCard.Draw(infoCards, visCardIndex, drawer);
         }
 
         public List<KSelectable> GetAllSelectables()

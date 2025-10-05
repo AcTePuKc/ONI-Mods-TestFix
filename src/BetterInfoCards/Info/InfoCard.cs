@@ -31,8 +31,14 @@ namespace BetterInfoCards
 
         public string GetTitleKey() => titleDrawer.ti?.Text.RemoveCountSuffix() ?? string.Empty;
 
-        public void Draw(List<InfoCard> cards, int visCardIndex)
+        public void Draw(List<InfoCard> cards, int visCardIndex, HoverTextDrawer drawer)
         {
+            if (drawer == null)
+            {
+                Debug.LogWarning("[BetterInfoCards] Skipping info card draw because HoverTextDrawer instance is unavailable.");
+                return;
+            }
+
             if (visCardIndex > 0 && titleDrawer.style != null)
             {
                 var ti = TextInfo.Create(string.Empty, " #" + (++visCardIndex), null);
@@ -40,12 +46,12 @@ namespace BetterInfoCards
                 drawActions.Insert(++titleDrawer.drawIndex, drawCount);
             }
 
-            InterceptHoverDrawer.drawerInstance.BeginShadowBar(isSelected);
+            drawer.BeginShadowBar(isSelected);
 
             foreach (var info in drawActions)
-                info.Draw(cards);
+                info.Draw(cards, drawer);
 
-            InterceptHoverDrawer.drawerInstance.EndShadowBar();
+            drawer.EndShadowBar();
         }
 
         public void AddDraw(DrawActions drawAction) => drawActions.Add(drawAction);
