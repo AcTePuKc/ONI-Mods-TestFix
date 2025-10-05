@@ -30,6 +30,9 @@ namespace BetterInfoCards
             if (cards.Count == 0)
                 return;
 
+            foreach (var card in cards)
+                card?.ResolvePendingWidgets();
+
             var offset = new Vector2(0f, topY);
 
             columns.Clear();
