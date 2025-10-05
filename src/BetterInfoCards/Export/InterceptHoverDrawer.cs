@@ -11,6 +11,7 @@ namespace BetterInfoCards
 
         private static InfoCard curInfoCard;
         private static List<InfoCard> infoCards = new();
+        private static bool loggedMissingCard;
 
         public static List<InfoCard> ConsumeInfoCards()
         {
@@ -28,6 +29,7 @@ namespace BetterInfoCards
             {
                 drawerInstance = __instance;
                 IsInterceptMode = true;
+                loggedMissingCard = false;
                 onBeginDrawing?.Invoke();
             }
         }
@@ -56,14 +58,8 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix(Sprite icon, Color color, int image_size, int horizontal_spacing)
             {
-                if (!IsInterceptMode)
+                if (ShouldDeferToVanilla(nameof(DrawIcon)))
                     return true;
-
-                if (curInfoCard == null)
-                {
-                    Debug.LogWarning("[BetterInfoCards] DrawIcon received without an active info card; falling back to HoverTextDrawer.");
-                    return true;
-                }
 
                 curInfoCard.AddDraw(pool.Get().Set(icon, color, image_size, horizontal_spacing));
                 return false;
@@ -80,14 +76,8 @@ namespace BetterInfoCards
             {
                 // Null check avoids crashes from drawing multiple empty strings.
                 // This appears to now occur when hovering neutromium tiles.
-                if (!IsInterceptMode)
+                if (ShouldDeferToVanilla(nameof(DrawText)))
                     return true;
-
-                if (curInfoCard == null)
-                {
-                    Debug.LogWarning("[BetterInfoCards] DrawText received without an active info card; falling back to HoverTextDrawer.");
-                    return true;
-                }
 
                 if (!text.IsNullOrWhiteSpace())
                 {
@@ -107,14 +97,8 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix(int width)
             {
-                if (!IsInterceptMode)
+                if (ShouldDeferToVanilla(nameof(AddIndent)))
                     return true;
-
-                if (curInfoCard == null)
-                {
-                    Debug.LogWarning("[BetterInfoCards] AddIndent received without an active info card; falling back to HoverTextDrawer.");
-                    return true;
-                }
 
                 curInfoCard.AddDraw(pool.Get().Set(width));
                 return false;
@@ -129,14 +113,8 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix(int min_height)
             {
-                if (!IsInterceptMode)
+                if (ShouldDeferToVanilla(nameof(NewLine)))
                     return true;
-
-                if (curInfoCard == null)
-                {
-                    Debug.LogWarning("[BetterInfoCards] NewLine received without an active info card; falling back to HoverTextDrawer.");
-                    return true;
-                }
 
                 curInfoCard.AddDraw(pool.Get().Set(min_height));
                 return false;
@@ -149,18 +127,30 @@ namespace BetterInfoCards
             [HarmonyPriority(Priority.First)]
             static bool Prefix()
             {
-                if (!IsInterceptMode)
+                if (ShouldDeferToVanilla(nameof(EndShadowBar)))
                     return true;
-
-                if (curInfoCard == null)
-                {
-                    Debug.LogWarning("[BetterInfoCards] EndShadowBar received without an active info card; falling back to HoverTextDrawer.");
-                    return true;
-                }
 
                 curInfoCard.selectable = ExportSelectToolData.ConsumeSelectable();
                 return false;
             }
+        }
+
+        private static bool ShouldDeferToVanilla(string caller)
+        {
+            if (!IsInterceptMode)
+                return true;
+
+            if (curInfoCard != null)
+                return false;
+
+            if (!loggedMissingCard)
+            {
+                Debug.LogWarning($"[BetterInfoCards] {caller} received without an active info card; falling back to HoverTextDrawer.");
+                loggedMissingCard = true;
+            }
+
+            IsInterceptMode = false;
+            return true;
         }
     }
 }

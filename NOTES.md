@@ -161,3 +161,8 @@
 - Relaxed `InfoCardWidgets.MatchesWidgetRect` so collapsed runtime rects still match the prefab when names and component layouts align, deferring to the existing capture heuristics once Unity sizes the widget.
 - Confirmed `TryAssignShadowBar` continues caching zero-sized matches in `pendingShadowBars`, letting `ResolvePendingWidgets` claim them after layout expands the rect.
 - Unable to rebuild `BetterInfoCards` or run the in-game hover verification in this container because the ONI-managed assemblies and `dotnet` runtime are missing; please execute `dotnet build src/oniMods.sln` and perform the hover test on a full workstation.
+
+## 2025-11-05 - BetterInfoCards hover intercept fallback
+- Short-circuited the Harmony prefixes in `InterceptHoverDrawer` so they immediately defer to the vanilla drawer when `curInfoCard` is unavailable, preventing null dereferences when the widget pool hook is missing.
+- Added a one-shot warning and reset `IsInterceptMode` after the fallback triggers to avoid repeatedly re-entering the prefixes without a valid card in the same frame.
+- Could not rebuild `BetterInfoCards` inside this container because the ONI-managed assemblies and `dotnet` runtime are still absent; maintainers should run `dotnet build src/oniMods.sln` locally and replay a hover sequence to confirm the fallback no longer throws.
