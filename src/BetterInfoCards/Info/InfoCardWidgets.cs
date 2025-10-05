@@ -9,7 +9,7 @@ namespace BetterInfoCards
 {
     public class InfoCardWidgets
     {
-        private enum PendingShadowBarState
+        internal enum PendingShadowBarState
         {
             None,
             Pending,
@@ -90,12 +90,12 @@ namespace BetterInfoCards
                 widgets.Add(rect);
         }
 
-        public void ResolvePendingWidgets()
+        public PendingShadowBarState ResolvePendingWidgets()
         {
-            ResolvePendingWidgets(scheduleDeferredChecks: true);
+            return ResolvePendingWidgets(scheduleDeferredChecks: true);
         }
 
-        private PendingShadowBarState ResolvePendingWidgets(bool scheduleDeferredChecks)
+        internal PendingShadowBarState ResolvePendingWidgets(bool scheduleDeferredChecks)
         {
             var state = UpdatePendingShadowBarState();
 
