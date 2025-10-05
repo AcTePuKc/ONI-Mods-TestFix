@@ -29,3 +29,9 @@
 - **Issue:** Skin shadow bars wrapped in helper objects exposed extra components and differing rect sizes, so `InfoCardWidgets` rejected the prefab match and never promoted the instantiated shadow bar, leaving card widths and heights at zero.
 - **Resolution:** Relaxed the prefab comparison so wrappers that contain a component superset of the skin shadow bar still qualify, allowing the runtime `RectTransform` to be recovered from the entry hierarchy and restored to `shadowBar`.
 - **Status:** Fixed
+
+## 2025-11-15 - BetterInfoCards temperature converter guard
+- **Module:** BetterInfoCards hover temperature aggregation
+- **Issue:** Buildings without a `PrimaryElement` caused the temperature converter to dereference `null` while reading `Temperature`, crashing hover card rendering.
+- **Resolution:** Cache the component lookup, emit a one-shot warning when it is missing, and return a safe default so aggregation proceeds without throwing.
+- **Status:** Fixed

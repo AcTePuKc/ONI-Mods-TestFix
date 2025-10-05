@@ -20,6 +20,7 @@ namespace BetterInfoCards
         private static Func<string, string, object, TextInfo> titleConverter;
         private static bool hasLoggedInvalidDiseaseIndex;
         private static bool hasLoggedMissingPrimaryElementForTitle;
+        private static bool hasLoggedMissingPrimaryElementForTemp;
 
         static ConverterManager()
         {
@@ -100,7 +101,18 @@ namespace BetterInfoCards
             // TEMP
             AddConverter(
                 temp,
-                data => ((GameObject)data).GetComponent<PrimaryElement>().Temperature,
+                data =>
+                {
+                    var go = data as GameObject;
+                    var primaryElement = go?.GetComponent<PrimaryElement>();
+                    if (primaryElement == null)
+                    {
+                        LogMissingPrimaryElementOnce(ref hasLoggedMissingPrimaryElementForTemp, go, temp);
+                        return 0f;
+                    }
+
+                    return primaryElement.Temperature;
+                },
                 (original, temps) => GameUtil.GetFormattedTemperature(temps.Average()) + avgSuffix,
                 null /* caller must supply proper splitListDefs when required */);
         }
