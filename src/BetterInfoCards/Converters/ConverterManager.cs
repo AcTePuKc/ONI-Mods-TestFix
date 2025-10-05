@@ -19,6 +19,7 @@ namespace BetterInfoCards
         private static Func<string, string, object, TextInfo> defaultConverter;
         private static Func<string, string, object, TextInfo> titleConverter;
         private static bool hasLoggedInvalidDiseaseIndex;
+        private static bool hasLoggedMissingPrimaryElementForTitle;
 
         static ConverterManager()
         {
@@ -34,10 +35,19 @@ namespace BetterInfoCards
                 title,
                 data => {
                     GameObject go = data as GameObject;
-                    KPrefabID prefabID = go.GetComponent<KPrefabID>();
+                    KPrefabID prefabID = go?.GetComponent<KPrefabID>();
                     if (prefabID != null && Assets.IsTagCountable(prefabID.PrefabTag))
-                        return go.GetComponent<PrimaryElement>().Units;
-                    return 1;
+                    {
+                        var primaryElement = go.GetComponent<PrimaryElement>();
+                        if (primaryElement == null)
+                        {
+                            LogMissingPrimaryElementOnce(ref hasLoggedMissingPrimaryElementForTitle, go, title);
+                            return 1f;
+                        }
+
+                        return primaryElement.Units;
+                    }
+                    return 1f;
                 },
                 (original, counts) => original.RemoveCountSuffix() + " x " + counts.Sum());
 
@@ -155,6 +165,15 @@ namespace BetterInfoCards
 
             converter = defaultConverter;
             return false;
+        }
+
+        private static void LogMissingPrimaryElementOnce(ref bool hasLogged, GameObject go, string converterId)
+        {
+            if (hasLogged)
+                return;
+
+            hasLogged = true;
+            Debug.LogWarning($"[BetterInfoCards] Missing PrimaryElement for converter '{converterId}' on object '{go?.name ?? \"<null>\"}'. Using a safe default.");
         }
     }
 }
