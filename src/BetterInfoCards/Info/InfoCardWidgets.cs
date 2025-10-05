@@ -90,7 +90,8 @@ namespace BetterInfoCards
 
             const float heightTolerance = 0.01f;
 
-            if (candidateRect.height + heightTolerance < referenceRect.height)
+            // Allow shorter runtime instances so long as they are not completely collapsed.
+            if (candidateRect.height <= 0f && referenceRect.height > heightTolerance)
                 return false;
 
             if (HasMatchingComponents(candidate.gameObject, reference.gameObject))
