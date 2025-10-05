@@ -221,3 +221,8 @@
 - Hardened the temperature converter to reuse a cached `PrimaryElement` lookup, emit a one-time warning when the component is missing, and fall back to a safe default instead of dereferencing `null`.
 - Reviewed the existing title converter logging helper and mirrored its usage for temperature entries so missing-component spam stays suppressed after the first warning.
 - Compilation and in-game hover verification remain blocked in this environment due to missing ONI assemblies and `dotnet`; maintainers should run `dotnet build src/oniMods.sln` and hover affected buildings to confirm the hover card displays the fallback temperature text without crashing.
+
+## 2025-11-16 - BetterInfoCards hover drawer skin guard
+- Added a pre-export guard in `ExportWidgets.GetWidget_Postfix` so widget capture waits for `HoverTextDrawer.skin` to load before mutating per-card state, logging a single warning while the skin is unavailable.
+- Confirmed the intercept-mode short-circuit remains intact and the new guard clears its warning flag once the drawer skin becomes accessible so exports resume normally.
+- Unable to rebuild or validate in-game here because the container lacks the ONI-managed assemblies and a `dotnet` runtime; maintainers should run `dotnet build src/oniMods.sln` and confirm hover cards render without crashes while the drawer initialises, then resume widget export once the skin loads.
