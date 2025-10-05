@@ -391,6 +391,7 @@ namespace BetterInfoCards.Export
         {
             static void Postfix()
             {
+                curICWidgets = null;
                 icWidgets.Clear();
             }
         }
@@ -418,14 +419,12 @@ namespace BetterInfoCards.Export
             if (prefab == null)
                 return;
 
-            if (curICWidgets == null)
-            {
-                if (InterceptHoverDrawer.IsInterceptMode)
-                    return;
+            if (InterceptHoverDrawer.IsInterceptMode)
+                return;
 
+            if (curICWidgets == null)
                 curICWidgets = new();
                 icWidgets.Add(curICWidgets);
-            }
 
             if (!ShouldProcessEntry(__result))
                 return;
