@@ -95,9 +95,6 @@ namespace BetterInfoCards
             bool candidateCollapsed = candidateRect.height <= heightTolerance;
             bool referenceCollapsed = referenceRect.height <= heightTolerance;
 
-            if (candidateCollapsed && referenceCollapsed)
-                return false;
-
             if (HasMatchingComponents(candidate.gameObject, reference.gameObject))
                 return true;
 
