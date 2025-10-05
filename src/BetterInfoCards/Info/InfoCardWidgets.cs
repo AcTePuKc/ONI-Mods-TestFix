@@ -9,7 +9,7 @@ namespace BetterInfoCards
 {
     public class InfoCardWidgets
     {
-        internal enum PendingShadowBarState
+        public enum PendingShadowBarState
         {
             None,
             Pending,
