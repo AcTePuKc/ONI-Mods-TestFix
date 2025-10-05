@@ -14,6 +14,11 @@
 >
 > "Debug: Prefixed with `DEV_` ... exported to ONI's `mods\dev` folder. Release: Exported to the Release folder ... Zipped and placed in the Distribute folder." (`src/README.md`)
 
+### Shared Libraries & Helpers
+- `src/Directory.Build.props` automatically references both **AzeLib** and **PLib** for every project in the solution. Review that file before adding new dependencies to confirm the helpers are already included.
+- Prefer reusing existing utilities from these shared libraries rather than introducing new helper types. This keeps behavior consistent across mods and avoids duplicate maintenance work.
+- AzeLib extension documentation lives under `AzeLib/Extensions/README.md`; skim it when you need to understand or extend existing helpers before writing custom code.
+
 1. **Environment setup** — Follow the quoted steps above to align your build environment, including custom `Directory.Build.props.user` overrides when paths differ.
 2. **Rebuild the solution** — Use Visual Studio/MSBuild to restore packages and emit publicized assemblies. Resolve missing `_public.dll` assemblies by restarting VS.
 3. **Build outputs** — Expect DEV-prefixed debug builds in ONI's `mods\dev` directory and release zips under `Distribute/`.
