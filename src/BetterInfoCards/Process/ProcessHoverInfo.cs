@@ -1,6 +1,7 @@
 using BetterInfoCards.Export;
 using BetterInfoCards.Process;
 using HarmonyLib;
+using UnityEngine;
 
 namespace BetterInfoCards
 {
@@ -9,6 +10,15 @@ namespace BetterInfoCards
     {
         static void Prefix()
         {
+            var drawer = InterceptHoverDrawer.drawerInstance;
+            if (drawer == null)
+            {
+                if (InterceptHoverDrawer.IsInterceptMode)
+                    InterceptHoverDrawer.IsInterceptMode = false;
+                Debug.LogWarning("[BetterInfoCards] HoverTextDrawer instance is missing; skipping info card replay.");
+                return;
+            }
+
             var infoCards = InterceptHoverDrawer.ConsumeInfoCards();
             var displayCards = new DisplayCards().UpdateData(infoCards);
 
@@ -16,7 +26,7 @@ namespace BetterInfoCards
 
             InterceptHoverDrawer.IsInterceptMode = false;
             foreach (var card in displayCards)
-                card.Draw();
+                card.Draw(drawer);
             InterceptHoverDrawer.IsInterceptMode = true;
 
             var widgets = ExportWidgets.ConsumeWidgets();

@@ -136,3 +136,8 @@
 - Removed the zero-height short-circuit inside `InfoCardWidgets.MatchesWidgetRect` so shadow bars that remain collapsed while pooled still run through the component matching heuristics.
 - The container continues to lack the ONI-managed assemblies and a `dotnet` host, preventing a local rebuild of `BetterInfoCards`; please execute `dotnet build src/oniMods.sln` in a full environment.
 - In-game confirmation that `shadowBar` now reports a non-null rect (restoring multi-column wrapping) remains pending until the mod is rebuilt and loaded with the game client.
+
+## 2025-10-31 - BetterInfoCards drawer null safety
+- Updated the hover info replay to cache the `HoverTextDrawer` instance and short-circuit when it is unavailable so captured actions are never re-run without a live drawer.
+- Routed `InfoCard` and `DrawActions` rendering through the cached drawer reference, emitting a warning when the drawer is missing to avoid Unity exceptions.
+- Unable to recompile or verify hover card recovery in-game inside this container because the ONI-managed assemblies and runtime remain unavailable; maintainers should rebuild via `dotnet build src/oniMods.sln` and confirm that layout is skipped (without crashing) when the drawer hook fails.
