@@ -22,7 +22,8 @@ namespace BetterInfoCards
         public static readonly System.Type PoolType = AccessTools.Inner(typeof(HoverTextDrawer), "Pool`1")?.MakeGenericType(typeof(MonoBehaviour));
         public static readonly System.Type EntryType = PoolType != null ? AccessTools.Inner(PoolType, "Entry") : null;
 
-        private static readonly FieldInfo rectField = EntryType != null ? AccessTools.Field(EntryType, "rect") : null;
+        private static readonly Dictionary<System.Type, FieldInfo> rectFieldCache = new();
+        private static readonly object rectFieldCacheLock = new();
         private static readonly MethodInfo drawMethod = PoolType != null ? AccessTools.Method(PoolType, "Draw") : null;
         private static readonly MemberInfo shadowBarPoolMember = PoolType != null ? FindShadowBarPoolMember() : null;
 
@@ -64,8 +65,23 @@ namespace BetterInfoCards
             if (entry == null)
                 return null;
 
+            var entryType = entry.GetType();
+
+            FieldInfo rectField;
+            lock (rectFieldCacheLock)
+            {
+                if (!rectFieldCache.TryGetValue(entryType, out rectField))
+                {
+                    rectField = AccessTools.Field(entryType, "rect");
+                    rectFieldCache[entryType] = rectField;
+                }
+            }
+
             if (rectField != null && rectField.GetValue(entry) is RectTransform rect)
                 return rect;
+
+            if (rectField != null)
+                return null;
 
             var traverse = Traverse.Create(entry);
             return traverse?.Property("rect")?.GetValue<RectTransform>();

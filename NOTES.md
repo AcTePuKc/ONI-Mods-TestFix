@@ -241,3 +241,8 @@
 - Updated `HoverTextEntryAccess` to locate and cache the `HoverTextDrawer` shadow bar pool member via reflection so callers no longer depend on the `shadowBars` field name.
 - Swapped `InfoCardWidgets.SetWidth` to invoke the cached pool through the shared draw method and emit a warning when the pool or draw method is unavailable, preventing null-reference crashes when the drawer layout differs.
 - `dotnet` remains unavailable in this environment (`bash: command not found: dotnet`), so the solution rebuild and in-game hover verification are still pending and should be completed on a local workstation with the ONI toolchain.
+
+## 2025-11-20 - BetterInfoCards entry rect caching
+- Updated `HoverTextEntryAccess.GetRect` to resolve `rect` fields against the runtime entry type and cache the discovered `FieldInfo` instances per type to avoid repeated reflection and mismatched member access.
+- Retained the Traverse-based accessor exclusively as a fallback when the runtime entry exposes no `rect` field so widget exports continue to receive `RectTransform` handles.
+- Unable to rebuild `BetterInfoCards` or verify hover card rendering in-game because the container still lacks the ONI-managed assemblies and a `.NET` runtime; maintainers should run `dotnet build src/oniMods.sln` and validate hover cards draw without `ArgumentException` once synced locally.
