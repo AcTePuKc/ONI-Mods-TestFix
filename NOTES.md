@@ -226,3 +226,8 @@
 - Added a pre-export guard in `ExportWidgets.GetWidget_Postfix` so widget capture waits for `HoverTextDrawer.skin` to load before mutating per-card state, logging a single warning while the skin is unavailable.
 - Confirmed the intercept-mode short-circuit remains intact and the new guard clears its warning flag once the drawer skin becomes accessible so exports resume normally.
 - Unable to rebuild or validate in-game here because the container lacks the ONI-managed assemblies and a `dotnet` runtime; maintainers should run `dotnet build src/oniMods.sln` and confirm hover cards render without crashes while the drawer initialises, then resume widget export once the skin loads.
+
+## 2025-11-17 - BetterInfoCards widget export rollback
+- Restored `ExportWidgets`, `InfoCardWidgets`, and `Grid` to the pre-refactor implementations so hover card capture once again records pool entries directly and reuses the simple postfix on `HoverTextDrawer.Pool<MonoBehaviour>.Draw`.
+- The older API contracts remove the deferred layout bookkeeping that was triggering the null-reference loop, keeping `Grid` column math aligned with the entry-based widgets.
+- Unable to rebuild or verify in-game because this workspace still lacks the ONI assemblies and `dotnet`; maintainers should run `dotnet build src/oniMods.sln` locally and smoke-test hover cards to confirm the null-reference loop no longer occurs.
