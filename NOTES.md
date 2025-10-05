@@ -166,3 +166,8 @@
 - Short-circuited the Harmony prefixes in `InterceptHoverDrawer` so they immediately defer to the vanilla drawer when `curInfoCard` is unavailable, preventing null dereferences when the widget pool hook is missing.
 - Added a one-shot warning and reset `IsInterceptMode` after the fallback triggers to avoid repeatedly re-entering the prefixes without a valid card in the same frame.
 - Could not rebuild `BetterInfoCards` inside this container because the ONI-managed assemblies and `dotnet` runtime are still absent; maintainers should run `dotnet build src/oniMods.sln` locally and replay a hover sequence to confirm the fallback no longer throws.
+
+## 2025-11-05 - BetterInfoCards reset pool constructor parity
+- Updated `ResetPool` so the single-parameter constructor now combines `HoverTextDrawer.BeginDrawing` with the `Reset` handler, matching the multiparameter overload.
+- Centralized the delegate hookup through `AttachResetHandler` to keep both constructors in sync and expose the combined delegate via `OnBeginDrawing` for telemetry consumers.
+- Rebuild and hover replay verification remain blocked here because the ONI-managed assemblies and `dotnet` runtime are unavailable; please run `dotnet build src/oniMods.sln` and confirm pooled draw actions reset on each `HoverTextDrawer.BeginDrawing` in a full environment.
