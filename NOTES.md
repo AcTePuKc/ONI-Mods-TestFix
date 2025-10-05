@@ -211,3 +211,8 @@
 - Relaxed `InfoCardWidgets.MatchesWidgetPrefab` so helper wrappers that add components around the skin shadow bar still qualify via the existing component-superset fallback, allowing deferred prefab resolution to recover the instantiated `RectTransform` and repopulate `shadowBar`.
 - Verified the fallback continues to assign `shadowBar` through `TryResolveShadowBarFromPrefab`, ensuring downstream layout math sees non-zero widths/heights once the instantiated rect reports a usable size.
 - Unable to rebuild or execute in-game validation because the container lacks the ONI-managed assemblies and `dotnet` runtime; maintainers should run `dotnet build src/oniMods.sln` locally and confirm wrapped skin shadow bars now populate card dimensions.
+
+## 2025-11-14 - BetterInfoCards widget allocation guard
+- Ensured `ExportWidgets.GetWidget_Postfix` only enqueues a new `InfoCardWidgets` container the moment it is instantiated so hover cards contribute exactly one entry to the export list.
+- Re-reviewed other call sites that append to `icWidgets` and confirmed `BeginShadowBar` remains the sole allocation path during live draws, preventing duplicate containers when replaying captured widgets.
+- Runtime confirmation that `Grid` now receives a single container per card remains pending; the container environment still lacks the ONI-managed assemblies and `dotnet`, so maintainers should rebuild via `dotnet build src/oniMods.sln` and verify column translation offsets in-game.
