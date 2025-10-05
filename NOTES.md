@@ -116,3 +116,8 @@
 - Relaxed `InfoCardWidgets.MatchesWidgetRect` so reduced-height shadow bars that still share the prefab name and component layout are treated as matches instead of being rejected by the height check.
 - The container still lacks the ONI-managed assemblies and the `dotnet` runtime, so `BetterInfoCards` could not be rebuilt here; please run `dotnet build src/oniMods.sln` in a full environment.
 - Multi-column hover validation continues to require an in-game hover test after rebuilding to confirm shadow bars with smaller heights restore the secondary column.
+
+## 2025-10-27 - BetterInfoCards shadow bar pool targeting
+- Updated `ExportWidgets.FindWidgetPoolType` to continue scanning HoverTextDrawer members when the nested entry probe fails, prioritizing the shadow bar pool so the postfix captures the correct widgets.
+- Tried to rebuild `BetterInfoCards`, but the container still lacks the ONI-managed assemblies and a `dotnet` host; maintainers should run `dotnet build src/oniMods.sln` in a full environment.
+- In-game confirmation that multi-column hover wrapping now works again remains pending until the mod is rebuilt alongside the game client.
