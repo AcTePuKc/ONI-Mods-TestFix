@@ -141,3 +141,8 @@
 - Updated the hover info replay to cache the `HoverTextDrawer` instance and short-circuit when it is unavailable so captured actions are never re-run without a live drawer.
 - Routed `InfoCard` and `DrawActions` rendering through the cached drawer reference, emitting a warning when the drawer is missing to avoid Unity exceptions.
 - Unable to recompile or verify hover card recovery in-game inside this container because the ONI-managed assemblies and runtime remain unavailable; maintainers should rebuild via `dotnet build src/oniMods.sln` and confirm that layout is skipped (without crashing) when the drawer hook fails.
+
+## 2025-11-01 - BetterInfoCards shadow bar replay setup
+- Switched the shadow bar capture to allocate its widget container during the `BeginShadowBar` prefix so the subsequent `Draw()` call receives a ready list and no longer skips the first widget entry.
+- Added a replay-phase fallback in the widget postfix to lazily create the container when the prefix is bypassed, keeping the `IsInterceptMode` guard so live draws remain untouched.
+- The ONI-managed assemblies and runtime are still unavailable here, so `dotnet build src/oniMods.sln` and in-game hover validation of multi-column wrapping must be performed in a full environment.
