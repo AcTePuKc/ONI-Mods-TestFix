@@ -28,7 +28,7 @@ namespace BetterInfoCards.Export
         [HarmonyPatch(typeof(HoverTextDrawer), nameof(HoverTextDrawer.BeginShadowBar))]
         class OnBeginShadowBar
         {
-            static void Postfix()
+            static void Prefix()
             {
                 if (!InterceptHoverDrawer.IsInterceptMode)
                 {
@@ -43,6 +43,15 @@ namespace BetterInfoCards.Export
         {
             static void Postfix(HoverTextDrawer.Pool<MonoBehaviour>.Entry __result, GameObject ___prefab)
             {
+                if (curICWidgets == null)
+                {
+                    if (InterceptHoverDrawer.IsInterceptMode)
+                        return;
+
+                    curICWidgets = new();
+                    icWidgets.Add(curICWidgets);
+                }
+
                 curICWidgets.AddWidget(__result, ___prefab);
             }
         }
