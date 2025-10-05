@@ -27,6 +27,7 @@ namespace BetterInfoCards
             types: new[] { typeof(Vector2) },
             modifiers: null);
         private const float collapseTolerance = 0.01f;
+        private static bool hoverDrawerUnavailableLogged;
 
         public List<RectTransform> widgets = new();
         public RectTransform shadowBar;
@@ -47,8 +48,23 @@ namespace BetterInfoCards
             var rect = ExtractRect(entry);
             EnsureShadowBarUsable();
 
-            var skin = HoverTextScreen.Instance.drawer.skin;
+            var hoverTextScreen = HoverTextScreen.Instance;
+            var drawer = hoverTextScreen?.drawer;
+
+            if (drawer == null)
+            {
+                if (!hoverDrawerUnavailableLogged)
+                {
+                    hoverDrawerUnavailableLogged = true;
+                    Debug.LogWarning("[BetterInfoCards] HoverTextDrawer instance is unavailable; skipping widget assignment.");
+                }
+
+                return;
+            }
+
+            var skin = drawer.skin;
             var skinShadowBar = skin?.shadowBarWidget;
+            var selectBorderWidget = skin?.selectBorderWidget;
 
             if (TryAssignShadowBar(rect, prefab, skinShadowBar?.gameObject, skinShadowBar?.rectTransform))
                 return;
@@ -56,8 +72,8 @@ namespace BetterInfoCards
             if (rect == null)
                 return;
 
-            if (MatchesWidgetPrefab(prefab, skin.selectBorderWidget?.gameObject) ||
-                     MatchesWidgetRect(rect, skin.selectBorderWidget?.rectTransform))
+            if (MatchesWidgetPrefab(prefab, selectBorderWidget?.gameObject) ||
+                     MatchesWidgetRect(rect, selectBorderWidget?.rectTransform))
                 selectBorder = rect;
             else
                 widgets.Add(rect);
