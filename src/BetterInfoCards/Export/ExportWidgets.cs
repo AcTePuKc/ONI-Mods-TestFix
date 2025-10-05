@@ -423,8 +423,10 @@ namespace BetterInfoCards.Export
                 return;
 
             if (curICWidgets == null)
+            {
                 curICWidgets = new();
                 icWidgets.Add(curICWidgets);
+            }
 
             if (!ShouldProcessEntry(__result))
                 return;
