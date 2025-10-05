@@ -19,11 +19,13 @@ namespace BetterInfoCards
             binder: null,
             types: new[] { typeof(Vector2) },
             modifiers: null);
+        private const float collapseTolerance = 0.01f;
 
         public List<RectTransform> widgets = new();
         public RectTransform shadowBar;
         public RectTransform selectBorder;
         public Vector2 offset = new();
+        private readonly List<RectTransform> pendingShadowBars = new();
 
         public float YMax => shadowBar != null ? shadowBar.anchoredPosition.y : 0f;
         public float YMin => YMax - Height;
@@ -39,16 +41,41 @@ namespace BetterInfoCards
             if (rect == null)
                 return;
 
-            var skin = HoverTextScreen.Instance.drawer.skin;
+            EnsureShadowBarUsable();
 
-            if (MatchesWidgetPrefab(prefab, skin.shadowBarWidget?.gameObject) ||
-                MatchesWidgetRect(rect, skin.shadowBarWidget?.rectTransform))
-                shadowBar = rect;
-            else if (MatchesWidgetPrefab(prefab, skin.selectBorderWidget?.gameObject) ||
+            var skin = HoverTextScreen.Instance.drawer.skin;
+            var skinShadowBar = skin?.shadowBarWidget;
+
+            if (TryAssignShadowBar(rect, prefab, skinShadowBar?.gameObject, skinShadowBar?.rectTransform))
+                return;
+
+            if (MatchesWidgetPrefab(prefab, skin.selectBorderWidget?.gameObject) ||
                      MatchesWidgetRect(rect, skin.selectBorderWidget?.rectTransform))
                 selectBorder = rect;
             else
                 widgets.Add(rect);
+        }
+
+        public void ResolvePendingWidgets()
+        {
+            EnsureShadowBarUsable();
+
+            if (shadowBar != null)
+                return;
+
+            for (int i = pendingShadowBars.Count - 1; i >= 0; i--)
+            {
+                var candidate = pendingShadowBars[i];
+                if (HasUsableSize(candidate))
+                {
+                    shadowBar = candidate;
+                    pendingShadowBars.Clear();
+                    return;
+                }
+
+                if (candidate == null)
+                    pendingShadowBars.RemoveAt(i);
+            }
         }
 
         private static bool MatchesWidgetPrefab(GameObject candidate, GameObject reference)
@@ -80,7 +107,7 @@ namespace BetterInfoCards
                 return false;
 
             if (candidate == reference)
-                return true;
+                return candidate.rect.height > collapseTolerance;
 
             if (!string.Equals(StripCloneSuffix(candidate.name), StripCloneSuffix(reference.name), StringComparison.Ordinal))
                 return false;
@@ -88,12 +115,11 @@ namespace BetterInfoCards
             var candidateRect = candidate.rect;
             var referenceRect = reference.rect;
 
-            const float heightTolerance = 0.01f;
+            bool candidateCollapsed = candidateRect.height <= collapseTolerance;
+            bool referenceCollapsed = referenceRect.height <= collapseTolerance;
 
-            // Allow pooled runtime instances that have not yet expanded while still filtering
-            // out placeholder widgets that never acquire a visible height.
-            bool candidateCollapsed = candidateRect.height <= heightTolerance;
-            bool referenceCollapsed = referenceRect.height <= heightTolerance;
+            if (candidateCollapsed && referenceCollapsed)
+                return false;
 
             if (HasMatchingComponents(candidate.gameObject, reference.gameObject))
                 return true;
@@ -157,6 +183,60 @@ namespace BetterInfoCards
             }
 
             return referenceIndex == referenceComponents.Length;
+        }
+
+        private bool TryAssignShadowBar(RectTransform rect, GameObject prefab, GameObject referenceObject, RectTransform referenceRect)
+        {
+            if (rect == null)
+                return false;
+
+            if (shadowBar != null && HasUsableSize(shadowBar))
+                return true;
+
+            if (!MatchesWidgetPrefab(prefab, referenceObject) && !MatchesWidgetRect(rect, referenceRect))
+                return false;
+
+            if (HasUsableSize(rect))
+            {
+                shadowBar = rect;
+                pendingShadowBars.Clear();
+            }
+            else
+            {
+                CachePendingShadowBar(rect);
+            }
+
+            return true;
+        }
+
+        private void EnsureShadowBarUsable()
+        {
+            if (shadowBar == null)
+                return;
+
+            if (HasUsableSize(shadowBar))
+                return;
+
+            CachePendingShadowBar(shadowBar);
+            shadowBar = null;
+        }
+
+        private void CachePendingShadowBar(RectTransform rect)
+        {
+            if (rect == null)
+                return;
+
+            if (!pendingShadowBars.Contains(rect))
+                pendingShadowBars.Add(rect);
+        }
+
+        private static bool HasUsableSize(RectTransform rect)
+        {
+            if (rect == null)
+                return false;
+
+            var size = rect.rect;
+            return size.height > collapseTolerance && size.width > collapseTolerance;
         }
 
         public void Translate(float x)
