@@ -91,8 +91,9 @@ namespace BetterInfoCards
                     var ti = TextInfo.Create(id, text, data);
                     if (ti == null)
                     {
-                        Debug.LogWarning($"[BetterInfoCards] Text converter '{id ?? "<default>"}' returned null; skipping DrawText replay.");
-                        return false;
+                        Debug.LogWarning($"[BetterInfoCards] Text converter '{id ?? "<default>"}' returned null; falling back to vanilla DrawText.");
+                        // Returning true allows the vanilla drawer to render the text when our converter fails.
+                        return true;
                     }
 
                     curInfoCard.AddDraw(pool.Get().Set(ti, style, color, override_color), ti);
