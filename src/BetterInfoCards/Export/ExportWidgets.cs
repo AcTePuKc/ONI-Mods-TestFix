@@ -13,6 +13,7 @@ namespace BetterInfoCards.Export
         private static Type widgetEntryType;
         private static readonly Dictionary<Type, MemberInfo> rectMemberCache = new();
         private static readonly object rectMemberCacheLock = new();
+        private static bool hoverDrawerSkinUnavailableLogged;
 
         static ExportWidgets()
         {
@@ -421,6 +422,24 @@ namespace BetterInfoCards.Export
 
             if (InterceptHoverDrawer.IsInterceptMode)
                 return;
+
+            var hoverTextScreen = HoverTextScreen.Instance;
+            var drawer = hoverTextScreen?.drawer;
+            var skin = drawer?.skin;
+
+            if (drawer == null || skin == null)
+            {
+                if (!hoverDrawerSkinUnavailableLogged)
+                {
+                    hoverDrawerSkinUnavailableLogged = true;
+                    Debug.LogWarning("[BetterInfoCards] HoverTextDrawer skin is unavailable; deferring widget export until initialization completes.");
+                }
+
+                return;
+            }
+
+            if (hoverDrawerSkinUnavailableLogged)
+                hoverDrawerSkinUnavailableLogged = false;
 
             if (curICWidgets == null)
             {
