@@ -23,3 +23,9 @@
 - **Issue:** Resolving `shadowBar` from prefab assets caused layout translations and width adjustments to mutate the prefab instead of the live hover card instance, so later draws inherited stale offsets and asset changes persisted across sessions.
 - **Resolution:** Track pending widget entries and re-resolve the `RectTransform` from instantiated scene objects, falling back to hierarchy scans so deferred sizing now operates on the live hover card rather than the prefab asset.
 - **Status:** Fixed
+
+## 2025-11-13 - BetterInfoCards wrapper shadow bar prefabs
+- **Module:** BetterInfoCards hover widget capture
+- **Issue:** Skin shadow bars wrapped in helper objects exposed extra components and differing rect sizes, so `InfoCardWidgets` rejected the prefab match and never promoted the instantiated shadow bar, leaving card widths and heights at zero.
+- **Resolution:** Relaxed the prefab comparison so wrappers that contain a component superset of the skin shadow bar still qualify, allowing the runtime `RectTransform` to be recovered from the entry hierarchy and restored to `shadowBar`.
+- **Status:** Fixed

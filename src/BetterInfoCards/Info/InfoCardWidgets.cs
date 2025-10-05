@@ -121,6 +121,9 @@ namespace BetterInfoCards
             if (string.Equals(StripCloneSuffix(candidate.name), StripCloneSuffix(reference.name), StringComparison.Ordinal))
                 return true;
 
+            if (HasComponentSuperset(candidate, reference))
+                return true;
+
             if (!HasMatchingComponents(candidate, reference))
                 return false;
 

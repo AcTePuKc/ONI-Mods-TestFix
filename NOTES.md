@@ -206,3 +206,8 @@
 - Replaced the prefab-based `RectTransform` cache with live entry tracking so deferred resolution now probes instantiated hover card widgets before adjusting layout.
 - Updated the pending queues to store the captured entry alongside collapsed rects, ensuring late-update retries operate on scene objects and unregister once a usable rect is located.
 - Unable to rebuild or run in-game validation in this container because the ONI-managed assemblies and `dotnet` runtime remain unavailable; maintainers should run `dotnet build src/oniMods.sln` locally and hover a multi-widget card to confirm translations and width adjustments affect only the active instance.
+
+## 2025-11-13 - BetterInfoCards shadow bar wrapper tolerance
+- Relaxed `InfoCardWidgets.MatchesWidgetPrefab` so helper wrappers that add components around the skin shadow bar still qualify via the existing component-superset fallback, allowing deferred prefab resolution to recover the instantiated `RectTransform` and repopulate `shadowBar`.
+- Verified the fallback continues to assign `shadowBar` through `TryResolveShadowBarFromPrefab`, ensuring downstream layout math sees non-zero widths/heights once the instantiated rect reports a usable size.
+- Unable to rebuild or execute in-game validation because the container lacks the ONI-managed assemblies and `dotnet` runtime; maintainers should run `dotnet build src/oniMods.sln` locally and confirm wrapped skin shadow bars now populate card dimensions.
