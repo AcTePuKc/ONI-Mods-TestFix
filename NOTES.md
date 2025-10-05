@@ -131,3 +131,8 @@
 - Relaxed `InfoCardWidgets.MatchesWidgetRect` so shadow bars drawn from `Pool<MonoBehaviour>` still match while their runtime height remains collapsed, only rejecting candidates when both the prefab and runtime rects are effectively zero-height.
 - The container still lacks the ONI-managed assemblies and the `dotnet` host, so `BetterInfoCards` could not be rebuilt here; maintainers should run `dotnet build src/oniMods.sln` in a full environment.
 - In-game verification that hover card columns return once the shadow bar sizes update remains pending until the mod is rebuilt alongside the game client.
+
+## 2025-10-30 - BetterInfoCards collapsed rect matching
+- Removed the zero-height short-circuit inside `InfoCardWidgets.MatchesWidgetRect` so shadow bars that remain collapsed while pooled still run through the component matching heuristics.
+- The container continues to lack the ONI-managed assemblies and a `dotnet` host, preventing a local rebuild of `BetterInfoCards`; please execute `dotnet build src/oniMods.sln` in a full environment.
+- In-game confirmation that `shadowBar` now reports a non-null rect (restoring multi-column wrapping) remains pending until the mod is rebuilt and loaded with the game client.
