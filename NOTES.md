@@ -236,3 +236,8 @@
 - Replaced the direct generic Harmony patch on `HoverTextDrawer.Pool<MonoBehaviour>.Draw` with a `TargetMethod` lookup that locates the closed pool type through `AccessTools.Inner` so the patch no longer references the inaccessible nested entry type.
 - Updated the widget export pipeline to cache `RectTransform` handles in lightweight wrappers, exposing a shared `HoverTextEntryAccess` helper for both the exporter and grid logic.
 - Attempted to rebuild via `dotnet build src/oniMods.sln -c Release`, but the container still lacks the `dotnet` host; maintainers should rebuild locally with the ONI-managed assemblies to verify compilation succeeds.
+
+## 2025-11-19 - BetterInfoCards shadow bar pool reflection
+- Updated `HoverTextEntryAccess` to locate and cache the `HoverTextDrawer` shadow bar pool member via reflection so callers no longer depend on the `shadowBars` field name.
+- Swapped `InfoCardWidgets.SetWidth` to invoke the cached pool through the shared draw method and emit a warning when the pool or draw method is unavailable, preventing null-reference crashes when the drawer layout differs.
+- `dotnet` remains unavailable in this environment (`bash: command not found: dotnet`), so the solution rebuild and in-game hover verification are still pending and should be completed on a local workstation with the ONI toolchain.
