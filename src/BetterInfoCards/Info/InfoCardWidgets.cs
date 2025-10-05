@@ -24,8 +24,40 @@ namespace BetterInfoCards
 
         private static readonly FieldInfo rectField = EntryType != null ? AccessTools.Field(EntryType, "rect") : null;
         private static readonly MethodInfo drawMethod = PoolType != null ? AccessTools.Method(PoolType, "Draw") : null;
+        private static readonly MemberInfo shadowBarPoolMember = PoolType != null ? FindShadowBarPoolMember() : null;
 
         public static MethodInfo DrawMethod => drawMethod;
+        public static MemberInfo ShadowBarPoolMember => shadowBarPoolMember;
+
+        private static MemberInfo FindShadowBarPoolMember()
+        {
+            var type = typeof(HoverTextDrawer);
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            foreach (var field in type.GetFields(flags))
+                if (field.FieldType == PoolType)
+                    return field;
+
+            foreach (var property in type.GetProperties(flags))
+                if (property.PropertyType == PoolType && property.GetIndexParameters().Length == 0)
+                    return property;
+
+            return null;
+        }
+
+        public static object GetShadowBarPool(HoverTextDrawer drawer)
+        {
+            if (drawer == null || shadowBarPoolMember == null)
+                return null;
+
+            if (shadowBarPoolMember is FieldInfo field)
+                return field.GetValue(drawer);
+
+            if (shadowBarPoolMember is PropertyInfo property)
+                return property.GetValue(drawer);
+
+            return null;
+        }
 
         public static RectTransform GetRect(object entry)
         {
@@ -90,7 +122,22 @@ namespace BetterInfoCards
             // Modifying existing SBs triggers rebuilds somewhere and has a major impact on performance.
             // Genius idea from Peter to just add new ones to fill the gap.
             var rect = shadowBar.Rect;
-            var newSB = InterceptHoverDrawer.drawerInstance.shadowBars.Draw(rect.anchoredPosition + new Vector2(rect.sizeDelta.x, 0f));
+            var drawer = InterceptHoverDrawer.drawerInstance;
+            var pool = HoverTextEntryAccess.GetShadowBarPool(drawer);
+            if (pool == null)
+            {
+                Debug.LogWarning("[BetterInfoCards] Unable to access the HoverTextDrawer shadow bar pool; skipping width resize.");
+                return;
+            }
+
+            var drawMethod = HoverTextEntryAccess.DrawMethod;
+            if (drawMethod == null)
+            {
+                Debug.LogWarning("[BetterInfoCards] Unable to locate the shadow bar pool Draw() method; skipping width resize.");
+                return;
+            }
+
+            var newSB = drawMethod.Invoke(pool, new object[] { rect.anchoredPosition + new Vector2(rect.sizeDelta.x, 0f) });
             var newRect = HoverTextEntryAccess.GetRect(newSB) ?? rect;
             newRect.sizeDelta = new Vector2(width - rect.sizeDelta.x, rect.sizeDelta.y);
 
