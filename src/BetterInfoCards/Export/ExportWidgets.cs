@@ -37,7 +37,8 @@ namespace BetterInfoCards.Export
 
             widgetEntryType = entryType ?? widgetEntryType ?? ResolveEntryTypeFromPool(poolType);
 
-            if (widgetEntryType != null)
+            var requiresConstruction = poolType.IsGenericTypeDefinition || (poolType.IsGenericType && poolType.ContainsGenericParameters);
+            if (requiresConstruction)
             {
                 var poolDefinition = poolType.IsGenericTypeDefinition
                     ? poolType
@@ -45,9 +46,16 @@ namespace BetterInfoCards.Export
 
                 if (poolDefinition != null)
                 {
+                    var componentType = ResolveComponentTypeForPool(poolType, widgetEntryType);
+                    if (componentType == null)
+                    {
+                        Debug.LogWarning($"[BetterInfoCards] Unable to resolve component type for pool '{poolDefinition.FullName}'; skipping widget export patch.");
+                        return;
+                    }
+
                     try
                     {
-                        var constructed = poolDefinition.MakeGenericType(widgetEntryType);
+                        var constructed = poolDefinition.MakeGenericType(componentType);
                         if (!ReferenceEquals(poolType, constructed))
                         {
                             if (!HasRectTransformEntry(constructed))
@@ -61,7 +69,7 @@ namespace BetterInfoCards.Export
                     }
                     catch (ArgumentException)
                     {
-                        Debug.LogWarning($"[BetterInfoCards] Entry type '{widgetEntryType.FullName}' is incompatible with pool '{poolDefinition.FullName}'; skipping widget export patch.");
+                        Debug.LogWarning($"[BetterInfoCards] Component type '{componentType.FullName}' is incompatible with pool '{poolDefinition.FullName}'; skipping widget export patch.");
                         return;
                     }
                 }
@@ -327,6 +335,48 @@ namespace BetterInfoCards.Export
 
             const BindingFlags nestedFlags = BindingFlags.NonPublic | BindingFlags.Public;
             return poolType.GetNestedType("Entry", nestedFlags) ?? FindWidgetEntryTypeRecursive(poolType);
+        }
+
+        private static Type ResolveComponentTypeForPool(Type poolType, Type entryType)
+        {
+            static Type ExtractComponent(Type candidate)
+            {
+                if (candidate == null)
+                    return null;
+
+                if (candidate.IsGenericType && !candidate.ContainsGenericParameters)
+                {
+                    var arguments = candidate.GetGenericArguments();
+                    if (arguments.Length == 1)
+                        return arguments[0];
+                }
+
+                return null;
+            }
+
+            var componentType = ExtractComponent(poolType);
+            if (componentType != null)
+                return componentType;
+
+            for (var declaring = entryType?.DeclaringType; declaring != null; declaring = declaring.DeclaringType)
+            {
+                componentType = ExtractComponent(declaring);
+                if (componentType != null)
+                    return componentType;
+
+                if (poolType != null && poolType.IsGenericTypeDefinition && declaring.IsGenericType && !declaring.ContainsGenericParameters)
+                {
+                    var definition = declaring.GetGenericTypeDefinition();
+                    if (definition == poolType)
+                    {
+                        var arguments = declaring.GetGenericArguments();
+                        if (arguments.Length == 1)
+                            return arguments[0];
+                    }
+                }
+            }
+
+            return null;
         }
 
         public static List<InfoCardWidgets> ConsumeWidgets()
