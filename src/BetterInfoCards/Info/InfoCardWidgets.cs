@@ -9,6 +9,13 @@ namespace BetterInfoCards
 {
     public class InfoCardWidgets
     {
+        private enum PendingShadowBarState
+        {
+            None,
+            Pending,
+            Resolved
+        }
+
         private static readonly Dictionary<Type, Func<object, RectTransform>> rectAccessors = new();
         private static readonly object rectAccessorLock = new();
         private const BindingFlags memberBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -58,24 +65,22 @@ namespace BetterInfoCards
 
         public void ResolvePendingWidgets()
         {
-            EnsureShadowBarUsable();
+            ResolvePendingWidgets(scheduleDeferredChecks: true);
+        }
 
-            if (shadowBar != null)
-                return;
+        private PendingShadowBarState ResolvePendingWidgets(bool scheduleDeferredChecks)
+        {
+            var state = UpdatePendingShadowBarState();
 
-            for (int i = pendingShadowBars.Count - 1; i >= 0; i--)
+            if (scheduleDeferredChecks)
             {
-                var candidate = pendingShadowBars[i];
-                if (HasUsableSize(candidate))
-                {
-                    shadowBar = candidate;
-                    pendingShadowBars.Clear();
-                    return;
-                }
-
-                if (candidate == null)
-                    pendingShadowBars.RemoveAt(i);
+                if (state == PendingShadowBarState.Pending)
+                    DeferredShadowBarResolver.Register(this);
+                else
+                    DeferredShadowBarResolver.Unregister(this);
             }
+
+            return state;
         }
 
         private static bool MatchesWidgetPrefab(GameObject candidate, GameObject reference)
@@ -195,6 +200,7 @@ namespace BetterInfoCards
             if (HasUsableSize(rect))
             {
                 pendingShadowBars.Clear();
+                DeferredShadowBarResolver.Unregister(this);
             }
             else
             {
@@ -222,7 +228,10 @@ namespace BetterInfoCards
                 return;
 
             if (!pendingShadowBars.Contains(rect))
+            {
                 pendingShadowBars.Add(rect);
+                DeferredShadowBarResolver.Register(this);
+            }
         }
 
         private static bool HasUsableSize(RectTransform rect)
@@ -232,6 +241,38 @@ namespace BetterInfoCards
 
             var size = rect.rect;
             return size.height > collapseTolerance && size.width > collapseTolerance;
+        }
+
+        private PendingShadowBarState UpdatePendingShadowBarState()
+        {
+            EnsureShadowBarUsable();
+
+            if (shadowBar != null)
+                return PendingShadowBarState.Resolved;
+
+            var state = PendingShadowBarState.None;
+
+            for (int i = pendingShadowBars.Count - 1; i >= 0; i--)
+            {
+                var candidate = pendingShadowBars[i];
+                if (HasUsableSize(candidate))
+                {
+                    shadowBar = candidate;
+                    pendingShadowBars.Clear();
+                    return PendingShadowBarState.Resolved;
+                }
+
+                if (candidate == null)
+                {
+                    pendingShadowBars.RemoveAt(i);
+                }
+                else
+                {
+                    state = PendingShadowBarState.Pending;
+                }
+            }
+
+            return state;
         }
 
         public void Translate(float x)
@@ -410,6 +451,98 @@ namespace BetterInfoCards
                 return false;
 
             return true;
+        }
+
+        private static class DeferredShadowBarResolver
+        {
+            private static readonly List<InfoCardWidgets> pendingCards = new();
+            private static LateUpdateDriver driver;
+
+            public static void Register(InfoCardWidgets card)
+            {
+                if (card == null)
+                    return;
+
+                if (card.shadowBar != null || card.pendingShadowBars.Count == 0)
+                {
+                    Unregister(card);
+                    return;
+                }
+
+                if (!pendingCards.Contains(card))
+                    pendingCards.Add(card);
+
+                EnsureDriver()?.Activate();
+            }
+
+            public static void Unregister(InfoCardWidgets card)
+            {
+                if (card == null)
+                    return;
+
+                if (!pendingCards.Remove(card))
+                    return;
+
+                if (pendingCards.Count == 0 && driver != null)
+                    driver.enabled = false;
+            }
+
+            private static void Process()
+            {
+                for (int i = pendingCards.Count - 1; i >= 0; i--)
+                {
+                    var card = pendingCards[i];
+
+                    if (card == null)
+                    {
+                        pendingCards.RemoveAt(i);
+                        continue;
+                    }
+
+                    var state = card.ResolvePendingWidgets(scheduleDeferredChecks: false);
+
+                    if (state != PendingShadowBarState.Pending)
+                        pendingCards.RemoveAt(i);
+                }
+
+                if (pendingCards.Count == 0 && driver != null)
+                    driver.enabled = false;
+            }
+
+            private static LateUpdateDriver EnsureDriver()
+            {
+                if (driver != null)
+                    return driver;
+
+                var screen = HoverTextScreen.Instance;
+                if (screen == null)
+                    return null;
+
+                driver = screen.gameObject.GetComponent<LateUpdateDriver>();
+                if (driver == null)
+                    driver = screen.gameObject.AddComponent<LateUpdateDriver>();
+
+                return driver;
+            }
+
+            private sealed class LateUpdateDriver : MonoBehaviour
+            {
+                public void Activate()
+                {
+                    enabled = true;
+                }
+
+                private void OnEnable()
+                {
+                    if (pendingCards.Count == 0)
+                        enabled = false;
+                }
+
+                private void LateUpdate()
+                {
+                    Process();
+                }
+            }
         }
     }
 }

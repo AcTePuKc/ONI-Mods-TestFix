@@ -181,3 +181,8 @@
 - Added a null check around `TextInfo.Create` in the hover drawer intercept so converter failures log a warning and skip the draw instead of queuing a crashing replay action.
 - Ensured replayed text actions bail out when either the captured `TextInfo` or `TextStyleSetting` is unavailable so the hover text drawer is never invoked with missing data.
 - Compilation and in-game verification remain blocked in this container because the ONI-managed assemblies and `dotnet` runtime are unavailable; maintainers should rebuild via `dotnet build src/oniMods.sln` and hover a converted info card to confirm the warning path prevents crashes.
+
+## 2025-11-08 - BetterInfoCards deferred shadow bar sizing
+- Added a deferred resolver that schedules collapsed shadow bar candidates for a `LateUpdate` retry so the grid promotes them once Unity expands their rects, ensuring width/height reflect the final layout before wrapping columns.
+- The new scheduler only reuses `ResolvePendingWidgets` and leaves the prefab/rect matching heuristics untouched, so existing comparisons against the hover drawer skin continue to behave as before.
+- Could not rebuild or run in-game validation here because the ONI-managed assemblies and `dotnet` runtime remain unavailable; please execute `dotnet build src/oniMods.sln` in a full environment and verify hover cards populate multi-column layouts after the deferred sizing pass.
