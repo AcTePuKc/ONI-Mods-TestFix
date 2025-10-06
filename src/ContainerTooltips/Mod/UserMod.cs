@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BadMod.ContainerTooltips.Configuration;
 using BadMod.ContainerTooltips.Components;
 using HarmonyLib;
+using Klei;
 using Klei.AI;
 using KMod;
 using PeterHan.PLib.Core;
