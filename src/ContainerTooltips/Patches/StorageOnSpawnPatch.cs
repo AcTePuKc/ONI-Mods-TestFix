@@ -1,4 +1,4 @@
-using BadMod.ContainerTooltips.Storage;
+using BadMod.ContainerTooltips.Components;
 using HarmonyLib;
 using UnityEngine;
 

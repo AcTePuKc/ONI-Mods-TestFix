@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BadMod.ContainerTooltips.Configuration;
-using BadMod.ContainerTooltips.Storage;
+using BadMod.ContainerTooltips.Components;
 using HarmonyLib;
 using Klei.AI;
 using KMod;
