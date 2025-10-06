@@ -428,16 +428,38 @@ public static class StorageContentsSummarizer
 		return new string(' ', depth * 4);
 	}
 
-	private static string FormatDiseases(ContentSummary summary)
-	{
-		if (summary.TotalDiseaseCount <= 0 || summary.Diseases == null || summary.Diseases.Count == 0)
-		{
-			return string.Empty;
-		}
-		string formattedDiseaseAmount = GameUtil.GetFormattedDiseaseAmount(summary.TotalDiseaseCount, (TimeSlice)0);
-		string text = string.Join(" + ", summary.Diseases.Select((KeyValuePair<byte, int> d) => GameUtil.GetFormattedDiseaseName(d.Key, false)));
-		return formattedDiseaseAmount + " [" + text + "]";
-	}
+       private static bool loggedInvalidDiseaseIndex;
+
+       private static string FormatDiseases(ContentSummary summary)
+       {
+               if (summary.TotalDiseaseCount <= 0 || summary.Diseases == null || summary.Diseases.Count == 0)
+               {
+                       return string.Empty;
+               }
+               int count = Db.Get().Diseases.Count;
+               List<string> list = new List<string>();
+               foreach (KeyValuePair<byte, int> item in summary.Diseases)
+               {
+                       int key = item.Key;
+                       if (key == byte.MaxValue || key < 0 || key >= count)
+                       {
+                               if (!loggedInvalidDiseaseIndex)
+                               {
+                                       Debug.LogWarning((object)$"[ContainerTooltips]: Skipping invalid disease index {key} while summarizing storage contents");
+                                       loggedInvalidDiseaseIndex = true;
+                               }
+                               continue;
+                       }
+                       list.Add(GameUtil.GetFormattedDiseaseName((byte)key, false));
+               }
+               if (list.Count == 0)
+               {
+                       return string.Empty;
+               }
+               string formattedDiseaseAmount = GameUtil.GetFormattedDiseaseAmount(summary.TotalDiseaseCount, (TimeSlice)0);
+               string text = string.Join(" + ", list);
+               return formattedDiseaseAmount + " [" + text + "]";
+       }
 
 	private static IEnumerable<ContentSummary> FlattenedSummaries(ContentSummaryCollection entries)
 	{

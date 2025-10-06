@@ -246,3 +246,8 @@
 - Updated `HoverTextEntryAccess.GetRect` to resolve `rect` fields against the runtime entry type and cache the discovered `FieldInfo` instances per type to avoid repeated reflection and mismatched member access.
 - Retained the Traverse-based accessor exclusively as a fallback when the runtime entry exposes no `rect` field so widget exports continue to receive `RectTransform` handles.
 - Unable to rebuild `BetterInfoCards` or verify hover card rendering in-game because the container still lacks the ONI-managed assemblies and a `.NET` runtime; maintainers should run `dotnet build src/oniMods.sln` and validate hover cards draw without `ArgumentException` once synced locally.
+
+## 2025-11-21 - ContainerTooltips disease index guard
+- Filtered the disease summary formatter so it skips invalid disease indices before requesting localized names, logging a single warning the first time an out-of-range entry appears.
+- This prevents `GameUtil.GetFormattedDiseaseName` from dereferencing an invalid index when polluted storage includes placeholder rows.
+- Rebuild and in-game tooltip verification remain outstanding; the hosted environment still lacks the ONI-managed assemblies and `dotnet` runtime, so maintainers need to run `dotnet build src/oniMods.sln` locally and hover affected storage to confirm the warning suppresses the crash.
