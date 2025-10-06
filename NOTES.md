@@ -251,3 +251,8 @@
 - Filtered the disease summary formatter so it skips invalid disease indices before requesting localized names, logging a single warning the first time an out-of-range entry appears.
 - This prevents `GameUtil.GetFormattedDiseaseName` from dereferencing an invalid index when polluted storage includes placeholder rows.
 - Rebuild and in-game tooltip verification remain outstanding; the hosted environment still lacks the ONI-managed assemblies and `dotnet` runtime, so maintainers need to run `dotnet build src/oniMods.sln` locally and hover affected storage to confirm the warning suppresses the crash.
+
+## 2025-11-22 - ContainerTooltips build import alignment
+- Added `FixedMod/src/Directory.Build.props` so the FixedMod solution inherits the shared net471 target, references, and translation path overrides.
+- Added `FixedMod/src/Directory.Build.targets` to ensure the packaging/versioning pipeline runs for ContainerTooltips when built from the FixedMod solution.
+- Unable to reload `src/oniMods.sln` or build `ContainerTooltips` here because the container lacks the required .NET/ONI toolchain; maintainers should run `dotnet build src/oniMods.sln` locally to confirm the shared settings apply without errors.
