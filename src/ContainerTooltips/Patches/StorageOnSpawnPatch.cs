@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BadMod.ContainerTooltips.Patches;
 
-[HarmonyPatch(typeof(Storage), nameof(Storage.OnSpawn))]
+[HarmonyPatch(typeof(Storage), "OnSpawn")]
 public static class StorageOnSpawnPatch
 {
     private static void Postfix(Storage __instance)

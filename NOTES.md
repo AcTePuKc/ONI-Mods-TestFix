@@ -283,3 +283,7 @@
 ## 2025-11-28 - ContainerTooltips mass format alias cleanup
 - Updated `MassDisplayMode` to use a uniquely named alias for `global::GameUtil` so ContainerTooltips no longer collides with other `GameUtil` aliases when loaded alongside mods.
 - The workspace still lacks the ONI-managed assemblies and `.NET` runtime, preventing a rebuild; maintainers should run `dotnet build src/oniMods.sln` locally to confirm the enum resolves without namespace conflicts.
+
+## 2025-11-29 - ContainerTooltips Storage.OnSpawn patch accessibility
+- Replaced the `nameof(Storage.OnSpawn)` Harmony target with a literal string to avoid accessibility errors when the nested `OnSpawn` reference is unavailable at compile time.
+- Attempted to rebuild via `dotnet build src/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`dotnet` command not found); maintainers should rebuild locally to confirm the accessibility warning no longer occurs.
