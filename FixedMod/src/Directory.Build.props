@@ -4,5 +4,10 @@
 
   <PropertyGroup>
     <TranslationsFolder>..\..\..\Translations</TranslationsFolder>
+    <UsesAzeLib>false</UsesAzeLib>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\AzeLib\AzeLib.csproj" Private="true" />
+  </ItemGroup>
 </Project>
