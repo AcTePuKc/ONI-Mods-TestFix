@@ -256,3 +256,7 @@
 - Added `FixedMod/src/Directory.Build.props` so the FixedMod solution inherits the shared net471 target, references, and translation path overrides.
 - Added `FixedMod/src/Directory.Build.targets` to ensure the packaging/versioning pipeline runs for ContainerTooltips when built from the FixedMod solution.
 - Unable to reload `src/oniMods.sln` or build `ContainerTooltips` here because the container lacks the required .NET/ONI toolchain; maintainers should run `dotnet build src/oniMods.sln` locally to confirm the shared settings apply without errors.
+
+## 2025-11-23 - ContainerTooltips import path fix
+- Corrected the relative imports in `FixedMod/src/Directory.Build.props` and `FixedMod/src/Directory.Build.targets` to reference the root `src` directory instead of the FixedMod subtree, eliminating the circular dependency Visual Studio reported when loading the project.
+- Build verification remains pending; the hosted environment still lacks the ONI-managed assemblies and `.NET` runtime, so maintainers should run `dotnet build src/oniMods.sln` locally to confirm the solution now loads without the circular import error.

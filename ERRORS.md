@@ -35,3 +35,9 @@
 - **Issue:** Buildings without a `PrimaryElement` caused the temperature converter to dereference `null` while reading `Temperature`, crashing hover card rendering.
 - **Resolution:** Cache the component lookup, emit a one-shot warning when it is missing, and return a safe default so aggregation proceeds without throwing.
 - **Status:** Fixed
+
+## 2025-11-23 - ContainerTooltips build imports
+- **Module:** ContainerTooltips project configuration
+- **Issue:** The FixedMod-specific `Directory.Build.props` and `.targets` imported `../src/...`, which resolved to the same directory and caused MSBuild to report a circular dependency when the solution loaded in Visual Studio.
+- **Resolution:** Updated the relative paths to `../../src/...` so the FixedMod projects now import the shared root build settings without recursion.
+- **Status:** Fixed
