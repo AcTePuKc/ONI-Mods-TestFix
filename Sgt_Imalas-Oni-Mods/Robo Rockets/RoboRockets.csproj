@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+	<!-- General Package Properties -->
+  <PropertyGroup>
+    <PackageId>RoboRockets</PackageId>
+    <Version>4.2.8</Version>
+    <Authors>Sgt_Imalas</Authors>
+    <Copyright>2022-2023 Sgt_Imalas</Copyright>
+    <RepositoryUrl>https://github.com/Sgt-Imalas/Sgt_Imalas-Oni-Mods</RepositoryUrl>
+  </PropertyGroup>
+
+	<!-- Build Properties -->
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<Configurations>Debug;Release</Configurations>
+		<AssemblyName>RoboRockets</AssemblyName>
+		<RootNamespace>RoboRockets</RootNamespace>
+		<IsMod>true</IsMod>
+		<GenerateMetadata>true</GenerateMetadata>
+		<IsPacked>true</IsPacked>
+	</PropertyGroup>
+	
+	
+	<!-- Mod Info AI Controlled Rockets-->
+	<PropertyGroup>
+		<ModName>AI Controlled Rockets</ModName>
+		<ModDescription>Adds in 3 Control Modules that allows Rockets to fly without a Pilot</ModDescription>
+		<RequiredDlcIds>EXPANSION1_ID</RequiredDlcIds>
+		<SteamId>2765256496</SteamId>
+		<MinimumSupportedBuild>$(TargetGameVersion)</MinimumSupportedBuild>
+		<APIVersion>2</APIVersion>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutDir>bin</OutDir>
+		<OutputPath></OutputPath>
+		<DocumentationFile></DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <OutDir>bin</OutDir>
+	  <OutputPath />
+	  <DocumentationFile />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2|AnyCPU'">
+	  <OutDir>bin</OutDir>
+	  <OutputPath />
+	  <DocumentationFile />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutDir>bin</OutDir>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\UtilLibs\UtilLibs.csproj" />
+	</ItemGroup>
+</Project>

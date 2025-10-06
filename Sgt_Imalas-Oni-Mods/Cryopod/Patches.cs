@@ -1,0 +1,292 @@
+﻿using Cryopod.Buildings;
+using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UtilLibs;
+
+namespace Cryopod
+{
+	class Patches
+	{
+		//needs Changes
+		//[HarmonyPatch(typeof(WorldContainer))]
+		//[HarmonyPatch(nameof(WorldContainer.SpacePodAllDupes))]
+		//public static class ThrowOutFrozenDupesInsideRocket_ToWorld_Patch
+		//{
+		//    public static void Prefix(Vector3 spawn_pos, WorldContainer __instance)
+		//    {
+		//        foreach (var worldItem in ModAssets.CryoPods.GetWorldItems(__instance.id))
+		//        {
+		//            Debug.Log("PATCH !" + worldItem + spawn_pos);
+		//            worldItem.ThrowOutDupe(true, spawn_pos);
+		//        }
+		//    }
+		//}
+		[HarmonyPatch(typeof(WorldContainer))]
+		[HarmonyPatch(nameof(WorldContainer.SpacePodAllDupes))]
+		public static class EjectFrozenDupesToSpacepod
+		{
+			public static void Prefix(AxialI sourceLocation, WorldContainer __instance)
+			{
+				foreach (var worldItem in ModAssets.CryoPods.GetWorldItems(__instance.id))
+				{
+					worldItem.CreateEscapePodForCryopodupe(sourceLocation);
+				}
+			}
+		}
+		[HarmonyPatch(typeof(WorldContainer))]
+		[HarmonyPatch(nameof(WorldContainer.EjectAllDupes))]
+		public static class EjectFrozenDupesToWorld
+		{
+			public static void Prefix(WorldContainer __instance, Vector3 spawn_pos)
+			{
+				foreach (var worldItem in ModAssets.CryoPods.GetWorldItems(__instance.id))
+				{
+					SgtLogger.l("throwing out dupe from destruction");
+					worldItem.ThrowOutDupe(true, spawn_pos);
+				}
+			}
+		}
+
+
+
+		/// <summary>
+		/// Fixes Crash on moduleDestroy with pod inside (also why would you discover a rocket module?)
+		/// </summary>
+		[HarmonyPatch(typeof(WorldContainer))]
+		[HarmonyPatch(nameof(WorldContainer.SetDiscovered))]
+		public static class RemoveDiscoveryOfRocketModules_ToWorld_Patch
+		{
+			public static bool Prefix(WorldContainer __instance)
+			{
+				if (__instance.IsModuleInterior)
+				{
+					return false;
+				}
+				return true;
+			}
+		}
+
+
+
+
+		[HarmonyPatch(typeof(SpaceArtifact))]
+		[HarmonyPatch("RemoveCharm")]
+		public class UnlockCryopodOnArtifactScanning_Patch
+		{
+			public static void Postfix(SpaceArtifact __instance)
+			{
+				if (__instance.artifactType == ArtifactType.Space)
+				{
+					///dlc always active.
+					//int chance = DlcManager.IsExpansion1Active() ? 33 : 100;
+					ModAssets.UnlockCryopod(33);
+				}
+			}
+		}
+		[HarmonyPatch(typeof(ResearchTypes))]
+		[HarmonyPatch(MethodType.Constructor)]
+		[HarmonyPatch(new Type[] { })]
+		public class ResearchTypes_Constructor_Patch
+		{
+			public static void Postfix(ResearchTypes __instance)
+			{
+				__instance.Types.Add(new ResearchType(
+					ModAssets.CryopodResearchTypeID,
+					STRINGS.CRYOPODRESEARCHTYPE.NAME,
+					STRINGS.CRYOPODRESEARCHTYPE.RECIPEDESC,
+					Assets.GetSprite("DistressSignal"),
+					UIUtils.rgb(173, 139, 83),
+					null,
+					2400f,
+					(HashedString)"research_center_kanim",
+					new string[] { },
+					STRINGS.CRYOPODRESEARCHTYPE.RECIPEDESC
+				));
+			}
+		}
+		/// Basegame Compatibility - cryopod is dlc asset so.. . nope, dont want legal [anything] 
+
+		//[HarmonyPatch(typeof(ArtifactFinder))]
+		//[HarmonyPatch("GetArtifactsOfTier")]
+		//public class UnlockCryopodOnArtifactFoundBaseGame_Patch
+		//{
+		//    public static void Prefix(ArtifactTier tier)
+		//    {
+		//        if (tier != TUNING.DECOR.SPACEARTIFACT.TIER_NONE)
+		//        {
+		//            ModAssets.UnlockCryopod();
+		//        }
+		//    }
+		//}
+
+
+
+		/// <summary>
+		/// Disallows Selecting; thus Researching the Cryopod
+		/// </summary>
+		/// 
+		[HarmonyPatch(typeof(Research))]
+		[HarmonyPatch("SetActiveResearch")]
+		public class Research_SetActiveResearch_Patch
+		{
+			public static void Prefix(ref Tech tech)
+			{
+				if (tech == null)
+					return;
+				if (tech.Id == ModAssets.Techs.FrostedDupeResearchID)
+					tech = null;
+
+			}
+		}
+
+
+		/// <summary>
+		/// add research card to research screen
+		/// </summary>
+		[HarmonyPatch(typeof(ResourceTreeLoader<ResourceTreeNode>), MethodType.Constructor, typeof(TextAsset))]
+		public class ResourceTreeLoader_Load_Patch
+		{
+			public static void Postfix(ResourceTreeLoader<ResourceTreeNode> __instance, TextAsset file)
+			{
+				AddNode(__instance);
+			}
+
+			private static void AddNode(ResourceTreeLoader<ResourceTreeNode> tech_tree_nodes)
+			{
+				ResourceTreeNode tempModNode = null;
+				var x = 0f;
+				var y = 0f;
+
+				foreach (var item in tech_tree_nodes)
+				{
+					if (item.Id == GameStrings.Technology.Medicine.MicroTargetedMedicine)
+					{
+						tempModNode = item;
+					}
+					else if (item.Id == GameStrings.Technology.Medicine.Pharmacology)
+					{
+						y = item.nodeY;
+					}
+					else if (item.Id == GameStrings.Technology.SolidMaterial.SuperheatedForging && !DlcManager.IsExpansion1Active())
+					{
+						x = item.nodeX;
+					}
+					else if (item.Id == GameStrings.Technology.SolidMaterial.PressurizedForging && DlcManager.IsExpansion1Active())
+					{
+						x = item.nodeX;
+					}
+				}
+				if (tempModNode == null)
+				{
+					return;
+				}
+
+				var id = ModAssets.Techs.FrostedDupeResearchID;
+				var node = new ResourceTreeNode
+				{
+					height = tempModNode.height,
+					width = tempModNode.width,
+					nodeX = x,
+					nodeY = y,
+					edges = new List<ResourceTreeNode.Edge>(tempModNode.edges),
+					references = new List<ResourceTreeNode>() { },
+					Disabled = false,
+					Id = id,
+					Name = id
+
+				};
+
+				//tempModNode.references.Add(node);
+				tech_tree_nodes.resources.Add(node);
+			}
+		}
+
+		/// <summary>
+		/// Add research node to tree
+		/// </summary>
+		[HarmonyPatch(typeof(Database.Techs), "Init")]
+		public class Techs_TargetMethod_Patch
+		{
+			public static void Postfix(Database.Techs __instance)
+			{
+				var CryoTech = new Tech(ModAssets.Techs.FrostedDupeResearchID, new List<string>
+				{
+					BuildableCryopodConfig.ID,
+					BuildableCryopodLiquidConfig.ID,
+				},
+				__instance);
+
+				CryoTech.costsByResearchTypeID.Clear();
+				CryoTech.costsByResearchTypeID.Add("basic", 0f);
+				CryoTech.costsByResearchTypeID.Add(ModAssets.CryopodResearchTypeID, 1f);
+			}
+		}
+
+
+		/// <summary>
+		/// Researches on dupe thawing; disabled, I want that on demolishing
+		/// </summary>
+		//[HarmonyPatch(typeof(CryoTank), "DropContents")]
+		//public class AddTechUnlock_Patch
+		//{
+		//    public static void Postfix()
+		//    {
+		//        ModAssets.UnlockCryopod();
+		//    }
+		//}
+
+
+		[HarmonyPatch(typeof(Demolishable), "TriggerDestroy")]
+		public class UnlockCryotechOnDestruction_patch
+		{
+			public static void Prefix(Demolishable __instance)
+			{
+				if (__instance.gameObject.GetComponent<CryoTank>() != null)
+				{
+					ModAssets.UnlockCryopod();
+				}
+			}
+		}
+
+		/// <summary>
+		/// add buildings to plan screen
+		/// </summary>
+		[HarmonyPatch(typeof(GeneratedBuildings))]
+		[HarmonyPatch(nameof(GeneratedBuildings.LoadGeneratedBuildings))]
+		public static class GeneratedBuildings_LoadGeneratedBuildings_Patch
+		{
+
+			public static void Prefix()
+			{
+				InjectionMethods.AddBuildingToPlanScreenBehindNext(GameStrings.PlanMenuCategory.Medicine, BuildableCryopodConfig.ID);
+				InjectionMethods.AddBuildingToPlanScreenBehindNext(GameStrings.PlanMenuCategory.Medicine, BuildableCryopodLiquidConfig.ID);
+			}
+		}
+
+		/// <summary>
+		/// Init. auto translation
+		/// </summary>
+		[HarmonyPatch(typeof(Localization), "Initialize")]
+		public static class Localization_Initialize_Patch
+		{
+			public static void Postfix()
+			{
+				LocalisationUtil.Translate(typeof(STRINGS), true);
+			}
+		}
+
+		/// <summary>
+		/// register custom status items
+		/// </summary>
+		[HarmonyPatch(typeof(Database.BuildingStatusItems), "CreateStatusItems")]
+		public static class Database_BuildingStatusItems_CreateStatusItems_Patch
+		{
+			public static void Postfix()
+			{
+				ModAssets.StatusItems.Register();
+			}
+		}
+	}
+}

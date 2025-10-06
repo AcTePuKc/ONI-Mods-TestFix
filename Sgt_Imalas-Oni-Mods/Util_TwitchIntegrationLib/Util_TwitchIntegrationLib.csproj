@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Configurations>Debug;Release;Release2</Configurations>
+		<DoNotBuildAsMod>true</DoNotBuildAsMod>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="ONITwitchLib">
+			<HintPath>..\TwitchLib\ONITwitchLib.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+</Project>

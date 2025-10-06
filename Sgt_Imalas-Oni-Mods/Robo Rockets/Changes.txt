@@ -1,0 +1,3 @@
+﻿- fixed automated ai rockets being able to ignore the sky condition
+- added width visualizers
+- added drillcone cargobay check to ai modules

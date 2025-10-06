@@ -1,0 +1,128 @@
+name: Build all mods for full release
+
+on:
+  push:
+    branches: [ "master" ]
+
+permissions:
+  contents: write # Grant write permission for creating releases
+  actions: write # Grant write permission to delete old workflow runs
+
+jobs:
+  build:
+    if: contains(github.event.head_commit.message, 'buildall')
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-dotnet@v4
+      env:
+        DOTNET_NOLOGO: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: true
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore -t:Rebuild -c:Release -p:GameLibsFolder="../Lib"
+    
+    - name: Create Zip target directory
+      run: mkdir BuildsZipped
+            
+    - name: Create AllInOne release file
+      run: Compress-Archive -Path 'Builds' -DestinationPath 'BuildsZipped/All_Mods_Sgt_Imalas_Release.zip'  
+    
+
+    - name: Create individual mod zips and description
+      id: buildtext
+      run: |    
+            # install yaml parser for mod info files
+            Install-Module powershell-yaml -Force
+            # start creation of release desc. file
+            echo "Automated build of all mods, based on the latest code state" >> Desc.md
+            echo "| Folder | Mod Name | Mod Description |" >> Desc.md
+            echo "|-|-|-|" >> Desc.md
+            
+            #create version info json file
+            echo "{`"mods`":[" >> ./BuildsZipped/_ReleaseVersionInfoData.json
+            
+            $releaseUrl = 'https://github.com/Sgt-Imalas/Sgt_Imalas-Oni-Mods/releases/download/AllMods_Automated_Build_FullRelease/'
+            #iterate through the built mod folders to individually zip them and grep their info
+            $source = './Builds'
+            $destination = './BuildsZipped'
+            $subfolders = Get-ChildItem $source -Directory
+            foreach ($s in $subfolders) { 
+            $folderpath = $s.FullName
+            
+            #parse the mod info files
+            $modInfoData = ConvertFrom-Yaml -Yaml $(Get-Content -Raw "$folderpath/mod_info.yaml") -AllDocuments
+            $modData = ConvertFrom-Yaml -Yaml $(Get-Content -Raw "$folderpath/mod.yaml") -AllDocuments
+            
+            #grep data from mod.yaml file
+            $modId= $modData."staticID"
+            $ModName = $modData."title"
+            $ModDesc = $modData."description"
+
+            #write the mod info to the desc file
+            echo "| $modId | $ModName | $ModDesc |" >> Desc.md
+            
+            $ModNameCleaned = $ModName.Replace('''','').Replace('"','')
+            $ModDescCleaned = $ModDesc.Replace('''','').Replace('"','')
+            $modUrl = $releaseUrl + $modId.Replace(' ','.') + '.zip'
+
+            #write version data to version json file
+            $minGameVersion= $modInfoData."minimumSupportedBuild"
+            $modVersion= $modInfoData."version"
+            echo "{`"staticID`":`"$modId`",`"version`":`"$modVersion`",`"minimumSupportedBuild`":`"$minGameVersion`",`"modName`":`"$ModNameCleaned`",`"modDesc`":`"$ModDescCleaned`", `"downloadURL`":`"$modUrl`"},">> ./BuildsZipped/_ReleaseVersionInfoData.json
+
+            #create zip file
+            Compress-Archive `
+            -Path $folderpath/* `
+            -DestinationPath $destination\$modId}   
+                        
+            #finalize version info json file
+            echo "]}" >> ./BuildsZipped/_ReleaseVersionInfoData.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Delete old releases
+      uses: dev-drprasad/delete-older-releases@v0.3.4
+      with:
+        keep_latest: 0
+        delete_tag_pattern: AllMods_Automated_Build_FullRelease*
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Create GitHub release
+      id: create_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "AllMods_Automated_Build_FullRelease"
+        release_name: "All Mods - Latest Build"
+        body_path: "Desc.md"
+        draft: false
+        prerelease: false
+
+    - name: Upload files to github release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: BuildsZipped/*.*
+        file_glob: true
+        tag: AllMods_Automated_Build_FullRelease
+        prerelease: false
+        overwrite: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # - name: Delete workflow runs
+    #   uses: Mattraks/delete-workflow-runs@v2
+    #   with:
+    #     token: ${{ github.token }}
+    #     repository: ${{ github.repository }}
+    #     retain_days: 1
+    #     keep_minimum_runs: 3
+          
+

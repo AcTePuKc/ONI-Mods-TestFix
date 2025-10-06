@@ -1,0 +1,4 @@
+﻿
+- changed dlc check logic for frosty planet to be generic for all dlcs in various locations. 
+- dlc toggles in the UI are now constructed dynamically on screen creation, this automates their creation.
+- fixed togging a mixing asteroid (asteroid fragments) not applying it to the custom cluster until the seed was changed

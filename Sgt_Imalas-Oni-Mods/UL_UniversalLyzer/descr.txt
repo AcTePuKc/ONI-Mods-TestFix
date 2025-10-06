@@ -1,0 +1,38 @@
+﻿[img]https://i.imgur.com/GbFtLZ2.png[/img]
+
+[h1]Universal Electrolyzer[/h1]
+
+This mod allows the electrolyzer to electrolyze all types of water. the output gasses vary based on the water type.
+
+[h1]Current latest Version: 1.0.0[/h1]
+
+[hr][/hr]
+
+[h1]Features[/h1]
+[list][*] The Electrolyzer can now electrolyze all water types, resulting in different gas mixes produced
+[*] Polluted Water creates hydrogen and polluted oxygen
+[*] Salt Water and Brine produce hydrogen, oxygen and chlorine (in varying quantities, according to their mixture)
+[*] Power Consumption, Output Temperature are configurable for every water type
+[*] Integration with "piped everything", "piped outputs" to either disable pipes on the electrolyzer building or adding pipes for additional elements
+[/list]
+
+[hr][/hr]
+[h1]Integration[/h1]
+This mod has integration with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3033409170]Piped Everything[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2550027771]Piped Output - Updated[/url].
+
+[hr][/hr]
+[h1]Credits[/h1]
+Options made with PLib.
+
+[h1]Bug Reports & Local Download[/h1]
+You can find direct downloads for my mods [url=https://github.com/Sgt-Imalas/Sgt_Imalas-Oni-Mods/releases]here[/url] (please notify me if I forgot to release new versions).
+
+Please post bug reports and issues on [url=https://github.com/Sgt-Imalas/Sgt_Imalas-Oni-Mods/issues] GitHub[/url] or on my [url=https://discord.gg/5n7peBCnWZ]Discord Server[/url]. 
+[b]Always include the full player.log in a report: [/b] https://github.com/aki-art/ONI-Mods/wiki/How-to-send-a-log
+
+[b]Make sure you do NOT have the mod "Debug Console" enabled as it breaks the game's logging and makes the log useless for debugging![/b] 
+
+[hr][/hr]
+
+Do you like the mods I made? If you want, you can support me on [url=https://www.buymeacoffee.com/sgtimalas]Buy me a coffe[/url] or [url=https://ko-fi.com/sgtimalas]Kofi[/url] :D.
+
