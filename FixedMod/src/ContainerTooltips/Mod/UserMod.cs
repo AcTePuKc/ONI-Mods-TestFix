@@ -51,9 +51,21 @@ public sealed class UserMod : UserMod2
         if (ContentsStatusItem != null)
             return;
 
-        Strings.Add(new[] { NameStringKey, "Contents" });
-        Strings.Add(new[] { TooltipStringKey, "Shows the items in internal storage." });
-        Strings.Add(new[] { EmptyStringKey, "None" });
+        Strings.Add(new[]
+        {
+            NameStringKey,
+            global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME
+        });
+        Strings.Add(new[]
+        {
+            TooltipStringKey,
+            global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.TOOLTIP
+        });
+        Strings.Add(new[]
+        {
+            EmptyStringKey,
+            global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY
+        });
 
         ContentsStatusItem = new StatusItem(
             StatusItemId,

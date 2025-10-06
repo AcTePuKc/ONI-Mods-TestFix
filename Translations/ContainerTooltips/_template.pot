@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not Included"
+"POT Version: 2.0"
+
+msgctxt "STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME"
+msgid "Contents"
+msgstr ""
+
+msgctxt "STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.TOOLTIP"
+msgid "Shows the items in internal storage."
+msgstr ""
+
+msgctxt "STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY"
+msgid "None"
+msgstr ""
