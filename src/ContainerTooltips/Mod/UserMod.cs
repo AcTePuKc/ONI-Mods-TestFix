@@ -62,7 +62,7 @@ public sealed class UserMod : UserMod2
             "status_item_info",
             StatusItem.IconType.Info,
             NotificationType.Neutral,
-            allowMultiples: false,
+            false,
             OverlayModes.None.ID)
         {
             resolveStringCallback = ResolveStatusText,

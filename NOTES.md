@@ -295,3 +295,7 @@
 ## 2025-12-01 - ContainerTooltips status icon namespace
 - Updated `UserMod.InitializeStatusItem` to reference `StatusItem.IconType.Info` explicitly so the compiler resolves the nested enum without relying on an implicit `using`.
 - Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` toolchain (`command not found: dotnet`); maintainers need to rebuild locally to confirm the enum reference compiles cleanly.
+
+## 2025-11-05 - ContainerTooltips status item argument alignment
+- Swapped the named `allowMultiples` argument in `UserMod.InitializeStatusItem` for the positional boolean used by the upstream reference so the constructor overload resolves during compilation.
+- Unable to run `dotnet build src/oniMods.sln` here because the container lacks the .NET host and ONI-managed assemblies; maintainers should rebuild locally to confirm the status item now compiles without overload ambiguity.
