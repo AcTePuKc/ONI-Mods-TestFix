@@ -296,6 +296,10 @@
 - Updated `UserMod.InitializeStatusItem` to reference `StatusItem.IconType.Info` explicitly so the compiler resolves the nested enum without relying on an implicit `using`.
 - Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` toolchain (`command not found: dotnet`); maintainers need to rebuild locally to confirm the enum reference compiles cleanly.
 
+## 2025-12-02 - ContainerTooltips LocString registration
+- Updated `UserMod.RegisterString` to rely on `LocString.ToString()` with a `value.text` fallback so the method no longer references the removed `LocString.String` member.
+- Unable to execute `dotnet build src/oniMods.sln` because the container still reports `command not found: dotnet`; please rebuild locally to confirm the updated LocString conversion compiles with the ONI toolchain.
+
 ## 2025-11-05 - ContainerTooltips status item argument alignment
 - Swapped the named `allowMultiples` argument in `UserMod.InitializeStatusItem` for the positional boolean used by the upstream reference so the constructor overload resolves during compilation.
 - Unable to run `dotnet build src/oniMods.sln` here because the container lacks the .NET host and ONI-managed assemblies; maintainers should rebuild locally to confirm the status item now compiles without overload ambiguity.
