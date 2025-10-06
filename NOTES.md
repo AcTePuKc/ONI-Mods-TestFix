@@ -315,3 +315,8 @@
 ## 2025-12-05 - ContainerTooltips LocString text precedence
 - Adjusted `UserMod.GetLocStringText` to prefer the embedded `LocString.text` over `ToString()` so the default "Contents"/"None" registration values win when translations are missing.
 - `dotnet` remains unavailable in this environment, so `dotnet build src/oniMods.sln` could not be executed. In-game verification of the updated storage tooltip header should be performed locally.
+
+## 2025-11-29 - BetterInfoCards overlay tint bleed
+- Reproduced the report by reviewing the Harmony patches: the shadow bar prefab tint was applied during every `HoverTextDrawer` construction, so overlays inherited the BetterInfoCards background color.
+- Updated the replay flow to recolor only the instantiated shadow bars captured by `ExportWidgets`, preventing other systems from inheriting the tint.
+- Could not validate the visual fix in this container because the ONI runtime is unavailable; follow up in-game once the mod is rebuilt locally per `src/README.md`.

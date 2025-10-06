@@ -24,8 +24,6 @@ namespace BetterInfoCards
             {
                 if (ShouldTweak)
                     skin.shadowBarBorder = border;
-
-                ApplyShadowBarColor(skin.shadowBarWidget);
             }
         }
 
