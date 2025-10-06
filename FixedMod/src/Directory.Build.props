@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <Import Project="../src/Directory.Build.props" />
+  <Import Project="../../src/Directory.Build.props" />
 
   <PropertyGroup>
     <TranslationsFolder>..\..\..\Translations</TranslationsFolder>
