@@ -287,3 +287,7 @@
 ## 2025-11-29 - ContainerTooltips Storage.OnSpawn patch accessibility
 - Replaced the `nameof(Storage.OnSpawn)` Harmony target with a literal string to avoid accessibility errors when the nested `OnSpawn` reference is unavailable at compile time.
 - Attempted to rebuild via `dotnet build src/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`dotnet` command not found); maintainers should rebuild locally to confirm the accessibility warning no longer occurs.
+
+## 2025-11-30 - ContainerTooltips nullable annotations context
+- Enabled nullable reference type analysis in `ContainerTooltips.csproj` so the compiler interprets existing `?` annotations and reports nullability issues correctly.
+- Unable to run `dotnet build src/ContainerTooltips/ContainerTooltips.csproj` here because the workspace still lacks the `.NET` runtime; maintainers should rebuild locally to confirm the nullability warnings disappear.

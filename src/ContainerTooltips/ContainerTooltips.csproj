@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyTitle>ContainerTooltips</AssemblyTitle>
     <RootNamespace>BadMod.ContainerTooltips</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
     <Title>Container Tooltips</Title>
