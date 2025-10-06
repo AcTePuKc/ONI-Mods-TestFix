@@ -3,7 +3,7 @@ using BadMod.ContainerTooltips.Mod;
 using Klei.AI;
 using UnityEngine;
 
-namespace BadMod.ContainerTooltips.Storage;
+namespace BadMod.ContainerTooltips.Components;
 
 public sealed class StorageContentsBehaviour : KMonoBehaviour
 {

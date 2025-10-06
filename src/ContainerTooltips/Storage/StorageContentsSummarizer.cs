@@ -6,7 +6,7 @@ using BadMod.ContainerTooltips.Configuration;
 using BadMod.ContainerTooltips.Enums;
 using UnityEngine;
 
-namespace BadMod.ContainerTooltips.Storage;
+namespace BadMod.ContainerTooltips.Components;
 
 internal static class StorageContentsSummarizer
 {

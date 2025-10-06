@@ -270,3 +270,8 @@
 - Converted `STRINGS.CONTAINERTOOLTIPS` into a static container and manually register the status item strings during initialization so the mod no longer depends on AzeLib's reflection-based registration.
 - Marked the project with `<UsesAzeLib>false</UsesAzeLib>` to drop the inherited project reference now that no AzeLib types are required.
 - The workspace still lacks the ONI-managed assemblies and `.NET` runtime, so I was unable to run `dotnet build src/oniMods.sln`; maintainers should rebuild locally to confirm ContainerTooltips compiles cleanly without AzeLib.
+
+## 2025-11-26 - ContainerTooltips namespace collision fix
+- Renamed the ContainerTooltips storage component namespace to `BadMod.ContainerTooltips.Components` so it no longer conflicts with ONI's `Storage` type.
+- Updated the mod entry point and Harmony patch to import the new namespace.
+- `dotnet` remains unavailable in this workspace, preventing a rebuild; maintainers should run `dotnet build src/oniMods.sln` locally to confirm the namespace/type resolution succeeds.
