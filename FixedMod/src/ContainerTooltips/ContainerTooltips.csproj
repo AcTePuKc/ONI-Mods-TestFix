@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyTitle>ContainerTooltips</AssemblyTitle>
+    <RootNamespace>BadMod.ContainerTooltips</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Title>Container Tooltips</Title>
+    <Description>Displays the contents of storage components directly in their status items and tooltips.</Description>
+  </PropertyGroup>
+</Project>
