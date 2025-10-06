@@ -138,7 +138,7 @@ public sealed class UserMod : UserMod2
         {
             var value = entry.String;
 
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value) && !value.StartsWith("MISSING", StringComparison.Ordinal))
                 return value;
         }
 

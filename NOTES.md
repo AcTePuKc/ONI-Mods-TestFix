@@ -307,3 +307,7 @@
 ## 2025-11-05 - ContainerTooltips status item argument alignment
 - Swapped the named `allowMultiples` argument in `UserMod.InitializeStatusItem` for the positional boolean used by the upstream reference so the constructor overload resolves during compilation.
 - Unable to run `dotnet build src/oniMods.sln` here because the container lacks the .NET host and ONI-managed assemblies; maintainers should rebuild locally to confirm the status item now compiles without overload ambiguity.
+
+## 2025-12-04 - ContainerTooltips missing string sentinel guard
+- Updated `UserMod.GetStringWithFallback` to ignore ONI's `MISSING` sentinel when localized lookups fail so the status line and tooltip fall back to the bundled `LocString` text.
+- `dotnet` and the ONI-managed assemblies are unavailable in this workspace, preventing a rebuild or in-game verification; maintainers should compile `ContainerTooltips` locally and confirm the "Contents:" header renders without the placeholder string.
