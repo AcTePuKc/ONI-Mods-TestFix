@@ -1,4 +1,4 @@
-using GameUtil = global::GameUtil;
+using OniGameUtil = global::GameUtil;
 
 namespace BadMod.ContainerTooltips.Enums;
 
@@ -7,8 +7,8 @@ namespace BadMod.ContainerTooltips.Enums;
 /// </summary>
 public enum MassDisplayMode
 {
-    Default = (int)GameUtil.MetricMassFormat.UseThreshold,
-    Kilogram = (int)GameUtil.MetricMassFormat.Kilogram,
-    Gram = (int)GameUtil.MetricMassFormat.Gram,
-    Tonne = (int)GameUtil.MetricMassFormat.Tonne
+    Default = (int)OniGameUtil.MetricMassFormat.UseThreshold,
+    Kilogram = (int)OniGameUtil.MetricMassFormat.Kilogram,
+    Gram = (int)OniGameUtil.MetricMassFormat.Gram,
+    Tonne = (int)OniGameUtil.MetricMassFormat.Tonne
 }

@@ -279,3 +279,7 @@
 ## 2025-11-27 - ContainerTooltips missing type imports
 - Added the missing `Klei`, `Klei.AI`, and `Database` namespace imports so `LocString`, `Tag`, `Db`, and related types resolve without relying on implicit references.
 - The container still lacks the ONI-managed assemblies and `.NET` runtime, so `dotnet build src/oniMods.sln` cannot be executed here; maintainers should rebuild locally to confirm the project compiles with the restored imports.
+
+## 2025-11-28 - ContainerTooltips mass format alias cleanup
+- Updated `MassDisplayMode` to use a uniquely named alias for `global::GameUtil` so ContainerTooltips no longer collides with other `GameUtil` aliases when loaded alongside mods.
+- The workspace still lacks the ONI-managed assemblies and `.NET` runtime, preventing a rebuild; maintainers should run `dotnet build src/oniMods.sln` locally to confirm the enum resolves without namespace conflicts.
