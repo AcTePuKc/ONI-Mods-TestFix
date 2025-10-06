@@ -1,12 +1,10 @@
-using AzeLib;
-
 namespace STRINGS
 {
-    public sealed class CONTAINERTOOLTIPS : AStrings<CONTAINERTOOLTIPS>
+    public static class CONTAINERTOOLTIPS
     {
-        public sealed class STATUSITEMS
+        public static class STATUSITEMS
         {
-            public sealed class CONTAINERTOOLTIPSTATUSITEM
+            public static class CONTAINERTOOLTIPSTATUSITEM
             {
                 public static LocString NAME = "Contents";
                 public static LocString TOOLTIP = "Shows the items in internal storage.";

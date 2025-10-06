@@ -51,21 +51,9 @@ public sealed class UserMod : UserMod2
         if (ContentsStatusItem != null)
             return;
 
-        Strings.Add(new[]
-        {
-            NameStringKey,
-            global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME
-        });
-        Strings.Add(new[]
-        {
-            TooltipStringKey,
-            global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.TOOLTIP
-        });
-        Strings.Add(new[]
-        {
-            EmptyStringKey,
-            global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY
-        });
+        RegisterString(NameStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME);
+        RegisterString(TooltipStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.TOOLTIP);
+        RegisterString(EmptyStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY);
 
         ContentsStatusItem = new StatusItem(
             StatusItemId,
@@ -146,5 +134,15 @@ public sealed class UserMod : UserMod2
     private static bool IsSameTick(float left, float right)
     {
         return !float.IsNaN(left) && !float.IsNaN(right) && Mathf.Approximately(left, right);
+    }
+
+    private static void RegisterString(string key, LocString value)
+    {
+        var englishText = value.String;
+
+        if (string.IsNullOrEmpty(englishText))
+            englishText = value.ToString();
+
+        Strings.Add(new[] { key, englishText });
     }
 }

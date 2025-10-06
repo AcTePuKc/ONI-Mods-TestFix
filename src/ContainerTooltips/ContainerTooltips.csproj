@@ -8,4 +8,7 @@
     <Title>Container Tooltips</Title>
     <Description>Displays the contents of storage components directly in their status items and tooltips.</Description>
   </PropertyGroup>
+  <PropertyGroup>
+    <UsesAzeLib>false</UsesAzeLib>
+  </PropertyGroup>
 </Project>

@@ -265,3 +265,8 @@
 - Updated `FixedMod/src/Directory.Build.props` so the translations path points at the repository-level `Translations` directory, matching the packaging expectations.
 - Adjusted the `AzeLib` project reference to target the shared source tree while keeping the reference private so ContainerTooltips links against the library without redistributing its binaries.
 - Could not re-run `msbuild /t:Restore` or reload the solution here because the container still lacks `dotnet`/MSBuild (`bash: command not found: dotnet`); maintainers should restore the solution locally to confirm the reference resolves.
+
+## 2025-11-25 - ContainerTooltips AzeLib dependency removal
+- Converted `STRINGS.CONTAINERTOOLTIPS` into a static container and manually register the status item strings during initialization so the mod no longer depends on AzeLib's reflection-based registration.
+- Marked the project with `<UsesAzeLib>false</UsesAzeLib>` to drop the inherited project reference now that no AzeLib types are required.
+- The workspace still lacks the ONI-managed assemblies and `.NET` runtime, so I was unable to run `dotnet build src/oniMods.sln`; maintainers should rebuild locally to confirm ContainerTooltips compiles cleanly without AzeLib.
