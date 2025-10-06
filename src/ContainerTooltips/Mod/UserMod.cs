@@ -152,10 +152,10 @@ public sealed class UserMod : UserMod2
 
     private static string GetLocStringText(LocString value)
     {
-        var englishText = value.ToString();
+        var englishText = value.text ?? string.Empty;
 
         if (string.IsNullOrEmpty(englishText))
-            englishText = value.text ?? string.Empty;
+            englishText = value.ToString();
 
         return englishText;
     }

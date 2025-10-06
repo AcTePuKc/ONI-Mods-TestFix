@@ -311,3 +311,7 @@
 ## 2025-12-04 - ContainerTooltips missing string sentinel guard
 - Updated `UserMod.GetStringWithFallback` to ignore ONI's `MISSING` sentinel when localized lookups fail so the status line and tooltip fall back to the bundled `LocString` text.
 - `dotnet` and the ONI-managed assemblies are unavailable in this workspace, preventing a rebuild or in-game verification; maintainers should compile `ContainerTooltips` locally and confirm the "Contents:" header renders without the placeholder string.
+
+## 2025-12-05 - ContainerTooltips LocString text precedence
+- Adjusted `UserMod.GetLocStringText` to prefer the embedded `LocString.text` over `ToString()` so the default "Contents"/"None" registration values win when translations are missing.
+- `dotnet` remains unavailable in this environment, so `dotnet build src/oniMods.sln` could not be executed. In-game verification of the updated storage tooltip header should be performed locally.
