@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <TranslationsFolder>..\..\..\Translations</TranslationsFolder>
+    <TranslationsFolder>..\..\Translations</TranslationsFolder>
     <UsesAzeLib>false</UsesAzeLib>
   </PropertyGroup>
 
   <Import Project="../../src/Directory.Build.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\AzeLib\AzeLib.csproj" Private="true" />
+    <ProjectReference Include="..\..\src\AzeLib\AzeLib.csproj" Private="true" />
   </ItemGroup>
 </Project>

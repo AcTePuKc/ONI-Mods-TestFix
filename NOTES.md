@@ -260,3 +260,8 @@
 ## 2025-11-23 - ContainerTooltips import path fix
 - Corrected the relative imports in `FixedMod/src/Directory.Build.props` and `FixedMod/src/Directory.Build.targets` to reference the root `src` directory instead of the FixedMod subtree, eliminating the circular dependency Visual Studio reported when loading the project.
 - Build verification remains pending; the hosted environment still lacks the ONI-managed assemblies and `.NET` runtime, so maintainers should run `dotnet build src/oniMods.sln` locally to confirm the solution now loads without the circular import error.
+
+## 2025-11-24 - ContainerTooltips translation path and AzeLib reference
+- Updated `FixedMod/src/Directory.Build.props` so the translations path points at the repository-level `Translations` directory, matching the packaging expectations.
+- Adjusted the `AzeLib` project reference to target the shared source tree while keeping the reference private so ContainerTooltips links against the library without redistributing its binaries.
+- Could not re-run `msbuild /t:Restore` or reload the solution here because the container still lacks `dotnet`/MSBuild (`bash: command not found: dotnet`); maintainers should restore the solution locally to confirm the reference resolves.
