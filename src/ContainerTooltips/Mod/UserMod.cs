@@ -139,10 +139,10 @@ public sealed class UserMod : UserMod2
 
     private static void RegisterString(string key, LocString value)
     {
-        var englishText = value.String;
+        var englishText = value.ToString();
 
         if (string.IsNullOrEmpty(englishText))
-            englishText = value.ToString();
+            englishText = value.text ?? string.Empty;
 
         Strings.Add(new[] { key, englishText });
     }
