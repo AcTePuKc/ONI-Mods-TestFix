@@ -1,3 +1,5 @@
+using Klei;
+
 namespace STRINGS
 {
     public static class CONTAINERTOOLTIPS

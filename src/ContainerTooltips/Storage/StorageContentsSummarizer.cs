@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using BadMod.ContainerTooltips.Configuration;
 using BadMod.ContainerTooltips.Enums;
+using Database;
+using Klei;
+using Klei.AI;
 using UnityEngine;
 
 namespace BadMod.ContainerTooltips.Components;

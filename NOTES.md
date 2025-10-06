@@ -275,3 +275,7 @@
 - Renamed the ContainerTooltips storage component namespace to `BadMod.ContainerTooltips.Components` so it no longer conflicts with ONI's `Storage` type.
 - Updated the mod entry point and Harmony patch to import the new namespace.
 - `dotnet` remains unavailable in this workspace, preventing a rebuild; maintainers should run `dotnet build src/oniMods.sln` locally to confirm the namespace/type resolution succeeds.
+
+## 2025-11-27 - ContainerTooltips missing type imports
+- Added the missing `Klei`, `Klei.AI`, and `Database` namespace imports so `LocString`, `Tag`, `Db`, and related types resolve without relying on implicit references.
+- The container still lacks the ONI-managed assemblies and `.NET` runtime, so `dotnet build src/oniMods.sln` cannot be executed here; maintainers should rebuild locally to confirm the project compiles with the restored imports.
