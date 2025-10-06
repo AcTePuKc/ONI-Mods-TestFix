@@ -291,3 +291,7 @@
 ## 2025-11-30 - ContainerTooltips nullable annotations context
 - Enabled nullable reference type analysis in `ContainerTooltips.csproj` so the compiler interprets existing `?` annotations and reports nullability issues correctly.
 - Unable to run `dotnet build src/ContainerTooltips/ContainerTooltips.csproj` here because the workspace still lacks the `.NET` runtime; maintainers should rebuild locally to confirm the nullability warnings disappear.
+
+## 2025-12-01 - ContainerTooltips status icon namespace
+- Updated `UserMod.InitializeStatusItem` to reference `StatusItem.IconType.Info` explicitly so the compiler resolves the nested enum without relying on an implicit `using`.
+- Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` toolchain (`command not found: dotnet`); maintainers need to rebuild locally to confirm the enum reference compiles cleanly.

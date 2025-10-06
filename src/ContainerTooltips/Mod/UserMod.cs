@@ -60,7 +60,7 @@ public sealed class UserMod : UserMod2
             StatusItemId,
             ModStringsPrefix,
             "status_item_info",
-            IconType.Info,
+            StatusItem.IconType.Info,
             NotificationType.Neutral,
             allowMultiples: false,
             OverlayModes.None.ID)
