@@ -101,8 +101,8 @@ public sealed class UserMod : UserMod2
             return cached.Result;
 
         var summary = StorageContentsSummarizer.SummarizeStorageContents(storage, Options.Instance.StatusLineLimit);
-        var header = Strings.Get(NameStringKey).String;
-        var empty = Strings.Get(EmptyStringKey).String;
+        var header = GetStringWithFallback(NameStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME);
+        var empty = GetStringWithFallback(EmptyStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY);
         var result = string.Concat(header, ": ", string.IsNullOrEmpty(summary) ? empty : summary);
 
         StatusTextCache[instanceId] = new SummaryCacheEntry(tick, result);
@@ -124,12 +124,25 @@ public sealed class UserMod : UserMod2
             return cached.Result;
 
         var summary = StorageContentsSummarizer.SummarizeStorageContents(storage, Options.Instance.TooltipLineLimit);
-        var header = Strings.Get(NameStringKey).String;
-        var empty = Strings.Get(EmptyStringKey).String;
+        var header = GetStringWithFallback(NameStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME);
+        var empty = GetStringWithFallback(EmptyStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY);
         var result = string.Concat(header, ": ", string.IsNullOrEmpty(summary) ? empty : summary);
 
         TooltipTextCache[instanceId] = new SummaryCacheEntry(tick, result);
         return result;
+    }
+
+    private static string GetStringWithFallback(string key, LocString fallback)
+    {
+        if (Strings.TryGet(key, out var entry))
+        {
+            var value = entry.String;
+
+            if (!string.IsNullOrEmpty(value))
+                return value;
+        }
+
+        return GetLocStringText(fallback);
     }
 
     private static bool IsSameTick(float left, float right)
@@ -137,13 +150,18 @@ public sealed class UserMod : UserMod2
         return !float.IsNaN(left) && !float.IsNaN(right) && Mathf.Approximately(left, right);
     }
 
-    private static void RegisterString(string key, LocString value)
+    private static string GetLocStringText(LocString value)
     {
         var englishText = value.ToString();
 
         if (string.IsNullOrEmpty(englishText))
             englishText = value.text ?? string.Empty;
 
-        Strings.Add(new[] { key, englishText });
+        return englishText;
+    }
+
+    private static void RegisterString(string key, LocString value)
+    {
+        Strings.Add(new[] { key, GetLocStringText(value) });
     }
 }

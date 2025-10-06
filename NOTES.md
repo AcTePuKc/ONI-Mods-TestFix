@@ -300,6 +300,10 @@
 - Updated `UserMod.RegisterString` to rely on `LocString.ToString()` with a `value.text` fallback so the method no longer references the removed `LocString.String` member.
 - Unable to execute `dotnet build src/oniMods.sln` because the container still reports `command not found: dotnet`; please rebuild locally to confirm the updated LocString conversion compiles with the ONI toolchain.
 
+## 2025-12-03 - ContainerTooltips localized status fallback
+- Added a helper to resolve localized status item strings with a bundled fallback so overridden translations no longer regress to `MISSING:` when the string table lacks entries.
+- Unable to run `dotnet build src/oniMods.sln` or launch ONI in this environment (`dotnet` is unavailable and the game executable is not installed); maintainers should rebuild and verify in-game that storage bins now display the localized "Contents:" header.
+
 ## 2025-11-05 - ContainerTooltips status item argument alignment
 - Swapped the named `allowMultiples` argument in `UserMod.InitializeStatusItem` for the positional boolean used by the upstream reference so the constructor overload resolves during compilation.
 - Unable to run `dotnet build src/oniMods.sln` here because the container lacks the .NET host and ONI-managed assemblies; maintainers should rebuild locally to confirm the status item now compiles without overload ambiguity.
