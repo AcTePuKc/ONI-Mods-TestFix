@@ -24,7 +24,7 @@ namespace AzeLib.Attributes
         /// <returns>The component instance that should be assigned to the field.</returns>
         protected virtual object? ResolveComponent(Type componentType) => GetComponent(componentType);
 
-        public void OnSpawn()
+        public virtual void OnSpawn()
         {
             var thisType = GetType();
             var cachedFields = MyIntGetFieldCache.GetOrAdd(thisType, BuildMyIntGetFieldCache);

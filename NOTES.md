@@ -407,3 +407,7 @@
 ## 2025-12-20 - BetterDeselect transpiler predicate update
 - Swapped the `Manipulator` matchers in the BetterDeselect escape-close patches to use predicate-based overloads so Harmony's `Calls` helper drives the injection target.
 - Attempted to validate with `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the transpiler updates compile.
+
+## 2025-12-21 - AMonoBehaviour spawn hook virtualization
+- Marked `AMonoBehaviour.OnSpawn()` as `virtual` so derived components such as `LogicLabelSetting` can extend the spawn sequence while retaining the automatic `[MyCmpGet]` cache population.
+- Tried to rebuild with `dotnet build src/BetterLogicOverlay/BetterLogicOverlay.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the project build locally to confirm the new override compiles cleanly.
