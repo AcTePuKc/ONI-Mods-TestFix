@@ -10,4 +10,9 @@
   <PropertyGroup>
     <UsesAzeLib>false</UsesAzeLib>
   </PropertyGroup>
+  <ItemGroup Condition="Exists('Images')">
+    <Content Include="Images\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
