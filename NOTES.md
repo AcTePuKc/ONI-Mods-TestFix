@@ -159,6 +159,10 @@
 - Added a replay-phase fallback in the widget postfix to lazily create the container when the prefix is bypassed, keeping the `IsInterceptMode` guard so live draws remain untouched.
 - The ONI-managed assemblies and runtime are still unavailable here, so `dotnet build src/oniMods.sln` and in-game hover validation of multi-column wrapping must be performed in a full environment.
 
+## 2025-11-02 - AzeLib spawn hook virtualization
+- Updated `AMonoBehaviour.OnSpawn` to be virtual so mods like BetterLogicOverlay can override the spawn hook while preserving the attribute-driven component resolution.
+- Attempted `dotnet build src/oniMods.sln`, but the container image still lacks the .NET host (`dotnet` command is unavailable). Rebuild the solution in a full ONI environment to confirm the override compiles.
+
 ## 2025-11-02 - BetterInfoCards hover drawer null guards
 - Hardened the hover drawer patches so every `DrawIcon`, `DrawText`, `AddIndent`, `NewLine`, and `EndShadowBar` prefix verifies `curInfoCard` before replaying captured actions, logging and deferring to vanilla rendering when the card context is missing.
 - Reset `curInfoCard` whenever `BeginShadowBar` skips allocation to avoid replaying into a stale card when the intercept path is bypassed.
