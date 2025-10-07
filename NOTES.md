@@ -348,3 +348,7 @@
 - Replaced the lingering ILSpy ref-cast helpers in `DevMiniBootstrap`, `CenterMini`, and `UI` with idiomatic property access and `Vector2` construction so Unity's compiler stops reporting CS1525 syntax errors.
 - Cached the badge sprite rect once when configuring the layout element to avoid repeated struct copies while setting width and height.
 - Attempted to rebuild with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still reports `command not found: dotnet`; maintainers must re-run the build on a workstation with the ONI toolchain to confirm the cleanup compiles.【1200ed†L1-L2】
+## 2025-12-10 - DevLoader shared reference cleanup
+- Removed the hard-coded `Assembly-CSharp`, `Assembly-CSharp-firstpass`, and `Unity.TextMeshPro` references from `DevLoader.csproj` so the project now relies on the shared `Directory.Build.props` targets for ONI assemblies.
+- Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`dotnet: command not found`); maintainers should rebuild locally to confirm DevLoader compiles against the shared targets.
+
