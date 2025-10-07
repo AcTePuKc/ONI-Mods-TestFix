@@ -396,3 +396,7 @@
 - Qualified the DevLoader hotkey loading callbacks and runtime toggle event with `System.Action` so the compiler binds against the BCL delegates explicitly.
 - Attempted to run `dotnet build src/DevLoader/DevLoader.csproj` to confirm the delegate changes compile, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rebuild locally to verify.
 
+## 2025-12-18 - DevLoader implicit operator removal follow-up
+- Replaced every `Object.op_Implicit` usage inside `CenterMini` and `DevMiniBootstrap` with explicit null checks to resolve the CS0558 compiler errors introduced by Unity's stripped implicit operators.
+- Tried to verify the fix via `dotnet build src/DevLoader/DevLoader.csproj`, but the container continues to report `command not found: dotnet`; rerun the build locally to ensure the DevLoader project compiles cleanly.
+
