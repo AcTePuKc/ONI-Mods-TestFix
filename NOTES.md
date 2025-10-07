@@ -400,3 +400,7 @@
 - Replaced every `Object.op_Implicit` usage inside `CenterMini` and `DevMiniBootstrap` with explicit null checks to resolve the CS0558 compiler errors introduced by Unity's stripped implicit operators.
 - Tried to verify the fix via `dotnet build src/DevLoader/DevLoader.csproj`, but the container continues to report `command not found: dotnet`; rerun the build locally to ensure the DevLoader project compiles cleanly.
 
+## 2025-12-19 - DevLoader Unity UI API alignment
+- Updated `CenterMini` to use `Selectable.Transition.None` and `Button.ButtonClickedEvent` so the generated IL no longer depends on deprecated Unity UI type aliases.
+- Attempted to rebuild with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the Unity UI references resolve correctly.
+

@@ -90,9 +90,9 @@ public static class CenterMini
 			_img.sprite = (Config.Enabled ? (_onMini ?? _offMini) : (_offMini ?? _onMini));
                         Debug.Log((object)("[DevLoader][MiniCenter] Image sprite set -> " + (((Object)_img.sprite != null) ? ((Object)_img.sprite).name : "<null>")));
 			Button component = val3.GetComponent<Button>();
-			((Selectable)component).transition = (Transition)0;
-			((UnityEventBase)component.onClick).RemoveAllListeners();
-			ButtonClickedEvent onClick = component.onClick;
+                        ((Selectable)component).transition = Selectable.Transition.None;
+                        ((UnityEventBase)component.onClick).RemoveAllListeners();
+                        Button.ButtonClickedEvent onClick = component.onClick;
 			object obj2 = _003C_003Ec._003C_003E9__3_0;
 			if (obj2 == null)
 			{
