@@ -352,3 +352,8 @@
 - Removed the hard-coded `Assembly-CSharp`, `Assembly-CSharp-firstpass`, and `Unity.TextMeshPro` references from `DevLoader.csproj` so the project now relies on the shared `Directory.Build.props` targets for ONI assemblies.
 - Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`dotnet: command not found`); maintainers should rebuild locally to confirm DevLoader compiles against the shared targets.
 
+## 2025-12-11 - BetterInfoCards & ContainerTooltips reference cleanup
+- Dropped the hard-coded ONI assembly references from the BetterInfoCards and ContainerTooltips project files so they inherit the publicized `_public` DLLs via `Directory.Build.props`.
+- Kept the explicit `Microsoft.CSharp` reference for BetterInfoCards while relying on the shared props for the remaining dependencies to avoid duplicate hint paths.
+- Attempted to run `dotnet build src/oniMods.sln`, but the container still reports `command not found: dotnet`; maintainers should rebuild locally to confirm both projects resolve the shared `_public` assemblies.
+
