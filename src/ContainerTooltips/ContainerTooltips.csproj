@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyTitle>ContainerTooltips</AssemblyTitle>
-    <RootNamespace>BadMod.ContainerTooltips</RootNamespace>
+    <RootNamespace>ContainerTooltips</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
