@@ -5,7 +5,7 @@ namespace DevLoader;
 
 public static class Runtime
 {
-	public static event Action<bool> Toggled;
+        public static event System.Action<bool> Toggled;
 
 	public static void ApplyToggle(bool enabled)
 	{

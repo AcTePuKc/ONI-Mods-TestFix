@@ -21,7 +21,7 @@ public class Hotkeys : MonoBehaviour
                 if ((Object)Game.Instance != null && (Object)PauseScreen.Instance != null)
 		{
 			Debug.Log((object)"[DevLoader] Ctrl+1 → Saliendo al menú sin guardar");
-			LoadingOverlay.Load((Action)delegate
+                        LoadingOverlay.Load((System.Action)delegate
 			{
 				((KScreen)PauseScreen.Instance).Deactivate();
 				PauseScreen.TriggerQuitGame();
@@ -33,7 +33,7 @@ public class Hotkeys : MonoBehaviour
 		if (!string.IsNullOrEmpty(latestSaveForCurrentDLC))
 		{
 			SaveLoader.SetActiveSaveFilePath(latestSaveForCurrentDLC);
-			LoadingOverlay.Load((Action)delegate
+                        LoadingOverlay.Load((System.Action)delegate
 			{
 				App.LoadScene("backend");
 			});
