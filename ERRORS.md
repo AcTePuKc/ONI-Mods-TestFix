@@ -53,3 +53,9 @@
 - **Issue:** The DevLoader project would not compile because the decompiled sources still contained ILSpy ref-cast helpers (e.g., `((Scene)(ref scene)).name`, `((Rect)(ref rect)).width`) that generate CS1525 syntax errors under the Unity/.NET compiler.
 - **Resolution:** Replaced the ref-cast helper calls with direct property access, reintroduced idiomatic `Vector2` construction for anchor settings, and cached the sprite rect once when configuring the badge layout.
 - **Status:** Fixed
+## 2025-12-10 - DevLoader reference configuration drift
+- **Module:** DevLoader project configuration
+- **Issue:** `DevLoader.csproj` hard-coded ONI assembly references, diverging from the shared `Directory.Build.props` and forcing contributors to maintain local filesystem paths.
+- **Resolution:** Removed the redundant `<Reference>` entries so DevLoader now inherits the managed assembly references from the shared build targets.
+- **Status:** Fixed
+
