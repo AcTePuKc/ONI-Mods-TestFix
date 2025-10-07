@@ -58,6 +58,10 @@
 - Relaxed the widget matching so `InfoCardWidgets` recognises hover drawer clones by comparing prefab names (sans `"(Clone)"`) and verifying the component layout/rect dimensions.
 - Unable to rebuild or verify the mod in-game here because the container lacks the ONI managed assemblies and a .NET runtime; maintainers should rebuild via `dotnet build src/oniMods.sln` and confirm stacked hover cards wrap correctly.
 
+## 2025-10-18 - DevLoader UI event type alignment
+- Replaced the raw `Transition` and `ButtonClickedEvent` aliases in `DevLoader/UI.cs` with the explicit `Selectable.Transition` and `Button.ButtonClickedEvent` references so Unity resolves the proper nested types during compilation.
+- Attempted to run `dotnet build src/DevLoader/DevLoader.csproj` to confirm the change compiles, but the container still reports `command not found: dotnet`; please rebuild locally with the ONI toolchain to verify the badge UI compiles against Unity's UI assemblies.
+
 ## 2025-10-14 - DevLoader UnityEngine.Object alias cleanup
 - Updated DevLoader's runtime UI helpers to alias `UnityEngine.Object` explicitly so null checks resolve against Unity's overloads instead of `System.Object`.
 - Attempted to verify by running `dotnet build src/oniMods.sln -t:DevLoader`, but the container still lacks a .NET host (`dotnet` command missing), so compilation must be performed on a workstation with the ONI toolchain installed.
