@@ -70,7 +70,7 @@ internal sealed class DevMiniBootstrap : MonoBehaviour
 		try
 		{
 			Transform val = FindIngameParent();
-			Debug.Log((object)("[DevLoader][MiniCenter] TryInstallNow parent=" + (Object.op_Implicit((Object)val) ? ((Object)val).name : "<null>")));
+                        Debug.Log((object)("[DevLoader][MiniCenter] TryInstallNow parent=" + (((Object)val != null) ? ((Object)val).name : "<null>")));
 			if ((Object)val != null)
 			{
 				CenterMini.Ensure(val);

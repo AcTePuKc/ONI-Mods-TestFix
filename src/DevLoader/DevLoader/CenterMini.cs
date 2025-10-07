@@ -64,7 +64,7 @@ public static class CenterMini
 		{
 			_onMini = TryLoadMini("mini_dev_on.png", "mini_dev_on");
 			_offMini = TryLoadMini("mini_dev_off.png", "mini_dev_off");
-			Debug.Log((object)("[DevLoader][MiniCenter] Sprites: on=" + (Object.op_Implicit((Object)_onMini) ? ((Object)_onMini).name : "<null>") + " off=" + (Object.op_Implicit((Object)_offMini) ? ((Object)_offMini).name : "<null>")));
+                        Debug.Log((object)("[DevLoader][MiniCenter] Sprites: on=" + (((Object)_onMini != null) ? ((Object)_onMini).name : "<null>") + " off=" + (((Object)_offMini != null) ? ((Object)_offMini).name : "<null>")));
 			Transform val2 = (((Object)parentHint != null) ? parentHint.root : null);
 			if ((Object)val2 == null && (Object)parentHint != null)
 			{
@@ -88,7 +88,7 @@ public static class CenterMini
 			_img.preserveAspect = true;
 			((Graphic)_img).color = Color.white;
 			_img.sprite = (Config.Enabled ? (_onMini ?? _offMini) : (_offMini ?? _onMini));
-			Debug.Log((object)("[DevLoader][MiniCenter] Image sprite set -> " + (Object.op_Implicit((Object)_img.sprite) ? ((Object)_img.sprite).name : "<null>")));
+                        Debug.Log((object)("[DevLoader][MiniCenter] Image sprite set -> " + (((Object)_img.sprite != null) ? ((Object)_img.sprite).name : "<null>")));
 			Button component = val3.GetComponent<Button>();
 			((Selectable)component).transition = (Transition)0;
 			((UnityEventBase)component.onClick).RemoveAllListeners();
@@ -142,7 +142,7 @@ public static class CenterMini
 		}
 		Sprite val = (Config.Enabled ? (_onMini ?? _offMini) : (_offMini ?? _onMini));
 		_img.sprite = val;
-		Debug.Log((object)("[DevLoader][MiniCenter] UpdateIcon -> " + (Config.Enabled ? "ON" : "OFF") + " sprite=" + (Object.op_Implicit((Object)val) ? ((Object)val).name : "<null>")));
+                Debug.Log((object)("[DevLoader][MiniCenter] UpdateIcon -> " + (Config.Enabled ? "ON" : "OFF") + " sprite=" + (((Object)val != null) ? ((Object)val).name : "<null>")));
 	}
 
 	private static Sprite TryLoadMini(string file, string atlasKey)
@@ -181,7 +181,7 @@ public static class CenterMini
 		{
                         HashedString hashedAtlasKey = new HashedString(atlasKey);
                         Sprite sprite = Assets.GetSprite(hashedAtlasKey);
-			Debug.Log((object)("[DevLoader][MiniCenter] Atlas  + atlasKey +  -> " + (Object.op_Implicit((Object)sprite) ? ((Object)sprite).name : "<null>")));
+                        Debug.Log((object)("[DevLoader][MiniCenter] Atlas  + atlasKey +  -> " + (((Object)sprite != null) ? ((Object)sprite).name : "<null>")));
 			return sprite;
 		}
 		catch (Exception ex2)
