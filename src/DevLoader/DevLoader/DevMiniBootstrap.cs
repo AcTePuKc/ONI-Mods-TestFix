@@ -41,11 +41,11 @@ internal sealed class DevMiniBootstrap : MonoBehaviour
 		Debug.Log((object)"[DevLoader][MiniCenter] Bootstrap Destroy");
 	}
 
-	private void OnActiveSceneChanged(Scene oldS, Scene newS)
-	{
-		Debug.Log((object)("[DevLoader][MiniCenter] SceneChanged: " + ((Scene)(ref oldS)).name + " -> " + ((Scene)(ref newS)).name));
-		TryInstallNow();
-	}
+        private void OnActiveSceneChanged(Scene oldS, Scene newS)
+        {
+                Debug.Log((object)("[DevLoader][MiniCenter] SceneChanged: " + oldS.name + " -> " + newS.name));
+                TryInstallNow();
+        }
 
 	private IEnumerator InstallUntilFound()
 	{
@@ -101,8 +101,8 @@ internal sealed class DevMiniBootstrap : MonoBehaviour
 				}
 			}
 		}
-		Scene activeScene = SceneManager.GetActiveScene();
-		GameObject[] rootGameObjects = ((Scene)(ref activeScene)).GetRootGameObjects();
+                Scene activeScene = SceneManager.GetActiveScene();
+                GameObject[] rootGameObjects = activeScene.GetRootGameObjects();
 		GameObject[] array4 = rootGameObjects;
 		foreach (GameObject val2 in array4)
 		{

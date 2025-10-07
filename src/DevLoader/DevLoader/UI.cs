@@ -95,14 +95,11 @@ public static class UI
 		}
 		((Graphic)_img).SetNativeSize();
 		LayoutElement val2 = val.AddComponent<LayoutElement>();
-		Rect rect = _img.sprite.rect;
-		val2.minWidth = ((Rect)(ref rect)).width;
-		rect = _img.sprite.rect;
-		val2.minHeight = ((Rect)(ref rect)).height;
-		rect = _img.sprite.rect;
-		val2.preferredWidth = ((Rect)(ref rect)).width;
-		rect = _img.sprite.rect;
-		val2.preferredHeight = ((Rect)(ref rect)).height;
+                Rect rect = _img.sprite.rect;
+                val2.minWidth = rect.width;
+                val2.minHeight = rect.height;
+                val2.preferredWidth = rect.width;
+                val2.preferredHeight = rect.height;
 		Button component = val.GetComponent<Button>();
 		((Selectable)component).transition = (Transition)0;
 		ButtonClickedEvent onClick = component.onClick;
