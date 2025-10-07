@@ -343,3 +343,8 @@
 - Updated `DevLoader.csproj` to copy any `.png` under `src/DevLoader/Images/` when present, keeping the build ready for locally supplied art assets.
 - Added `src/DevLoader/Images/README.md` with instructions to drop `dev_on.png`, `dev_off.png`, `mini_dev_on.png`, and `mini_dev_off.png` into the folder before building.
 - Still blocked from running `dotnet build src/DevLoader/DevLoader.csproj` in this container (`command not found: dotnet`); rerun the build locally after restoring the four PNGs.
+
+## 2025-12-09 - DevLoader CS1525 cleanup
+- Replaced the lingering ILSpy ref-cast helpers in `DevMiniBootstrap`, `CenterMini`, and `UI` with idiomatic property access and `Vector2` construction so Unity's compiler stops reporting CS1525 syntax errors.
+- Cached the badge sprite rect once when configuring the layout element to avoid repeated struct copies while setting width and height.
+- Attempted to rebuild with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still reports `command not found: dotnet`; maintainers must re-run the build on a workstation with the ONI toolchain to confirm the cleanup compiles.【1200ed†L1-L2】

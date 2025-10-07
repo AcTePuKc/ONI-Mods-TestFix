@@ -47,3 +47,9 @@
 - **Issue:** Overriding the `shadowBarWidget` tint at construction time recolored every `HoverTextDrawer` consumer, so world overlays adopted the info card background color.
 - **Resolution:** Stop mutating the skin prefab and instead recolor the instantiated shadow bar for each BetterInfoCards hover card during replay.
 - **Status:** Fixed
+
+## 2025-12-09 - DevLoader decompiler artifacts (CS1525)
+- **Module:** DevLoader bootstrap and badge UI wiring
+- **Issue:** The DevLoader project would not compile because the decompiled sources still contained ILSpy ref-cast helpers (e.g., `((Scene)(ref scene)).name`, `((Rect)(ref rect)).width`) that generate CS1525 syntax errors under the Unity/.NET compiler.
+- **Resolution:** Replaced the ref-cast helper calls with direct property access, reintroduced idiomatic `Vector2` construction for anchor settings, and cached the sprite rect once when configuring the badge layout.
+- **Status:** Fixed

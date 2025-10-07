@@ -116,16 +116,15 @@ public static class CenterMini
 			Runtime.Toggled += OnToggled;
 			UpdateIcon();
 		}
-		RectTransform obj3 = val;
-		RectTransform obj4 = val;
-		RectTransform obj5 = val;
-		Vector2 val5 = default(Vector2);
-		((Vector2)(ref val5))._002Ector(1f, 1f);
-		obj5.pivot = val5;
-		Vector2 anchorMin = (obj4.anchorMax = val5);
-		obj3.anchorMin = anchorMin;
-		val.anchoredPosition = new Vector2(-1100f, -18f);
-	}
+                if (!((Object)(object)val == (Object)null))
+                {
+                        Vector2 anchor = new Vector2(1f, 1f);
+                        val.pivot = anchor;
+                        val.anchorMin = anchor;
+                        val.anchorMax = anchor;
+                        val.anchoredPosition = new Vector2(-1100f, -18f);
+                }
+        }
 
 	private static void OnToggled(bool enabled)
 	{
