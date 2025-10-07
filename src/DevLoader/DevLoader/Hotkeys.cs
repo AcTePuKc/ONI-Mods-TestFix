@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
@@ -17,7 +18,7 @@ public class Hotkeys : MonoBehaviour
 		{
 			return;
 		}
-		if ((Object)(object)Game.Instance != (Object)null && (Object)(object)PauseScreen.Instance != (Object)null)
+                if ((Object)Game.Instance != null && (Object)PauseScreen.Instance != null)
 		{
 			Debug.Log((object)"[DevLoader] Ctrl+1 → Saliendo al menú sin guardar");
 			LoadingOverlay.Load((Action)delegate

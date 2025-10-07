@@ -7,6 +7,7 @@ using System.Reflection;
 using HarmonyLib;
 using KMod;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
@@ -176,10 +177,10 @@ public static class LiveLoader
 			Marker[] array2 = array;
 			foreach (Marker marker in array2)
 			{
-				if ((Object)(object)marker != (Object)null && (Object)(object)((Component)marker).gameObject != (Object)null)
+				if ((Object)marker != null && (Object)((Component)marker).gameObject != null)
 				{
 					num4++;
-					Object.Destroy((Object)(object)((Component)marker).gameObject);
+					Object.Destroy((Object)((Component)marker).gameObject);
 				}
 			}
 			Resources.UnloadUnusedAssets();

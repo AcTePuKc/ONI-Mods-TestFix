@@ -2,6 +2,7 @@ using System;
 using HarmonyLib;
 using KMod;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
@@ -32,10 +33,10 @@ public class Mod : UserMod2
 		}
 		try
 		{
-			if ((Object)(object)s_hotkeysGO == (Object)null)
+                        if ((Object)s_hotkeysGO == null)
 			{
 				s_hotkeysGO = new GameObject("DevLoaderHotkeys");
-				Object.DontDestroyOnLoad((Object)(object)s_hotkeysGO);
+                                Object.DontDestroyOnLoad((Object)s_hotkeysGO);
 				s_hotkeysGO.AddComponent<Hotkeys>();
 				Debug.Log((object)"[DevLoader] Hotkeys listo (Ctrl+F1 / Ctrl+1).");
 			}

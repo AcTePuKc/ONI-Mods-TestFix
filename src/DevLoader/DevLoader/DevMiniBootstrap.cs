@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
@@ -13,7 +14,7 @@ internal sealed class DevMiniBootstrap : MonoBehaviour
 
 	private void Awake()
 	{
-		Object.DontDestroyOnLoad((Object)(object)((Component)this).gameObject);
+		Object.DontDestroyOnLoad((Object)((Component)this).gameObject);
 		((Object)this).name = "DevMiniBootstrap";
 		Debug.Log((object)"[DevLoader][MiniCenter] Bootstrap Awake");
 	}
@@ -57,7 +58,7 @@ internal sealed class DevMiniBootstrap : MonoBehaviour
 				yield return (object)new WaitForSecondsRealtime(1f);
 			}
 		}
-		Object.Destroy((Object)(object)((Component)this).gameObject);
+		Object.Destroy((Object)((Component)this).gameObject);
 	}
 
 	private void TryInstallNow()
@@ -69,8 +70,8 @@ internal sealed class DevMiniBootstrap : MonoBehaviour
 		try
 		{
 			Transform val = FindIngameParent();
-			Debug.Log((object)("[DevLoader][MiniCenter] TryInstallNow parent=" + (Object.op_Implicit((Object)(object)val) ? ((Object)val).name : "<null>")));
-			if ((Object)(object)val != (Object)null)
+			Debug.Log((object)("[DevLoader][MiniCenter] TryInstallNow parent=" + (Object.op_Implicit((Object)val) ? ((Object)val).name : "<null>")));
+			if ((Object)val != null)
 			{
 				CenterMini.Ensure(val);
 				installed = true;
@@ -107,7 +108,7 @@ internal sealed class DevMiniBootstrap : MonoBehaviour
 		foreach (GameObject val2 in array4)
 		{
 			Transform transform = val2.transform;
-			if ((Object)(object)transform != (Object)null && ((Object)transform).name.IndexOf("Canvas", StringComparison.OrdinalIgnoreCase) >= 0)
+			if ((Object)transform != null && ((Object)transform).name.IndexOf("Canvas", StringComparison.OrdinalIgnoreCase) >= 0)
 			{
 				return transform;
 			}

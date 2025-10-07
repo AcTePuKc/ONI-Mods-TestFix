@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
@@ -52,10 +53,10 @@ public static class CenterMini
 		//IL_0259: Unknown result type (might be due to invalid IL or missing references)
 		//IL_025e: Unknown result type (might be due to invalid IL or missing references)
 		//IL_0264: Expected O, but got Unknown
-		Debug.Log((object)("[DevLoader][MiniCenter] Ensure ENTER parentHint=" + (((Object)(object)parentHint != (Object)null) ? ((Object)parentHint).name : "<null>")));
+		Debug.Log((object)("[DevLoader][MiniCenter] Ensure ENTER parentHint=" + (((Object)parentHint != null) ? ((Object)parentHint).name : "<null>")));
 		GameObject obj = GameObject.Find("DevCenterMiniButton");
 		RectTransform val = ((obj != null) ? obj.GetComponent<RectTransform>() : null);
-		if ((Object)(object)val != (Object)null)
+		if ((Object)val != null)
 		{
 			Debug.Log((object)"[DevLoader][MiniCenter] Ya existe el botón mini, reubicando...");
 		}
@@ -63,14 +64,14 @@ public static class CenterMini
 		{
 			_onMini = TryLoadMini("mini_dev_on.png", "mini_dev_on");
 			_offMini = TryLoadMini("mini_dev_off.png", "mini_dev_off");
-			Debug.Log((object)("[DevLoader][MiniCenter] Sprites: on=" + (Object.op_Implicit((Object)(object)_onMini) ? ((Object)_onMini).name : "<null>") + " off=" + (Object.op_Implicit((Object)(object)_offMini) ? ((Object)_offMini).name : "<null>")));
-			Transform val2 = (((Object)(object)parentHint != (Object)null) ? parentHint.root : null);
-			if ((Object)(object)val2 == (Object)null && (Object)(object)parentHint != (Object)null)
+			Debug.Log((object)("[DevLoader][MiniCenter] Sprites: on=" + (Object.op_Implicit((Object)_onMini) ? ((Object)_onMini).name : "<null>") + " off=" + (Object.op_Implicit((Object)_offMini) ? ((Object)_offMini).name : "<null>")));
+			Transform val2 = (((Object)parentHint != null) ? parentHint.root : null);
+			if ((Object)val2 == null && (Object)parentHint != null)
 			{
 				val2 = parentHint;
 			}
-			Debug.Log((object)("[DevLoader][MiniCenter] Parent picked: " + (((Object)(object)val2 != (Object)null) ? ((Object)val2).name : "<null>")));
-			if ((Object)(object)val2 == (Object)null)
+			Debug.Log((object)("[DevLoader][MiniCenter] Parent picked: " + (((Object)val2 != null) ? ((Object)val2).name : "<null>")));
+			if ((Object)val2 == null)
 			{
 				Debug.LogWarning((object)"[DevLoader][MiniCenter] parent NULL, abort");
 				return;
@@ -87,7 +88,7 @@ public static class CenterMini
 			_img.preserveAspect = true;
 			((Graphic)_img).color = Color.white;
 			_img.sprite = (Config.Enabled ? (_onMini ?? _offMini) : (_offMini ?? _onMini));
-			Debug.Log((object)("[DevLoader][MiniCenter] Image sprite set -> " + (Object.op_Implicit((Object)(object)_img.sprite) ? ((Object)_img.sprite).name : "<null>")));
+			Debug.Log((object)("[DevLoader][MiniCenter] Image sprite set -> " + (Object.op_Implicit((Object)_img.sprite) ? ((Object)_img.sprite).name : "<null>")));
 			Button component = val3.GetComponent<Button>();
 			((Selectable)component).transition = (Transition)0;
 			((UnityEventBase)component.onClick).RemoveAllListeners();
@@ -116,7 +117,7 @@ public static class CenterMini
 			Runtime.Toggled += OnToggled;
 			UpdateIcon();
 		}
-                if (!((Object)(object)val == (Object)null))
+                if ((Object)val != null)
                 {
                         Vector2 anchor = new Vector2(1f, 1f);
                         val.pivot = anchor;
@@ -134,14 +135,14 @@ public static class CenterMini
 
 	private static void UpdateIcon()
 	{
-		if ((Object)(object)_img == (Object)null)
+		if ((Object)_img == null)
 		{
 			Debug.LogWarning((object)"[DevLoader][MiniCenter] UpdateIcon with _img NULL");
 			return;
 		}
 		Sprite val = (Config.Enabled ? (_onMini ?? _offMini) : (_offMini ?? _onMini));
 		_img.sprite = val;
-		Debug.Log((object)("[DevLoader][MiniCenter] UpdateIcon -> " + (Config.Enabled ? "ON" : "OFF") + " sprite=" + (Object.op_Implicit((Object)(object)val) ? ((Object)val).name : "<null>")));
+		Debug.Log((object)("[DevLoader][MiniCenter] UpdateIcon -> " + (Config.Enabled ? "ON" : "OFF") + " sprite=" + (Object.op_Implicit((Object)val) ? ((Object)val).name : "<null>")));
 	}
 
 	private static Sprite TryLoadMini(string file, string atlasKey)
@@ -179,7 +180,7 @@ public static class CenterMini
 		try
 		{
 			Sprite sprite = Assets.GetSprite(HashedString.op_Implicit(atlasKey));
-			Debug.Log((object)("[DevLoader][MiniCenter] Atlas  + atlasKey +  -> " + (Object.op_Implicit((Object)(object)sprite) ? ((Object)sprite).name : "<null>")));
+			Debug.Log((object)("[DevLoader][MiniCenter] Atlas  + atlasKey +  -> " + (Object.op_Implicit((Object)sprite) ? ((Object)sprite).name : "<null>")));
 			return sprite;
 		}
 		catch (Exception ex2)
