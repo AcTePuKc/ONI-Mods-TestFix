@@ -357,3 +357,7 @@
 - Kept the explicit `Microsoft.CSharp` reference for BetterInfoCards while relying on the shared props for the remaining dependencies to avoid duplicate hint paths.
 - Attempted to run `dotnet build src/oniMods.sln`, but the container still reports `command not found: dotnet`; maintainers should rebuild locally to confirm both projects resolve the shared `_public` assemblies.
 
+## 2025-12-12 - Directory.Build.props default path cleanup
+- Updated `Directory.Build.props.default` to default `SteamFolder` to the stock `C:\Program Files (x86)\Steam` install location and documented the `.user` override for custom setups.
+- Attempted to run `dotnet build src/oniMods.sln` to confirm a clean clone compiles without editing `.default`, but the container still lacks the `.NET` host (`dotnet: command not found`). Rebuild locally to verify.
+
