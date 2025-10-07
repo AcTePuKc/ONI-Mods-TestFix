@@ -3,6 +3,7 @@ using System.Linq;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
@@ -22,18 +23,18 @@ public static class MainMenuPatch
 		{
 			KButton[] componentsInChildren2 = ((Component)val2).GetComponentsInChildren<KButton>(true);
 			RectTransform component = ((Component)val2).GetComponent<RectTransform>();
-			if (componentsInChildren2 != null && componentsInChildren2.Length >= 5 && (Object)(object)component != (Object)null && component.anchorMin.x <= 0.05f && component.anchorMax.x <= 0.4f)
+                        if (componentsInChildren2 != null && componentsInChildren2.Length >= 5 && (Object)component != null && component.anchorMin.x <= 0.05f && component.anchorMax.x <= 0.4f)
 			{
 				val = ((Component)val2).transform;
 				break;
 			}
 		}
-		if ((Object)(object)val == (Object)null)
+                if ((Object)val == null)
 		{
 			VerticalLayoutGroup obj = componentsInChildren.FirstOrDefault((VerticalLayoutGroup vg) => ((Component)vg).GetComponentsInChildren<KButton>(true).Length >= 5);
 			val = ((obj != null) ? ((Component)obj).transform : null);
 		}
-		if ((Object)(object)val == (Object)null)
+                if ((Object)val == null)
 		{
 			return;
 		}
@@ -41,7 +42,7 @@ public static class MainMenuPatch
 		val.GetChild(val.childCount - 1).SetAsLastSibling();
 		try
 		{
-			if ((Object)(object)GameObject.Find("DevMiniBootstrap") == (Object)null)
+                        if ((Object)GameObject.Find("DevMiniBootstrap") == null)
 			{
 				GameObject val3 = new GameObject("DevMiniBootstrap");
 				val3.AddComponent<DevMiniBootstrap>();

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
@@ -31,14 +32,14 @@ public static class UI
 
 	private static bool _badgeForcedOnce;
 
-	public static void EnsureSprites()
-	{
-		if (!((Object)(object)_on != (Object)null) || !((Object)(object)_off != (Object)null))
-		{
-			_on = LoadSprite("dev_on.png");
-			_off = LoadSprite("dev_off.png");
-		}
-	}
+        public static void EnsureSprites()
+        {
+                if ((Object)_on == null || (Object)_off == null)
+                {
+                        _on = LoadSprite("dev_on.png");
+                        _off = LoadSprite("dev_off.png");
+                }
+        }
 
 	internal static Sprite LoadSprite(string file)
 	{
@@ -118,12 +119,12 @@ public static class UI
 		Runtime.Toggled += UpdateBadge;
 	}
 
-	public static void UpdateBadge(bool enabled)
-	{
-		if (!((Object)(object)_img == (Object)null))
-		{
-			_img.sprite = (enabled ? _on : _off);
-			((Graphic)_img).SetNativeSize();
-		}
-	}
+        public static void UpdateBadge(bool enabled)
+        {
+                if ((Object)_img != null)
+                {
+                        _img.sprite = (enabled ? _on : _off);
+                        ((Graphic)_img).SetNativeSize();
+                }
+        }
 }

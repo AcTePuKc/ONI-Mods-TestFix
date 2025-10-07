@@ -58,6 +58,10 @@
 - Relaxed the widget matching so `InfoCardWidgets` recognises hover drawer clones by comparing prefab names (sans `"(Clone)"`) and verifying the component layout/rect dimensions.
 - Unable to rebuild or verify the mod in-game here because the container lacks the ONI managed assemblies and a .NET runtime; maintainers should rebuild via `dotnet build src/oniMods.sln` and confirm stacked hover cards wrap correctly.
 
+## 2025-10-14 - DevLoader UnityEngine.Object alias cleanup
+- Updated DevLoader's runtime UI helpers to alias `UnityEngine.Object` explicitly so null checks resolve against Unity's overloads instead of `System.Object`.
+- Attempted to verify by running `dotnet build src/oniMods.sln -t:DevLoader`, but the container still lacks a .NET host (`dotnet` command missing), so compilation must be performed on a workstation with the ONI toolchain installed.
+
 ## 2025-10-14 - BetterInfoCards .NET 4.7 compatibility cleanup
 - Replaced the C# 8 range expression in `StripCloneSuffix` with an explicit `Substring` call so the project compiles under the original .NET 4.7 target.
 - Attempted to rebuild via `dotnet build src/BetterInfoCards/BetterInfoCards.csproj`, but the container still lacks the .NET host (`dotnet` command is unavailable), so compilation must be verified on a workstation with the ONI assemblies and toolchain installed.

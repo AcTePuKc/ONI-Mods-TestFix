@@ -1,14 +1,15 @@
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DevLoader;
 
 public static class Mark
 {
-	public static void Add(GameObject go)
-	{
-		if (!((Object)(object)go == (Object)null) && (Object)(object)go.GetComponent<Marker>() == (Object)null)
-		{
-			go.AddComponent<Marker>();
-		}
-	}
+        public static void Add(GameObject go)
+        {
+                if ((Object)go != null && (Object)go.GetComponent<Marker>() == null)
+                {
+                        go.AddComponent<Marker>();
+                }
+        }
 }
