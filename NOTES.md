@@ -384,6 +384,11 @@
 - Wanted to validate the fix with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still reports `command not found: dotnet`; please rebuild locally to confirm the namespace collision is resolved.
 
 
+## 2025-12-16 - DevLoader CenterMini hashed string conversion
+- Replaced the implicit `HashedString` conversion in `CenterMini` with an explicit constructor call to avoid relying on the removed operator.
+- Attempted to rebuild with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`); rerun the build locally to confirm the change compiles without the implicit-operator error.
+
+
 ## 2025-10-07 - Directory.Build.props public assembly repointing
 - Updated `src/Directory.Build.props` so the shared ONI references resolve the `_public` DLLs generated under `src/lib`, preventing accidental fallbacks to the raw game assemblies.
 - Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rebuild locally to confirm the solution consumes the publicized assemblies.

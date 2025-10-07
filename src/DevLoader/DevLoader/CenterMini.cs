@@ -179,7 +179,8 @@ public static class CenterMini
 		}
 		try
 		{
-			Sprite sprite = Assets.GetSprite(HashedString.op_Implicit(atlasKey));
+                        HashedString hashedAtlasKey = new HashedString(atlasKey);
+                        Sprite sprite = Assets.GetSprite(hashedAtlasKey);
 			Debug.Log((object)("[DevLoader][MiniCenter] Atlas  + atlasKey +  -> " + (Object.op_Implicit((Object)sprite) ? ((Object)sprite).name : "<null>")));
 			return sprite;
 		}
