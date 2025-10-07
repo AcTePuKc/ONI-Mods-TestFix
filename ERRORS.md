@@ -41,3 +41,9 @@
 - **Issue:** The FixedMod-specific `Directory.Build.props` and `.targets` imported `../src/...`, which resolved to the same directory and caused MSBuild to report a circular dependency when the solution loaded in Visual Studio.
 - **Resolution:** Updated the relative paths to `../../src/...` so the FixedMod projects now import the shared root build settings without recursion.
 - **Status:** Fixed
+
+## 2025-11-29 - BetterInfoCards overlay tint bleed
+- **Module:** BetterInfoCards hover card styling
+- **Issue:** Overriding the `shadowBarWidget` tint at construction time recolored every `HoverTextDrawer` consumer, so world overlays adopted the info card background color.
+- **Resolution:** Stop mutating the skin prefab and instead recolor the instantiated shadow bar for each BetterInfoCards hover card during replay.
+- **Status:** Fixed

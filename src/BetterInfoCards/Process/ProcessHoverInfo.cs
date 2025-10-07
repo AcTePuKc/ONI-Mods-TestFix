@@ -2,6 +2,7 @@ using BetterInfoCards.Export;
 using BetterInfoCards.Process;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BetterInfoCards
 {
@@ -32,6 +33,15 @@ namespace BetterInfoCards
             var widgets = ExportWidgets.ConsumeWidgets();
             if (widgets.Count > 0)
             {
+                foreach (var cardWidgets in widgets)
+                {
+                    var shadowBarGraphic = cardWidgets?.shadowBar?.Rect != null
+                        ? cardWidgets.shadowBar.Rect.GetComponent<Graphic>()
+                        : null;
+
+                    CardTweaker.ApplyShadowBarColor(shadowBarGraphic);
+                }
+
                 var grid = new Grid(widgets, widgets[0].YMax);
                 grid.MoveAndResizeInfoCards();
             }
