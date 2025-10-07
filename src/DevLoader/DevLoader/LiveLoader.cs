@@ -52,9 +52,9 @@ public static class LiveLoader
 			int num2 = 0;
 			int num3 = 0;
 			int num4 = 0;
-			foreach (string item in list)
-			{
-				string[] files = Directory.GetFiles(item, "*.dll", SearchOption.AllDirectories);
+                        foreach (string item in list)
+                        {
+                                string[] files = System.IO.Directory.GetFiles(item, "*.dll", SearchOption.AllDirectories);
 				Debug.Log((object)$"[DevLoader] Buscando DLLs en: {item} -> {files.Length} archivos");
 				string[] array = files;
 				foreach (string text in array)
@@ -299,7 +299,7 @@ public static class LiveLoader
 			string fullPath = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 			string parent = Path.Combine(fullPath, "mods");
 			string text = FindSubdirCaseInsensitive(parent, "dev");
-			if (Directory.Exists(text))
+                        if (System.IO.Directory.Exists(text))
 			{
 				list.Add(text);
 			}
@@ -312,7 +312,7 @@ public static class LiveLoader
 			string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 			string parent2 = Path.Combine(folderPath, "Klei", "OxygenNotIncluded", "mods");
 			string text2 = FindSubdirCaseInsensitive(parent2, "dev");
-			if (Directory.Exists(text2))
+                        if (System.IO.Directory.Exists(text2))
 			{
 				list.Add(text2);
 			}
@@ -323,10 +323,10 @@ public static class LiveLoader
 		try
 		{
 			string persistentDataPath = Application.persistentDataPath;
-			string path = Directory.GetParent(persistentDataPath)?.FullName ?? persistentDataPath;
+                        string path = System.IO.Directory.GetParent(persistentDataPath)?.FullName ?? persistentDataPath;
 			string parent3 = Path.Combine(path, "mods");
 			string text3 = FindSubdirCaseInsensitive(parent3, "dev");
-			if (Directory.Exists(text3))
+                        if (System.IO.Directory.Exists(text3))
 			{
 				list.Add(text3);
 			}
@@ -341,11 +341,11 @@ public static class LiveLoader
 	{
 		try
 		{
-			if (string.IsNullOrEmpty(parent) || !Directory.Exists(parent))
+                        if (string.IsNullOrEmpty(parent) || !System.IO.Directory.Exists(parent))
 			{
 				return "";
 			}
-			string[] directories = Directory.GetDirectories(parent);
+                        string[] directories = System.IO.Directory.GetDirectories(parent);
 			string[] array = directories;
 			foreach (string text in array)
 			{

@@ -379,6 +379,11 @@
 - Attempted to rebuild with `dotnet build src/oniMods.sln /t:ContainerTooltips`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rerun the build locally to confirm the accessibility change compiles cleanly.
 
 
+## 2025-12-15 - DevLoader directory namespace cleanup
+- Qualified every `Directory.*` call inside `LiveLoader` with `System.IO.` so the compiler no longer resolves the name against Unity's `UnityEngine.Directory` helper when both assemblies are loaded.
+- Wanted to validate the fix with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still reports `command not found: dotnet`; please rebuild locally to confirm the namespace collision is resolved.
+
+
 ## 2025-10-07 - Directory.Build.props public assembly repointing
 - Updated `src/Directory.Build.props` so the shared ONI references resolve the `_public` DLLs generated under `src/lib`, preventing accidental fallbacks to the raw game assemblies.
 - Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rebuild locally to confirm the solution consumes the publicized assemblies.
