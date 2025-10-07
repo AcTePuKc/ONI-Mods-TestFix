@@ -102,8 +102,8 @@ public static class UI
                 val2.preferredWidth = rect.width;
                 val2.preferredHeight = rect.height;
 		Button component = val.GetComponent<Button>();
-		((Selectable)component).transition = (Transition)0;
-		ButtonClickedEvent onClick = component.onClick;
+                ((Selectable)component).transition = Selectable.Transition.None;
+                Button.ButtonClickedEvent onClick = component.onClick;
 		object obj = _003C_003Ec._003C_003E9__6_0;
 		if (obj == null)
 		{
