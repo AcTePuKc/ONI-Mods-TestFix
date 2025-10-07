@@ -10,7 +10,7 @@ namespace BetterDeselect.Deselect
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            return instructions.Manipulator(AccessTools.Method(typeof(SelectTool), nameof(SelectTool.Activate)), AddMethod);
+            return instructions.Manipulator(i => i.Calls(AccessTools.Method(typeof(SelectTool), nameof(SelectTool.Activate))), AddMethod);
 
             IEnumerable<CodeInstruction> AddMethod(CodeInstruction i)
             {
@@ -32,7 +32,7 @@ namespace BetterDeselect.Deselect
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            return instructions.Manipulator(AccessTools.Method(typeof(SelectTool), nameof(SelectTool.Activate)), AddMethod);
+            return instructions.Manipulator(i => i.Calls(AccessTools.Method(typeof(SelectTool), nameof(SelectTool.Activate))), AddMethod);
 
             IEnumerable<CodeInstruction> AddMethod(CodeInstruction i)
             {
