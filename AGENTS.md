@@ -15,6 +15,7 @@
 > "Debug: Prefixed with `DEV_` ... exported to ONI's `mods\dev` folder. Release: Exported to the Release folder ... Zipped and placed in the Distribute folder." (`src/README.md`)
 
 ### Shared Libraries & Helpers
+- **Local `Directory.Build.props` overrides** — When configuring a new workstation, copy `src/Directory.Build.props.default` to `src/Directory.Build.props.user` and update the `SteamFolder`, `GameFolder`, and `ModFolder` values so they point at your local installations. These steps mirror the canonical workflow documented in `src/README.md` and ensure subsequent builds generate the `_public` assemblies referenced throughout the solution. The sample paths in the `.default` file are placeholders; replace them with paths valid for your machine before rebuilding.
 - `src/Directory.Build.props` automatically references both **AzeLib** and **PLib** for every project in the solution. Review that file before adding new dependencies to confirm the helpers are already included.
 - Prefer reusing existing utilities from these shared libraries rather than introducing new helper types. This keeps behavior consistent across mods and avoids duplicate maintenance work.
 - AzeLib extension documentation lives under `AzeLib/Extensions/README.md`; skim it when you need to understand or extend existing helpers before writing custom code.
