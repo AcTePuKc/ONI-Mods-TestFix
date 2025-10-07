@@ -328,3 +328,14 @@
 ## 2025-12-06 - DevLoader metadata alignment
 - Updated `DevLoader.csproj` to rely on the shared build props for references and assembly info so the project inherits the publicized ONI assemblies automatically.
 - Attempted to run `dotnet build src/DevLoader/DevLoader.csproj`, but the container still lacks the `.NET` host (`dotnet` command not found); maintainers should rebuild locally to confirm the shared references resolve.
+
+## 2025-12-07 - DevLoader badge artwork distribution
+- Added the missing badge sprites under `src/DevLoader/Images/` so the runtime loader can resolve `dev_on.png`, `dev_off.png`, and their mini variants without warning spam.
+- Updated `DevLoader.csproj` to mark each PNG as `Content` with `CopyToOutputDirectory=PreserveNewest`, ensuring they ship alongside the DLL during builds.
+- Unable to verify with `dotnet build src/DevLoader/DevLoader.csproj` because the container still reports `command not found: dotnet`; please rebuild locally to confirm the assets copy into the output folder.
+
+## 2025-12-08 - DevLoader badge artwork placeholder follow-up
+- Removed the placeholder sprite commit from source control; the container cannot host the final badge PNGs without breaking licensing, so the `Images/` directory is now empty apart from documentation.
+- Updated `DevLoader.csproj` to copy any `.png` under `src/DevLoader/Images/` when present, keeping the build ready for locally supplied art assets.
+- Added `src/DevLoader/Images/README.md` with instructions to drop `dev_on.png`, `dev_off.png`, `mini_dev_on.png`, and `mini_dev_off.png` into the folder before building.
+- Still blocked from running `dotnet build src/DevLoader/DevLoader.csproj` in this container (`command not found: dotnet`); rerun the build locally after restoring the four PNGs.
