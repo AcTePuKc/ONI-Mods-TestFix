@@ -404,3 +404,6 @@
 - Updated `CenterMini` to use `Selectable.Transition.None` and `Button.ButtonClickedEvent` so the generated IL no longer depends on deprecated Unity UI type aliases.
 - Attempted to rebuild with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the Unity UI references resolve correctly.
 
+## 2025-12-20 - BetterDeselect transpiler predicate update
+- Swapped the `Manipulator` matchers in the BetterDeselect escape-close patches to use predicate-based overloads so Harmony's `Calls` helper drives the injection target.
+- Attempted to validate with `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the transpiler updates compile.
