@@ -28,9 +28,9 @@
 					$(GameFolder)/Assembly-CSharp.dll;
 					$(GameFolder)/Assembly-CSharp-firstpass.dll;
                     $(GameFolder)/Unity.TextMeshPro.dll"/>
-    <Reference Include="Assembly-CSharp_public" HintPath="../lib/Assembly-CSharp.dll"  />
-    <Reference Include="Assembly-CSharp-firstpass_public" HintPath="../lib/Assembly-CSharp-firstpass.dll" />
-    <Reference Include="Unity.TextMeshPro_public" HintPath="../lib/Unity.TextMeshPro.dll" />
+    <Reference Include="Assembly-CSharp_public" HintPath="../lib/Assembly-CSharp_public.dll"  />
+    <Reference Include="Assembly-CSharp-firstpass_public" HintPath="../lib/Assembly-CSharp-firstpass_public.dll" />
+    <Reference Include="Unity.TextMeshPro_public" HintPath="../lib/Unity.TextMeshPro_public.dll" />
 
     <!--Meta References-->
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="*" />

@@ -365,3 +365,7 @@
 - Updated `Directory.Build.props.default` to default `SteamFolder` to the stock `C:\Program Files (x86)\Steam` install location and documented the `.user` override for custom setups.
 - Attempted to run `dotnet build src/oniMods.sln` to confirm a clean clone compiles without editing `.default`, but the container still lacks the `.NET` host (`dotnet: command not found`). Rebuild locally to verify.
 
+
+## 2025-10-07 - Directory.Build.props public assembly repointing
+- Updated `src/Directory.Build.props` so the shared ONI references resolve the `_public` DLLs generated under `src/lib`, preventing accidental fallbacks to the raw game assemblies.
+- Attempted to run `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rebuild locally to confirm the solution consumes the publicized assemblies.
