@@ -90,11 +90,23 @@
       <MergeAssemblies Include="$(TargetDir)PLib.dll" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ILRepackSearchPath Include="@(ReferencePath->'%(RootDir)%(Directory)')" />
+    </ItemGroup>
+
+    <RemoveDuplicates Inputs="@(ILRepackSearchPath)">
+      <Output TaskParameter="Filtered" ItemName="ILRepackSearchPath" />
+    </RemoveDuplicates>
+
+    <PropertyGroup>
+      <ILRepackLibraryPath>$(TargetDir);$(GameFolder);@(ILRepackSearchPath,';');$(MSBuildThisFileDirectory)..\lib\</ILRepackLibraryPath>
+    </PropertyGroup>
+
     <ILRepack
       Parallel="true"
       DebugInfo="true"
       InputAssemblies="@(MergeAssemblies)"
-      LibraryPath='$(TargetDir);$(GameFolder);$(RestorePackagesPath);$(NuGetPackageRoot);$(MSBuildThisFileDirectory)..\\lib\\'
+      LibraryPath="$(ILRepackLibraryPath)"
       TargetKind="SameAsPrimaryAssembly"
       OutputFile="$(MergedAssemblyPath)" />
 
