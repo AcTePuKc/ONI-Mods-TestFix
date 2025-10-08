@@ -21,7 +21,7 @@ namespace ContainerTooltips
     }
 
     [JsonObject(MemberSerialization.OptOut)]
-    [ModInfo("https://github.com/Identifier/ONIMods")]
+    [ModInfo("Container Tooltips")]
     public sealed class Options : SingletonOptions<Options>, IOptions
     {
         [Option("Sort Order", "Controls how container contents are ordered in the displayed list.")]
