@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!--Prevent game assemblies from being copied (and thus merged).-->
+  <Target Name="ClearCopyLocalReferences" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="$(GameFolder)\*" />
+    </ItemGroup>
+  </Target>
+</Project>
