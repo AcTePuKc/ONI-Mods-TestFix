@@ -12,8 +12,10 @@ namespace BetterLogicOverlay
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            var targetMethod = AccessTools.Method(typeof(LogicCircuitNetwork), nameof(LogicCircuitNetwork.IsBitActive), new[] { typeof(int) });
+
             return instructions.Manipulator(
-                AccessTools.Method(typeof(LogicCircuitNetwork), nameof(LogicCircuitNetwork.IsBitActive), new[] { typeof(int) }),
+                i => i.Calls(targetMethod),
                 ReplaceWithWrapper);
 
             IEnumerable<CodeInstruction> ReplaceWithWrapper(CodeInstruction i)

@@ -1,5 +1,9 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2025-12-21 - BetterLogicOverlay IsBitActive predicate update
+- Updated `GateColorOutput_Patch` to use Harmony's predicate-based `Manipulator` overload when targeting `LogicCircuitNetwork.IsBitActive`, preventing delegate signature mismatches when Harmony resolves the hook.
+- Attempted to validate with `dotnet build src/BetterLogicOverlay/BetterLogicOverlay.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the predicate change compiles without errors.
+
 ## Instrumentation
 - Added DEBUG-only diagnostics around `AzeUserMod.OnLoad` to log discovery, invocation, and total execution timing without affecting release builds.
 - Reflection-based discovery results are now cached so domain reloads reuse the same `OnLoad` metadata instead of re-scanning the assembly.
