@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
+using OniGameUtil = global::GameUtil;
 
 namespace ContainerTooltips
 {
@@ -13,10 +14,10 @@ namespace ContainerTooltips
 
     public enum MassDisplayMode
     {
-        Default = GameUtil.MetricMassFormat.UseThreshold,
-        Kilogram = GameUtil.MetricMassFormat.Kilogram,
-        Gram = GameUtil.MetricMassFormat.Gram,
-        Tonne = GameUtil.MetricMassFormat.Tonne
+        Default = (int)OniGameUtil.MetricMassFormat.UseThreshold,
+        Kilogram = (int)OniGameUtil.MetricMassFormat.Kilogram,
+        Gram = (int)OniGameUtil.MetricMassFormat.Gram,
+        Tonne = (int)OniGameUtil.MetricMassFormat.Tonne
     }
 
     [JsonObject(MemberSerialization.OptOut)]
