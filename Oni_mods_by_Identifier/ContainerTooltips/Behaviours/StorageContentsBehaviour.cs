@@ -1,100 +1,83 @@
 using System;
-using System.Linq;
+using Klei.AI;
+using UnityEngine;
 
 namespace ContainerTooltips
 {
     public sealed class StorageContentsBehaviour : KMonoBehaviour
     {
-        private Guid statusHandle;
-        private Storage[]? storages;
-        private KSelectable? selectable;
+        private static readonly EventSystem.IntraObjectHandler<StorageContentsBehaviour> OnStorageChangedHandler =
+            new((component, _) => component.OnStorageChanged());
 
-        // private static readonly EventSystem.IntraObjectHandler<StorageContentsBehaviour> OnStorageChangeDelegate = new((component, _) => component.OnStorageChange(_));
+        private Guid statusHandle;
+        private Storage? storage;
+        private KSelectable? selectable;
 
         protected override void OnPrefabInit()
         {
             base.OnPrefabInit();
-            storages = GetComponents<Storage>();
+            storage = GetComponent<Storage>();
             selectable = GetComponent<KSelectable>();
-            // Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.OnPrefabInit on {gameObject.name} storages={GetNames(storages)} selectable={GetName(selectable)}");
+            Subscribe((int)GameHashes.OnStorageChange, OnStorageChangedHandler);
         }
 
         protected override void OnSpawn()
         {
             base.OnSpawn();
-            // Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.OnSpawn on {gameObject.name} storages={GetNames(storages)} selectable={GetName(selectable)}");
             RefreshStatus();
-            // Subscribe((int)GameHashes.OnStorageChange, OnStorageChangeDelegate);
         }
 
         protected override void OnCleanUp()
         {
-            base.OnCleanUp();
-            Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.OnCleanUp on {gameObject.name} storages={GetNames(storages)} selectable={GetName(selectable)}");
-            // Unsubscribe((int)GameHashes.OnStorageChange, OnStorageChangeDelegate);
             ClearStatus();
+            Unsubscribe((int)GameHashes.OnStorageChange, OnStorageChangedHandler);
+            base.OnCleanUp();
         }
 
-        private void OnStorageChange(object _)
+        private void OnStorageChanged()
         {
-            Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.OnStorageChange event received for {gameObject.name} storages={GetNames(storages)} selectable={GetName(selectable)}");
+            if (storage != null)
+            {
+                UserMod.InvalidateCache(storage);
+            }
+
             RefreshStatus();
         }
 
         private void RefreshStatus()
         {
-            if (statusHandle != Guid.Empty)
+            if (storage == null || selectable == null)
             {
-                Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.RefreshStatus called on {gameObject.name} storages={GetNames(storages)} selectable={GetName(selectable)} handle={statusHandle}");
-            }
-
-            if (storages == null || storages.Length == 0 || selectable == null)
-            {
-                Debug.LogWarning($"[ContainerTooltips]: StorageContentsBehaviour.RefreshStatus missing storage or selectable on {gameObject.name} storages={GetNames(storages)} selectable={GetName(selectable)} handle={statusHandle}");
+                Debug.LogWarning($"[ContainerTooltips]: StorageContentsBehaviour.RefreshStatus missing dependencies on {name}");
+                ClearStatus();
                 return;
             }
 
             if (UserMod.ContentsStatusItem == null)
             {
-                Debug.LogError("[ContainerTooltips]: StorageContentsBehaviour.RefreshStatus found null contentsStatusItem");
+                Debug.LogWarning("[ContainerTooltips]: StorageContentsBehaviour.RefreshStatus found null ContentsStatusItem");
                 ClearStatus();
                 return;
             }
 
-            if (statusHandle != Guid.Empty && storages?.Any(s => s?.showInUI == true) != true)
+            if (statusHandle != Guid.Empty && !storage.showInUI)
             {
-                Debug.Log("[ContainerTooltips]: StorageContentsBehaviour.RefreshStatus cleaning our status item since no storage is set to show in UI");
                 ClearStatus();
                 return;
             }
 
-            var newStatusHandle = selectable.ReplaceStatusItem(statusHandle, UserMod.ContentsStatusItem, storages);
-            if (statusHandle != Guid.Empty)
-            {
-                Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.RefreshStatus applied status item on {gameObject.name}, new handle={newStatusHandle}");
-            }
-            statusHandle = newStatusHandle;
+            statusHandle = selectable.ReplaceStatusItem(statusHandle, UserMod.ContentsStatusItem, storage);
         }
 
         private void ClearStatus()
         {
-            // Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.ClearStatus called on {gameObject.name} storages={GetNames(storages)} selectable={GetName(selectable)} handle={statusHandle}");
-            if (statusHandle != Guid.Empty && selectable != null)
+            if (statusHandle == Guid.Empty || selectable == null)
             {
-                selectable.RemoveStatusItem(statusHandle, immediate: false);
-                Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour.ClearStatus removed status item on {gameObject.name}, handle={statusHandle}");
-                statusHandle = Guid.Empty;
+                return;
             }
-        }
 
-        private string GetName(KSelectable? selectable)
-        {
-            return selectable != null ? selectable.name : "<null>";
-        }
-
-        private string GetNames(Storage[]? storages)
-        {
-            return storages?.Length > 0 ? string.Join(", ", Array.ConvertAll(storages, s => s?.name ?? "<null>")) : "<none>";
+            selectable.RemoveStatusItem(statusHandle);
+            statusHandle = Guid.Empty;
         }
     }
 }

@@ -8,17 +8,17 @@ namespace ContainerTooltips
 {
     public static class StorageContentsSummarizer
     {
-        public static string SummarizeStorageContents(Storage[] storages, int maxLineCount)
+        public static string SummarizeStorageContents(Storage storage, int maxLineCount)
         {
             // Debug.Log($"[ContainerTooltips]: SummarizeStorageContents called for storage={storage?.name ?? "<null>"} maxLines={maxLines}");
 
-            if (storages == null)
+            if (storage == null)
             {
-                Debug.LogWarning("[ContainerTooltips]: Skipping null Storages");
+                Debug.LogWarning("[ContainerTooltips]: Skipping null Storage");
                 return string.Empty;
             }
 
-            var items = storages.SelectMany(storage => storage.items).ToList();
+            var items = storage.items;
             if (items == null || items.Count == 0)
             {
                 // Debug.Log("[ContainerTooltips]: SummarizeStorageContents found no items in storage(s)");

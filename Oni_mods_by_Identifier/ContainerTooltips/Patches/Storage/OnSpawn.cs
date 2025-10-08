@@ -1,4 +1,5 @@
 using HarmonyLib;
+using UnityEngine;
 
 namespace ContainerTooltips
 {
@@ -14,7 +15,7 @@ namespace ContainerTooltips
                 return;
             }
 
-            // Add our custom behavior to the storage game object, which has its own OnSpawn, OnCleanUp, etc that it will use to manage the status item
+            // Attach the behaviour so it can supply this storage component directly to the status item callbacks.
             __instance.gameObject.AddOrGet<StorageContentsBehaviour>();
 
             // Debug.Log($"[ContainerTooltips]: StorageContentsBehaviour ensured on {__instance.name}");
