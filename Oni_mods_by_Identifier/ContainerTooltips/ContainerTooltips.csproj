@@ -96,6 +96,25 @@
     <Move SourceFiles="$(MergedPdbPath)" DestinationFiles="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(MergedPdbPath)')" OverwriteReadOnlyFiles="true" />
   </Target>
 
+  <Target Name="TrimReferenceCopies"
+          AfterTargets="MergeDependencies"
+          BeforeTargets="CopyReleaseArtifacts"
+          Condition="Exists('$(TargetDir)')">
+    <ItemGroup>
+      <TrimFiles Include="@(ReferenceCopyLocalPaths)" Condition="Exists('%(Identity)')" />
+      <TrimFiles Include="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
+      <TrimFiles Include="$(TargetDir)PLib.pdb" Condition="Exists('$(TargetDir)PLib.pdb')" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <TrimDirectories Include="$(TargetDir)Merged" Condition="Exists('$(TargetDir)Merged')" />
+      <TrimDirectories Include="$(TargetDir)ILRepack" Condition="Exists('$(TargetDir)ILRepack')" />
+    </ItemGroup>
+
+    <Delete Files="@(TrimFiles)" />
+    <RemoveDir Directories="@(TrimDirectories)" />
+  </Target>
+
   <Target Name="PrepareReleaseFolders" AfterTargets="MergeDependencies" Condition="'$(Configuration)' == 'Release' And '$(ShouldDistribute)' != 'false'">
     <MakeDir Directories="$(DistributeFolder)" />
   </Target>
