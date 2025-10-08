@@ -60,10 +60,10 @@ Please test your translations to make sure everything works as intended before s
 
 ## Uploading
 *Thank you for your help!*  
-For your translation to be added, I will need the `.po` file. There are several ways you can get this file to me:
-- Create a new issue on this repository (preferred).
-- Create a PR.
-- Contact me on Discord (Aze#0066).
+For your translation to be added, I will need the `.po` file. There are several ways you can share this file with the Identifier maintainers:
+- [Open an issue](https://github.com/Identifier/ONIMods/issues) on the Identifier ONI Mods repository (preferred).
+- [Submit a pull request](https://github.com/Identifier/ONIMods/pulls) with your translation.
+- Reach out through the contact details listed in the repository's README if you need direct assistance.
 - Link it in Steam Workshop comments.
   
 #### Downloading from Github:
