@@ -1,0 +1,89 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build ContainerTooltips",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "-v:d",
+        "-c:${config:BuildConfiguration}",
+        "ContainerTooltips/ContainerTooltips.csproj"
+      ],
+      "group": "build",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Build ZoomSpeed",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "-v:d",
+        "-c:${config:BuildConfiguration}",
+        "ZoomSpeed/ZoomSpeed.csproj"
+      ],
+      "group": "build",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Build All Mods",
+      "dependsOn": [
+        "Build ContainerTooltips",
+        "Build ZoomSpeed"
+      ],
+      "dependsOrder": "parallel",
+      "group": "build",
+    },
+    {
+      "label": "Build + Deploy ContainerTooltips",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "-v:d",
+        "-c:${config:BuildConfiguration}",
+        "ContainerTooltips/ContainerTooltips.csproj",
+        "/p:DeployOniMod=true"
+      ],
+      "group": "build",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Build + Deploy ZoomSpeed",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "-v:d",
+        "-c:${config:BuildConfiguration}",
+        "ZoomSpeed/ZoomSpeed.csproj",
+        "/p:DeployOniMod=true"
+      ],
+      "group": "build",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Build + Deploy All Mods",
+      "dependsOn": [
+        "Build + Deploy ContainerTooltips",
+        "Build + Deploy ZoomSpeed"
+      ],
+      "dependsOrder": "parallel",
+      "group": "build",
+    }
+  ]
+}
