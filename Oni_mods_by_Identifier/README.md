@@ -33,3 +33,6 @@ Before distributing an archival build:
 - If new dependencies are required, document the source and expected filename in this section so future maintainers know how to repopulate their local `lib/` folder.
 
 By following these steps, the identifier-based archive stays consistent with the actively maintained mods while remaining ready for historical reference.
+
+## License
+The contents of this archive are distributed under the MIT License. See [`LICENSE`](./LICENSE) for the full terms, including the notice covering Peter Han's PLib dependency.
