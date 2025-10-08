@@ -1,4 +1,6 @@
+using Database;
 using HarmonyLib;
+using UnityEngine;
 
 namespace ContainerTooltips
 {

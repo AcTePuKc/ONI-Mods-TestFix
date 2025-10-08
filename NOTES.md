@@ -466,3 +466,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2025-12-25 - ContainerTooltips STRINGS archive sync
 - Bundled the `Mod/STRINGS.cs` scaffold inside `Oni_mods_by_Identifier/ContainerTooltips` so the legacy project matches the maintained repository's `global::STRINGS` constants without requiring a manual copy.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to confirm the SDK project automatically includes the new file, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to verify.
+
+## 2025-12-26 - ContainerTooltips Db.Initialize postfix imports
+- Added the missing `Database` and `UnityEngine` namespace imports to the legacy `Db.Initialize` postfix so the compiler resolves `Db` and `Debug` without relying on transitive usings.
+- Tried to rebuild with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the patch compiles.
