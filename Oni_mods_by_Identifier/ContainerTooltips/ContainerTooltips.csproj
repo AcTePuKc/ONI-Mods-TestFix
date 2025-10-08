@@ -52,6 +52,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Update="PLib">
+      <Private>true</Private>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="mod.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
