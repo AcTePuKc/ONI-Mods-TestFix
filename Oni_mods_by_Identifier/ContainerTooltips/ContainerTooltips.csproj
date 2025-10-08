@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <InstallFolder Condition="'$(InstallFolder)' == ''">$(MSBuildThisFileDirectory)..\Release\$(ModId)</InstallFolder>
-    <DistributeFolder Condition="'$(DistributeFolder)' == ''">$(MSBuildThisFileDirectory)..\Distribute\</DistributeFolder>
+    <InstallFolder Condition="'$(InstallFolder)' == ''">$(TargetDir)</InstallFolder>
+    <DistributeFolder Condition="'$(DistributeFolder)' == ''">$(MSBuildThisFileDirectory)..\Releases\</DistributeFolder>
     <DeployOniMod Condition="'$(DeployOniMod)' == ''">true</DeployOniMod>
     <ShouldDistribute Condition="'$(ShouldDistribute)' == ''">true</ShouldDistribute>
   </PropertyGroup>
@@ -82,8 +82,6 @@
   </Target>
 
   <Target Name="PrepareReleaseFolders" AfterTargets="MergeDependencies" Condition="'$(Configuration)' == 'Release' And '$(ShouldDistribute)' != 'false'">
-    <RemoveDir Directories="$(InstallFolder)" Condition="Exists('$(InstallFolder)')" />
-    <MakeDir Directories="$(InstallFolder)" />
     <MakeDir Directories="$(DistributeFolder)" />
   </Target>
 
