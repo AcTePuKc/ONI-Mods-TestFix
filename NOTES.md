@@ -415,3 +415,7 @@
 ## 2025-12-20 - BetterDeselect transpiler predicate update
 - Swapped the `Manipulator` matchers in the BetterDeselect escape-close patches to use predicate-based overloads so Harmony's `Calls` helper drives the injection target.
 - Attempted to validate with `dotnet build src/oniMods.sln`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the transpiler updates compile.
+
+## 2025-12-21 - BetterLogicOverlay broadcaster label component fetch
+- Injected a `[MyCmpGet]` field into `LogicBroadcasterSetting` so the label resolves the broadcaster's display name without using the component instance as a `KMonoBehaviour`.
+- Tried to rebuild with `dotnet build src/BetterLogicOverlay/BetterLogicOverlay.csproj` to confirm the missing `KMonoBehaviour` conversion error is resolved, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to verify.
