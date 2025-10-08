@@ -470,3 +470,8 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2025-12-26 - ContainerTooltips Db.Initialize postfix imports
 - Added the missing `Database` and `UnityEngine` namespace imports to the legacy `Db.Initialize` postfix so the compiler resolves `Db` and `Debug` without relying on transitive usings.
 - Tried to rebuild with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the patch compiles.
+
+## 2025-12-27 - ContainerTooltips storage summarizer sync
+- Replaced the legacy `StorageContentsSummarizer` with the maintained implementation so multi-line summaries match upstream behaviour while keeping the newline guard and explicit `GameUtil` formatting parameters.
+- Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to confirm the API alignment, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to verify.
+- Unable to spot-check tooltips in-game because Oxygen Not Included is not available in the container; please confirm multi-line summaries render identically on a workstation with the game installed.
