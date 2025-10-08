@@ -462,3 +462,7 @@ es the visibility compiler error.
 - Unable to validate in-game localization because the container cannot launch Oxygen Not Included; please load the mod with an a
 lternate language locally to confirm the fallback strings resolve correctly.
 
+
+## 2025-12-25 - ContainerTooltips STRINGS archive sync
+- Bundled the `Mod/STRINGS.cs` scaffold inside `Oni_mods_by_Identifier/ContainerTooltips` so the legacy project matches the maintained repository's `global::STRINGS` constants without requiring a manual copy.
+- Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to confirm the SDK project automatically includes the new file, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to verify.
