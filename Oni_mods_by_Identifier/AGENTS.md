@@ -7,6 +7,6 @@
 - Package releases by rebuilding with the desired configuration and zipping the exported contents under `Releases/` for distribution.
 
 ## Folder Layout Expectations
-- Debug builds should land under `bin/Debug/net48/` (or the active TFMs) and mirror Aze's historical structure.
-- Release builds belong in `bin/Release/net48/` (or the relevant TFM) and feed the distributable archives.
+- Debug builds should land under `bin/Debug/net47/` (or the active TFMs) and mirror Aze's historical structure.
+- Release builds belong in `bin/Release/net47/` (or the relevant TFM) and feed the distributable archives.
 - Final archives must live in `Releases/*.zip` so this repository stays aligned with Aze's published packages.
