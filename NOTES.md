@@ -508,3 +508,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-02 - Identifier TFMs pinned to net471
 - Downgraded the `ContainerTooltips` and `ZoomSpeed` archival projects to target `net471` so their merged assemblies match ONI's Harmony runtime.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Release` to confirm the net471 build and ILRepack packaging, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally (Debug/Release) to verify the merged assembly and release zip succeed under the new TFM.
+
+## 2026-01-03 - Identifier post-merge trimming guard
+- Added a `TrimReferenceCopies` MSBuild target to the legacy `ContainerTooltips` and `ZoomSpeed` projects so copy-local references, PLib helpers, and ILRepack staging folders are removed after the merged assembly is produced.
+- Tried `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Release` to validate Debug/Release workflows, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the merged outputs remain intact while the helper DLLs are trimmed from `$(TargetDir)` and the Release zip.
