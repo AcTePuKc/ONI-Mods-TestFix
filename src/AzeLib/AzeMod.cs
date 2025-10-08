@@ -85,14 +85,16 @@ namespace AzeLib
             public override void OnLoad(Harmony harmony)
             {
                 UserMod = this;
-                Debug.Log("    - version: " + UserMod.assembly.GetName().Version);
+                var modAssembly = assembly ?? GetType().Assembly;
+
+                Debug.Log("    - version: " + modAssembly.GetName().Version);
 #if DEBUG
                 Debug.Log("[AzeLib] OnLoad diagnostics enabled.");
                 var totalStopwatch = Stopwatch.StartNew();
 #endif
                 PUtil.InitLibrary(false);
 
-                var (onLoadMethods, usedCache, discoveryDuration) = GetOnLoadMethods(assembly);
+                var (onLoadMethods, usedCache, discoveryDuration) = GetOnLoadMethods(modAssembly);
 
 #if DEBUG
                 Debug.Log($"[AzeLib] Discovered {onLoadMethods.Count} OnLoad methods {(usedCache ? "from cache" : "via reflection")} in {discoveryDuration.TotalMilliseconds:F2} ms.");
