@@ -27,10 +27,23 @@ Before distributing an archival build:
 - [ ] Regenerate release packages using the `Release` MSBuild target so zips land under `Distribute/`.
 - [ ] Update version metadata (mod_info.json, changelog) to match the mainline project.
 
+## Configuring MSBuild Paths
+When cloning this identifier archive by itself, copy `Directory.Build.props.default` to `Directory.Build.props.user` and adjust the directories so MSBuild can locate your ONI install directly. The `.user` file stays local thanks to `.gitignore`.
+
+```xml
+  <PropertyGroup>
+    <SteamFolder>C:\Program Files (x86)\Steam</SteamFolder>
+    <GameFolder>$(SteamFolder)\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed</GameFolder>
+    <ModFolder>$(UserProfile)\Documents\Klei\OxygenNotIncluded\mods\dev</ModFolder>
+  </PropertyGroup>
+```
+
+Adjust the values to match your workstation, then rebuild so the shared targets resolve assemblies from your live ONI installation.
+
 ## Handling Local Libraries
 - The historic packages assumed a `lib/` folder populated with Harmony, PLib, and Unity assemblies extracted from a local ONI installation. These binaries are no longer tracked in source control to avoid redistributing game files.
-- Before rebuilding, copy the required DLLs from your legally obtained ONI install (or from the maintained repository's build output) into `Oni_mods_by_Identifier/lib/` on your workstation. Keep the files local; the new `.gitignore` ensures they remain uncommitted.
-- If new dependencies are required, document the source and expected filename in this section so future maintainers know how to repopulate their local `lib/` folder.
+- You can either populate `Oni_mods_by_Identifier/lib/` with the required DLLs **or** rely on `Directory.Build.props.user` to point directly at your ONI install so MSBuild references the live binaries without copying them. Choose the workflow that best fits your environment.
+- If new dependencies are required, document the source and expected filename in this section so future maintainers know how to repopulate their local `lib/` folder (or update their `.user` overrides accordingly).
 
 By following these steps, the identifier-based archive stays consistent with the actively maintained mods while remaining ready for historical reference.
 
