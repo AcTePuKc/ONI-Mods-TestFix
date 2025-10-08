@@ -434,3 +434,8 @@ es the visibility compiler error.
 ## 2025-12-21 - BetterLogicOverlay broadcaster label component fetch
 - Injected a `[MyCmpGet]` field into `LogicBroadcasterSetting` so the label resolves the broadcaster's display name without using the component instance as a `KMonoBehaviour`.
 - Tried to rebuild with `dotnet build src/BetterLogicOverlay/BetterLogicOverlay.csproj` to confirm the missing `KMonoBehaviour` conversion error is resolved, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to verify.
+
+
+## 2025-12-22 - SuppressNotifications string namespace qualification
+- Qualified the SuppressNotifications copy tools to use the game UI namespace aliases so the compiler resolves `STRINGS.UI` correctly.
+- Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rerun the build locally to confirm the namespace bindings compile.

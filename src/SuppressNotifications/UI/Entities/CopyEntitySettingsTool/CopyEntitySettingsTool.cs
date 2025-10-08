@@ -1,4 +1,5 @@
 ﻿using STRINGS;
+using StringsUI = global::STRINGS.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -96,7 +97,7 @@ namespace SuppressNotifications
             void CopyTo(GameObject go)
             {
                 go.Trigger((int)GameHashes.CopySettings, sourceGameObject);
-                PopFXManager.Instance.SpawnFX(PopFXManager.Instance.sprite_Plus, UI.COPIED_SETTINGS, go.transform, new Vector3(0f, 0.5f, 0f), 1.5f, false, false);
+                PopFXManager.Instance.SpawnFX(PopFXManager.Instance.sprite_Plus, StringsUI.COPIED_SETTINGS, go.transform, new Vector3(0f, 0.5f, 0f), 1.5f, false, false);
             }
         }
     }
