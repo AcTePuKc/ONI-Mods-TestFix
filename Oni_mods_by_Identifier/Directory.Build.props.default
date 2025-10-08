@@ -6,4 +6,16 @@
     <GameFolder>$(SteamFolder)\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed</GameFolder>
     <ModFolder>$(UserProfile)\Documents\Klei\OxygenNotIncluded\mods\dev</ModFolder>
   </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Reference>
+      <Private>false</Private>
+    </Reference>
+    <ProjectReference>
+      <Private>false</Private>
+    </ProjectReference>
+    <PackageReference>
+      <Private>false</Private>
+    </PackageReference>
+  </ItemDefinitionGroup>
 </Project>

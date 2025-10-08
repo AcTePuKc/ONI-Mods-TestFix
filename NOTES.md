@@ -496,3 +496,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2025-12-31 - Identifier metadata copied to build output
 - Enabled `CopyToOutputDirectory="PreserveNewest"` for `mod.yaml`, `mod_info.yaml`, `preview.png`, and translation assets so debug and release builds include the static metadata next to the compiled assemblies.
 - Attempted to verify with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally (Debug and Release) to confirm the YAML files land in `bin/<Configuration>/<TFM>/`.
+
+## 2026-01-01 - Identifier reference copy-local disable
+- Set the identifier-level `Directory.Build.props.default` to mark `Reference`, `ProjectReference`, and `PackageReference` items as non-private so only the merged assemblies land in mod output folders.
+- Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to confirm ONI assemblies stay under `$(GameFolder)`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to validate the copy-local behavior.
