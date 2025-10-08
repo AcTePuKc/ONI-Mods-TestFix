@@ -1,5 +1,9 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2025-12-22 - SuppressNotifications reference cleanup
+- Removed the hard-coded `Assembly-CSharp.dll` reference from `SuppressNotifications.csproj` so the project now inherits the `_public` assemblies through `Directory.Build.props`.
+- Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj` to confirm `Assets.CreatePrefabs` resolves under the shared references, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to verify compilation succeeds.
+
 ## 2025-12-22 - DefaultBuildingSettings door spawn visibility
 - Updated `DoorSpawnOpener`'s `OnSpawn` override visibility to `public` so Unity can invoke it when Harmony injects the helper
   component onto door prefabs during construction.
