@@ -1,0 +1,4 @@
+# Keep the lib directory empty in source control.
+# Populate it locally with ONI-provided assemblies when rebuilding.
+*
+!.gitignore
