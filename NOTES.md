@@ -475,3 +475,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 - Replaced the legacy `StorageContentsSummarizer` with the maintained implementation so multi-line summaries match upstream behaviour while keeping the newline guard and explicit `GameUtil` formatting parameters.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to confirm the API alignment, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to verify.
 - Unable to spot-check tooltips in-game because Oxygen Not Included is not available in the container; please confirm multi-line summaries render identically on a workstation with the game installed.
+
+## 2025-12-28 - ContainerTooltips mod metadata label update
+- Swapped the options dialog `[ModInfo]` attribute to use the human-readable mod name so the UI surfaces "Container Tooltips" instead of the repository URL.
+- Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to validate the metadata change but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally and confirm the options screen reflects the new title.
