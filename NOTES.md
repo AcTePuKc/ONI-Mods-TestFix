@@ -1,5 +1,9 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2025-10-08 - Identifier ILRepack library path quoting fix
+- Updated the `LibraryPath` attribute in the legacy identifier mods to drop the stray escaped quote so ILRepack's search path list terminates cleanly with the repo-local `lib` folder.
+- Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj -c Debug` to confirm ILRepack accepts the revised path list, but the container still lacks the .NET host (`command not found: dotnet`). Please retry the build locally once the ONI toolchain is available.
+
 ## 2025-12-22 - SuppressNotifications reference cleanup
 - Removed the hard-coded `Assembly-CSharp.dll` reference from `SuppressNotifications.csproj` so the project now inherits the `_public` assemblies through `Directory.Build.props`.
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj` to confirm `Assets.CreatePrefabs` resolves under the shared references, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to verify compilation succeeds.
