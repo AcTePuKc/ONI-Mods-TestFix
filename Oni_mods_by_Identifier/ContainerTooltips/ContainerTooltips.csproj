@@ -51,6 +51,21 @@
     <PackageReference Include="MSBuildTasks" Version="1.5.0.235" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="mod.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="mod_info.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="preview.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Translations\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <!-- Cross-platform deploy to ONI Local mods folder via MSBuild -->
   <PropertyGroup>
     <!-- Allow override: dotnet build /p:OniLocalModsDir=... or env var -->
