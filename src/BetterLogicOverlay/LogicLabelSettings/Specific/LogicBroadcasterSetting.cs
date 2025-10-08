@@ -1,8 +1,12 @@
-﻿namespace BetterLogicOverlay.LogicSettingDisplay
+using AzeLib.Attributes;
+
+namespace BetterLogicOverlay.LogicSettingDisplay
 {
     class LogicBroadcasterSetting : LogicLabelSetting
     {
-        public override string GetSetting() => GetString(this);
+        [MyCmpGet] private LogicBroadcaster logicBroadcaster;
+
+        public override string GetSetting() => GetString(logicBroadcaster);
 
         protected string GetString(KMonoBehaviour l) => l.GetProperName();
 
