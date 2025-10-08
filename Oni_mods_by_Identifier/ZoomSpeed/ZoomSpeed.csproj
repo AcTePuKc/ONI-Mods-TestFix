@@ -89,7 +89,7 @@
       Parallel="true"
       DebugInfo="true"
       InputAssemblies="@(MergeAssemblies)"
-      LibraryPath="$(TargetDir)"
+      LibraryPath="$(TargetDir);$(GameFolder);$(MSBuildThisFileDirectory)..\\lib\\"
       TargetKind="SameAsPrimaryAssembly"
       OutputFile="$(MergedAssemblyPath)" />
 
