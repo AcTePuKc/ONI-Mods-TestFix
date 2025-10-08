@@ -1,5 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <Import Project="Directory.Build.props.default" />
-  <Import Condition="Exists('Directory.Build.props.user')" Project="Directory.Build.props.user" />
+  <!-- 1) defaults, 2) user overrides, 3) shared targets -->
+  <Import Project="Directory.Build.props.default" Condition="Exists('Directory.Build.props.default')" />
+  <Import Project="Directory.Build.props.user"    Condition="Exists('Directory.Build.props.user')" />
+
+  <PropertyGroup>
+    <TargetFramework>net471</TargetFramework>
+    <DistributedDir>$(MSBuildThisFileDirectory)distributed\</DistributedDir>
+    <LibDir>$(MSBuildThisFileDirectory)lib\</LibDir>
+  </PropertyGroup>
+
+  <Import Project="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" />
 </Project>

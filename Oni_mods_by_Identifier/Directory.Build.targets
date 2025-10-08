@@ -1,9 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <!--Prevent game assemblies from being copied (and thus merged).-->
-  <Target Name="ClearCopyLocalReferences" AfterTargets="ResolveAssemblyReferences">
+  <!-- Game assemblies copied locally for IDE/offline builds -->
+  <ItemGroup>
+    <GameRefs Include="$(GameFolder)\Assembly-CSharp.dll" />
+    <GameRefs Include="$(GameFolder)\UnityEngine.CoreModule.dll" />
+    <GameRefs Include="$(GameFolder)\UnityEngine.dll" Condition="Exists('$(GameFolder)\UnityEngine.dll')" />
+  </ItemGroup>
+
+  <Target Name="PrepareLib" BeforeTargets="Build">
+    <MakeDir Directories="$(LibDir)" />
+    <Copy SourceFiles="@(GameRefs)" DestinationFolder="$(LibDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="MergeDependencies" AfterTargets="Build">
     <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="$(GameFolder)\*" />
+      <MergeAssemblies Include="$(TargetPath)" />
     </ItemGroup>
+    <ILRepack
+      InputAssemblies="@(MergeAssemblies)"
+      OutputFile="$(TargetDir)$(AssemblyName).merged.dll"
+      TargetKind="SameAsPrimaryAssembly"
+      DebugInfo="true"
+      Parallel="true"
+      LibraryPath="$(TargetDir);$(GameFolder);$(RestorePackagesPath);$(NuGetPackageRoot);$(MSBuildThisFileDirectory)..\lib\" />
+  </Target>
+
+  <Target Name="PackageRelease" AfterTargets="MergeDependencies" Condition="'$(Configuration)'=='Release'">
+    <PropertyGroup>
+      <PkgName>$(AssemblyName)-$(Configuration).zip</PkgName>
+      <PkgPath>$(DistributedDir)$(PkgName)</PkgPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(DistributedDir)" />
+    <ItemGroup>
+      <ModPayload Include="$(TargetDir)**\*.dll" Exclude="$(TargetDir)**\*.pdb" />
+      <ModPayload Include="$(ProjectDir)mod_info.json" Condition="Exists('$(ProjectDir)mod_info.json')" />
+      <ModPayload Include="$(ProjectDir)strings\**\*" Condition="Exists('$(ProjectDir)strings')" />
+      <ModPayload Include="$(ProjectDir)translations\**\*" Condition="Exists('$(ProjectDir)translations')" />
+    </ItemGroup>
+    <Delete Files="$(PkgPath)" ContinueOnError="true" />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(PkgPath)' -Force&quot;" />
   </Target>
 </Project>
