@@ -13,6 +13,10 @@
 - Expanded the `LibraryPath` passed to ILRepack in `ContainerTooltips` and `ZoomSpeed` so it now probes the build output, the configured `GameFolder`, and the repo-local `lib` directory for Harmony.
 - Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm ILRepack resolves `0Harmony.dll` without copying it into `bin`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please retry the build locally where the ONI toolchain is available.
 
+## 2026-01-07 - Identifier release trim safety net
+- Limited the `TrimReferenceCopies` target in `ContainerTooltips` and `ZoomSpeed` to operate only on files inside `$(TargetDir)` by projecting `@(ReferenceCopyLocalPaths)` onto local filenames and skipping the merged DLL/PDB pair.
+- The cleanup still removes `Merged`/`ILRepack` scratch directories before `CopyReleaseArtifacts`, but the container cannot validate the flow because `dotnet` is unavailable (`command not found: dotnet`). Please rebuild both projects locally in Release to ensure only the merged assembly, its PDB, and YAML assets remain before zipping.
+
 ## 2025-12-23 - SuppressNotifications copy tool override scope
 - Widened the override visibility for `CopyEntitySettingsTool`'s drag lifecycle hooks to `public` so they match `DragTool`'s declarations and clear the CS0507 accessibility mismatch.
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to confirm the access modifier adjustments compile without warnings.

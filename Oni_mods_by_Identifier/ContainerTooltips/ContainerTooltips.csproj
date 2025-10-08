@@ -101,9 +101,8 @@
           BeforeTargets="CopyReleaseArtifacts"
           Condition="Exists('$(TargetDir)')">
     <ItemGroup>
-      <TrimFiles Include="@(ReferenceCopyLocalPaths)" Condition="Exists('%(Identity)')" />
-      <TrimFiles Include="$(TargetDir)PLib.dll" Condition="Exists('$(TargetDir)PLib.dll')" />
-      <TrimFiles Include="$(TargetDir)PLib.pdb" Condition="Exists('$(TargetDir)PLib.pdb')" />
+      <TrimFiles Include="@(ReferenceCopyLocalPaths->'$(TargetDir)%(Filename)%(Extension)')"
+                 Condition="Exists('%(TrimFiles.Identity)') and '%(TrimFiles.Identity)' != '$(TargetPath)' and '%(TrimFiles.Identity)' != '$(TargetDir)$(TargetName).pdb'" />
     </ItemGroup>
 
     <ItemGroup>
