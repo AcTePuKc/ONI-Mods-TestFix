@@ -479,3 +479,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2025-12-28 - ContainerTooltips mod metadata label update
 - Swapped the options dialog `[ModInfo]` attribute to use the human-readable mod name so the UI surfaces "Container Tooltips" instead of the repository URL.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to validate the metadata change but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally and confirm the options screen reflects the new title.
+
+## 2025-12-29 - Identifier Directory.Build.props bridge
+- Added an identifier-level `Directory.Build.props` that defers to the shared `.default`/`.user` pair so legacy projects consume the same path overrides as the main solution.
+- Attempted to capture `$(GameFolder)` via `dotnet msbuild Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /t:ResolveProjectReferences /v:diag`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please re-run the diagnostic build locally to confirm the property evaluation.
