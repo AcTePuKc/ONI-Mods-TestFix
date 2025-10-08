@@ -5,7 +5,7 @@
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj` to confirm `Assets.CreatePrefabs` resolves under the shared references, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to verify compilation succeeds.
 
 ## 2025-12-23 - SuppressNotifications copy tool override scope
-- Narrowed the override visibility for `CopyEntitySettingsTool` so `DragTool` lifecycle hooks remain protected and Unity can continue invoking them through the base type.
+- Widened the override visibility for `CopyEntitySettingsTool`'s drag lifecycle hooks to `public` so they match `DragTool`'s declarations and clear the CS0507 accessibility mismatch.
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to confirm the access modifier adjustments compile without warnings.
 
 ## 2025-12-22 - DefaultBuildingSettings door spawn visibility

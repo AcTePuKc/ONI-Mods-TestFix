@@ -16,7 +16,7 @@ namespace SuppressNotifications
         public void SetSourceObject(GameObject go) => sourceGameObject = go;
         public void Activate() => PlayerController.Instance.ActivateTool(this);
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             // Initialize
             base.OnPrefabInit();
@@ -46,7 +46,7 @@ namespace SuppressNotifications
             hoverConfig.ToolName = hoverTemplate.ToolName;
         }
 
-        protected override void OnDragTool(int cell, int distFromOrigin)
+        public override void OnDragTool(int cell, int distFromOrigin)
         {
             if (sourceGameObject == null)
                 return;
@@ -55,7 +55,7 @@ namespace SuppressNotifications
                 cells.Add(cell);
         }
 
-        protected override void OnDragComplete(Vector3 cursorDown, Vector3 cursorUp)
+        public override void OnDragComplete(Vector3 cursorDown, Vector3 cursorUp)
         {
             if (sourceGameObject.GetComponent<CreatureBrain>() != null)
                 CopyCritterSettings();
@@ -67,13 +67,13 @@ namespace SuppressNotifications
                 CopyGeyserSettings();
         }
 
-        protected override void OnLeftClickDown(Vector3 cursor_pos)
+        public override void OnLeftClickDown(Vector3 cursor_pos)
         {
             base.OnLeftClickDown(cursor_pos);
             cells.Clear();
         }
 
-        protected override void OnDeactivateTool(InterfaceTool new_tool)
+        public override void OnDeactivateTool(InterfaceTool new_tool)
         {
             base.OnDeactivateTool(new_tool);
             sourceGameObject = null;
