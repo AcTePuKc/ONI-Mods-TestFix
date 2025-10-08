@@ -1,5 +1,6 @@
 ﻿using AzeLib;
 using STRINGS;
+using StringsUI = global::STRINGS.UI;
 
 namespace SuppressNotifications
 {
@@ -11,13 +12,13 @@ namespace SuppressNotifications
         public class SUPPRESSBUTTON
         {
             public static LocString NAME = "Suppress Current";
-            public static LocString TOOLTIP = UI.FormatAsKeyWord("Suppress") + " the following items.";
+            public static LocString TOOLTIP = StringsUI.FormatAsKeyWord("Suppress") + " the following items.";
         }
 
         public class CLEARBUTTON
         {
             public static LocString NAME = "Clear Suppressed";
-            public static LocString TOOLTIP = UI.FormatAsKeyWord("Stop suppressing") + " the following items.";
+            public static LocString TOOLTIP = StringsUI.FormatAsKeyWord("Stop suppressing") + " the following items.";
         }
 
         public class BUILDINGS
