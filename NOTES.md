@@ -483,3 +483,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2025-12-29 - Identifier Directory.Build.props bridge
 - Added an identifier-level `Directory.Build.props` that defers to the shared `.default`/`.user` pair so legacy projects consume the same path overrides as the main solution.
 - Attempted to capture `$(GameFolder)` via `dotnet msbuild Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /t:ResolveProjectReferences /v:diag`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please re-run the diagnostic build locally to confirm the property evaluation.
+
+## 2025-12-30 - Identifier projects prefer live game assemblies
+- Updated the legacy `ContainerTooltips` and `ZoomSpeed` project references to read assemblies from `$(GameFolder)` with a fallback to the optional `lib/` cache so they align with the standard `Directory.Build.props.user` override.
+- Tried to validate with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the live game folder resolves successfully.

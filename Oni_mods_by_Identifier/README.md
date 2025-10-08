@@ -43,7 +43,7 @@ Adjust the values to match your workstation, then rebuild so the shared targets 
 
 ## Handling Local Libraries
 - The historic packages assumed a `lib/` folder populated with Harmony, PLib, and Unity assemblies extracted from a local ONI installation. These binaries are no longer tracked in source control to avoid redistributing game files.
-- You can either populate `Oni_mods_by_Identifier/lib/` with the required DLLs **or** rely on `Directory.Build.props.user` to point directly at your ONI install so MSBuild references the live binaries without copying them. Choose the workflow that best fits your environment.
+- You can either populate `Oni_mods_by_Identifier/lib/` with the required DLLs **or** rely on `Directory.Build.props.user` to point directly at your ONI install so MSBuild references the live binaries without copying them. Choose the workflow that best fits your environment. The bundled `ContainerTooltips.csproj` and `ZoomSpeed.csproj` now honor the `$(GameFolder)` override automatically, falling back to the optional `lib/` cache only when the live game assemblies are unavailable.
 - If new dependencies are required, document the source and expected filename in this section so future maintainers know how to repopulate their local `lib/` folder (or update their `.user` overrides accordingly).
 
 By following these steps, the identifier-based archive stays consistent with the actively maintained mods while remaining ready for historical reference.
