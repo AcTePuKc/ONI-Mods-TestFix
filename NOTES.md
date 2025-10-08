@@ -4,6 +4,11 @@
 - Removed the hard-coded `Assembly-CSharp.dll` reference from `SuppressNotifications.csproj` so the project now inherits the `_public` assemblies through `Directory.Build.props`.
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj` to confirm `Assets.CreatePrefabs` resolves under the shared references, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to verify compilation succeeds.
 
+## 2025-12-31 - Identifier release packaging restore
+- Defaulted the legacy identifier mods' Release configuration to local `Release/<ModId>` and `Distribute/` folders within the identifier repo and enabled `DeployOniMod` automatically so packaging runs without extra MSBuild properties.
+- Inlined bespoke packaging targets for `ContainerTooltips` and `ZoomSpeed` to merge dependencies, rebuild the Release install folder, and zip the DLL alongside `mod.yaml` and `mod_info.yaml` without importing shared targets from the main solution.
+- Attempted `dotnet build Oni_mods_by_Identifier/ONIMods.sln -c Release` to verify the Release packaging flow, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the artifacts populate `Release/` and `Distribute/` as expected.
+
 ## 2025-12-23 - SuppressNotifications copy tool override scope
 - Widened the override visibility for `CopyEntitySettingsTool`'s drag lifecycle hooks to `public` so they match `DragTool`'s declarations and clear the CS0507 accessibility mismatch.
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to confirm the access modifier adjustments compile without warnings.
