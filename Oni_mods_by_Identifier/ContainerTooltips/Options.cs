@@ -44,6 +44,7 @@ namespace ContainerTooltips
         {
             // Update the singleton Options.Instance when options are changed in the menu, so we don't need to restart the game.
             instance = POptions.ReadSettings<Options>() ?? new Options();
+            UserMod.ClearSummaryCache();
         }
 
         public IEnumerable<IOptionsEntry> CreateOptions()

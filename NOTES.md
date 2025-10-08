@@ -16,6 +16,11 @@
 - Added a pre-load guard in `LiveLoader.LoadAll` that checks `AppDomain.CurrentDomain` for an existing assembly name match before shadow-loading development DLLs, preventing duplicate Harmony registrations for mods the core manager already imported.
 - Tried to rebuild with `dotnet build src/DevLoader/DevLoader.csproj` to confirm the guard compiles, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to validate the DevLoader changes.
 
+## 2025-12-24 - ContainerTooltips storage tooltip refresh
+- Ported the event-driven `StorageContentsBehaviour` and cache helpers so tooltips invalidate and rebuild per storage component instead of per-array snapshots.
+- Adjusted the summarizer and storage spawn patch to operate on a single `Storage` component, matching the refreshed behaviour contract.
+- Manual verification in-game (adding/removing storage items to observe tooltip refreshes) remains blocked here because the container lacks the ONI runtime; please validate on a workstation with the game installed.
+
 ## 2025-12-22 - DefaultBuildingSettings door spawn visibility
 - Updated `DoorSpawnOpener`'s `OnSpawn` override visibility to `public` so Unity can invoke it when Harmony injects the helper
   component onto door prefabs during construction.
