@@ -10,6 +10,13 @@
     <ModId>ContainerTooltips</ModId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <InstallFolder Condition="'$(InstallFolder)' == ''">$(MSBuildThisFileDirectory)..\Release\$(ModId)</InstallFolder>
+    <DistributeFolder Condition="'$(DistributeFolder)' == ''">$(MSBuildThisFileDirectory)..\Distribute\</DistributeFolder>
+    <DeployOniMod Condition="'$(DeployOniMod)' == ''">true</DeployOniMod>
+    <ShouldDistribute Condition="'$(ShouldDistribute)' == ''">true</ShouldDistribute>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath Condition="Exists('$(GameFolder)/0Harmony.dll')">$(GameFolder)/0Harmony.dll</HintPath>
@@ -41,6 +48,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PLib" Version="4.17.1" />
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.26" PrivateAssets="All" />
+    <PackageReference Include="MSBuildTasks" Version="1.5.0.235" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Cross-platform deploy to ONI Local mods folder via MSBuild -->
@@ -71,6 +79,28 @@
 
     <Move SourceFiles="$(MergedAssemblyPath)" DestinationFiles="$(TargetPath)" OverwriteReadOnlyFiles="true" />
     <Move SourceFiles="$(MergedPdbPath)" DestinationFiles="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(MergedPdbPath)')" OverwriteReadOnlyFiles="true" />
+  </Target>
+
+  <Target Name="PrepareReleaseFolders" AfterTargets="MergeDependencies" Condition="'$(Configuration)' == 'Release' And '$(ShouldDistribute)' != 'false'">
+    <RemoveDir Directories="$(InstallFolder)" Condition="Exists('$(InstallFolder)')" />
+    <MakeDir Directories="$(InstallFolder)" />
+    <MakeDir Directories="$(DistributeFolder)" />
+  </Target>
+
+  <Target Name="CopyReleaseArtifacts" AfterTargets="PrepareReleaseFolders" Condition="'$(Configuration)' == 'Release' And '$(ShouldDistribute)' != 'false'">
+    <ItemGroup>
+      <ReleaseOutputs Include="$(TargetPath)" />
+      <ReleaseOutputs Include="$(ProjectDir)mod.yaml" />
+      <ReleaseOutputs Include="$(ProjectDir)mod_info.yaml" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ReleaseOutputs)" DestinationFolder="$(InstallFolder)" />
+  </Target>
+
+  <Target Name="ZipRelease" AfterTargets="CopyReleaseArtifacts" Condition="'$(Configuration)' == 'Release' And '$(ShouldDistribute)' != 'false'">
+    <CreateItem Include="$(InstallFolder)\**\*.*" Exclude="$(InstallFolder)\*.zip">
+      <Output ItemName="ZipFiles" TaskParameter="Include" />
+    </CreateItem>
+    <Zip ZipFileName="$(DistributeFolder)\$(ModId).zip" WorkingDirectory="$(InstallFolder)" Files="@(ZipFiles)" Flatten="false" />
   </Target>
 
   <Target Name="DeployOniMod" AfterTargets="Build" DependsOnTargets="MergeDependencies" Condition="'$(DeployOniMod)' != ''">
