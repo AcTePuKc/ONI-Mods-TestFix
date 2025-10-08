@@ -64,7 +64,7 @@ namespace DefaultBuildingSettings
         {
             [MyCmpReq] private Door door;
 
-            protected override void OnSpawn()
+            public override void OnSpawn()
             {
                 base.OnSpawn();
 

@@ -1,5 +1,12 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2025-12-22 - DefaultBuildingSettings door spawn visibility
+- Updated `DoorSpawnOpener`'s `OnSpawn` override visibility to `public` so Unity can invoke it when Harmony injects the helper
+  component onto door prefabs during construction.
+- Attempted to rebuild with `dotnet build src/DefaultBuildingSettings/DefaultBuildingSettings.csproj`, but the container still
+  lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the accessibility change resolv
+es the visibility compiler error.
+
 ## 2025-12-21 - BetterLogicOverlay IsBitActive predicate update
 - Updated `GateColorOutput_Patch` to use Harmony's predicate-based `Manipulator` overload when targeting `LogicCircuitNetwork.IsBitActive`, preventing delegate signature mismatches when Harmony resolves the hook.
 - Attempted to validate with `dotnet build src/BetterLogicOverlay/BetterLogicOverlay.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the predicate change compiles without errors.
