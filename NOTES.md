@@ -525,3 +525,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-05 - Identifier PLib copy-local override
 - Updated the legacy `ContainerTooltips` and `ZoomSpeed` projects to mark `PLib` as `Private` so the dependency is restored next to the target assembly before ILRepack runs.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Debug` and `/p:Configuration=Release` to confirm `PLib.dll` lands in `$(TargetDir)` ahead of `MergeDependencies`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to validate the packaging flow and merged assembly.
+## 2026-01-09 - Identifier ILRepack NuGet search paths
+- Extended the ILRepack `LibraryPath` for `ContainerTooltips` and `ZoomSpeed` so it now probes `$(RestorePackagesPath)` and `$(NuGetPackageRoot)` alongside the build output, configured `GameFolder`, and repo-local `lib` directory.
+- Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm NuGet-resolved assemblies like `Newtonsoft.Json.dll` merge without being copied into `bin`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to verify ILRepack consumes the restored package outputs.
+
