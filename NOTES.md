@@ -492,3 +492,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2025-12-30 - Identifier projects prefer live game assemblies
 - Updated the legacy `ContainerTooltips` and `ZoomSpeed` project references to read assemblies from `$(GameFolder)` with a fallback to the optional `lib/` cache so they align with the standard `Directory.Build.props.user` override.
 - Tried to validate with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to confirm the live game folder resolves successfully.
+
+## 2025-12-31 - Identifier metadata copied to build output
+- Enabled `CopyToOutputDirectory="PreserveNewest"` for `mod.yaml`, `mod_info.yaml`, `preview.png`, and translation assets so debug and release builds include the static metadata next to the compiled assemblies.
+- Attempted to verify with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally (Debug and Release) to confirm the YAML files land in `bin/<Configuration>/<TFM>/`.
