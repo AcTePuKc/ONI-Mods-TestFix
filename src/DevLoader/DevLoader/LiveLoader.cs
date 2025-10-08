@@ -60,11 +60,17 @@ public static class LiveLoader
 				foreach (string text in array)
 				{
 					num2++;
-					Stopwatch stopwatch3 = Stopwatch.StartNew();
-					try
-					{
-						byte[] rawAssembly = File.ReadAllBytes(text);
-						Assembly assembly = Assembly.Load(rawAssembly);
+                                        Stopwatch stopwatch3 = Stopwatch.StartNew();
+                                        try
+                                        {
+                                                Assembly assembly2 = FindLoadedAssembly(text);
+                                                if (assembly2 != null)
+                                                {
+                                                        Debug.Log((object)$"[DevLoader] Skipping {Path.GetFileName(text)} (already loaded as {assembly2.GetName().FullName})");
+                                                        continue;
+                                                }
+                                                byte[] rawAssembly = File.ReadAllBytes(text);
+                                                Assembly assembly = Assembly.Load(rawAssembly);
 						_loaded.Add(assembly);
 						string text2 = SanitizeId(Path.GetFileNameWithoutExtension(text));
 						string text3 = ("devloader.live." + text2).ToLowerInvariant();
@@ -122,16 +128,35 @@ public static class LiveLoader
 		{
 			Debug.LogWarning((object)("[DevLoader] LoadAll error: " + ex3));
 		}
-		finally
-		{
-			stopwatch.Stop();
-			Debug.Log((object)$"[DevLoader] LoadAll() total = {stopwatch.ElapsedMilliseconds} ms");
-			_isLoadingOrUnloading = false;
-		}
-	}
+                finally
+                {
+                        stopwatch.Stop();
+                        Debug.Log((object)$"[DevLoader] LoadAll() total = {stopwatch.ElapsedMilliseconds} ms");
+                        _isLoadingOrUnloading = false;
+                }
+        }
 
-	public static void UnloadAll()
-	{
+        private static Assembly FindLoadedAssembly(string dllPath)
+        {
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(dllPath);
+                if (string.IsNullOrEmpty(fileNameWithoutExtension))
+                {
+                        return null;
+                }
+                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                foreach (Assembly assembly in assemblies)
+                {
+                        AssemblyName name = assembly.GetName();
+                        if (string.Equals(name.Name, fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase) || string.Equals(name.FullName, fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
+                        {
+                                return assembly;
+                        }
+                }
+                return null;
+        }
+
+        public static void UnloadAll()
+        {
 		//IL_004c: Unknown result type (might be due to invalid IL or missing references)
 		//IL_00c9: Unknown result type (might be due to invalid IL or missing references)
 		if (_isLoadingOrUnloading)

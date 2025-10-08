@@ -12,6 +12,10 @@
 - Guarded `AzeUserMod.OnLoad` against `UserMod2.assembly` being `null` by capturing `assembly ?? GetType().Assembly` for version logging and `[OnLoad]` discovery so domain reloads no longer throw.
 - Attempted to run `dotnet build src/DevLoader/DevLoader.csproj` to satisfy the DevLoader rebuild requirement, but the container still reports `command not found: dotnet`. Please rebuild locally and verify the reload loop remains clean in `Player.log` once the ONI toolchain is available.
 
+## 2025-12-24 - DevLoader skip already loaded assemblies
+- Added a pre-load guard in `LiveLoader.LoadAll` that checks `AppDomain.CurrentDomain` for an existing assembly name match before shadow-loading development DLLs, preventing duplicate Harmony registrations for mods the core manager already imported.
+- Tried to rebuild with `dotnet build src/DevLoader/DevLoader.csproj` to confirm the guard compiles, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to validate the DevLoader changes.
+
 ## 2025-12-22 - DefaultBuildingSettings door spawn visibility
 - Updated `DoorSpawnOpener`'s `OnSpawn` override visibility to `public` so Unity can invoke it when Harmony injects the helper
   component onto door prefabs during construction.
