@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using HarmonyLib;
+using Klei;
 using Klei.AI;
 using KMod;
 using PeterHan.PLib.Core;
@@ -53,9 +53,9 @@ namespace ContainerTooltips
                 return;
             }
 
-            Strings.Add(NameStringKey, "Contents");
-            Strings.Add(TooltipStringKey, "Shows the items in internal storage.");
-            Strings.Add(EmptyStringKey, "None");
+            RegisterString(NameStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME);
+            RegisterString(TooltipStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.TOOLTIP);
+            RegisterString(EmptyStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY);
 
             var statusItem = new StatusItem(
                 StatusItemId,
@@ -120,25 +120,9 @@ namespace ContainerTooltips
             }
 
             var summary = StorageContentsSummarizer.SummarizeStorageContents(storage, lineLimit);
-            var resultBuilder = new StringBuilder(summary.Length + 50);
-            resultBuilder.Append(Strings.Get(NameStringKey));
-            resultBuilder.Append(": ");
-
-            if (string.IsNullOrEmpty(summary))
-            {
-                resultBuilder.Append(Strings.Get(EmptyStringKey));
-            }
-            else
-            {
-                if (summary.Contains('\n'))
-                {
-                    resultBuilder.Append('\n');
-                }
-
-                resultBuilder.Append(summary);
-            }
-
-            var result = resultBuilder.ToString();
+            var header = GetStringWithFallback(NameStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.NAME);
+            var empty = GetStringWithFallback(EmptyStringKey, global::STRINGS.CONTAINERTOOLTIPS.STATUSITEMS.CONTAINERTOOLTIPSTATUSITEM.EMPTY);
+            var result = string.Concat(header, ": ", string.IsNullOrEmpty(summary) ? empty : summary);
             cache[instanceId] = new SummaryCacheEntry(tick, result);
             return result;
         }
@@ -146,6 +130,38 @@ namespace ContainerTooltips
         private static bool IsSameTick(float left, float right)
         {
             return !float.IsNaN(left) && !float.IsNaN(right) && Mathf.Approximately(left, right);
+        }
+
+        private static string GetStringWithFallback(string key, LocString fallback)
+        {
+            if (Strings.TryGet(key, out var entry))
+            {
+                var value = entry.String;
+
+                if (!string.IsNullOrEmpty(value) && !value.StartsWith("MISSING", StringComparison.Ordinal))
+                {
+                    return value;
+                }
+            }
+
+            return GetLocStringText(fallback);
+        }
+
+        private static string GetLocStringText(LocString value)
+        {
+            var englishText = value.text ?? string.Empty;
+
+            if (string.IsNullOrEmpty(englishText))
+            {
+                englishText = value.ToString();
+            }
+
+            return englishText;
+        }
+
+        private static void RegisterString(string key, LocString value)
+        {
+            Strings.Add(new[] { key, GetLocStringText(value) });
         }
     }
 }
