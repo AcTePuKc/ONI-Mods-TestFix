@@ -456,3 +456,9 @@ es the visibility compiler error.
 ## 2025-12-23 - DevLoader static content preload
 - Captured each mod DLL's root and added a reflection-based `KMod.Content` loader so static assets (strings, anims, templates) register before `OnLoad` executes.
 - Attempted to verify with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rebuild locally to ensure the helper compiles alongside the new preload workflow.
+## 2025-12-24 - ContainerTooltips localization fallback helpers
+- Added fallback-aware string registration to the legacy `ContainerTooltips` build so translations missing localized entries ret
+  urn the English `LocString` text like the maintained version.
+- Unable to validate in-game localization because the container cannot launch Oxygen Not Included; please load the mod with an a
+lternate language locally to confirm the fallback strings resolve correctly.
+
