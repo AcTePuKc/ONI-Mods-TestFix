@@ -533,3 +533,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 - Extended the ILRepack `LibraryPath` for `ContainerTooltips` and `ZoomSpeed` so it now probes `$(RestorePackagesPath)` and `$(NuGetPackageRoot)` alongside the build output, configured `GameFolder`, and repo-local `lib` directory.
 - Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm NuGet-resolved assemblies like `Newtonsoft.Json.dll` merge without being copied into `bin`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to verify ILRepack consumes the restored package outputs.
 
+## 2026-01-10 - Identifier ILRepack search path projection
+- Updated the `ContainerTooltips` and `ZoomSpeed` projects to generate ILRepack search paths from `@(ReferencePath)` and deduplicate them before invoking the merge task. Added a shared `ILRepackLibraryPath` property so the task now consumes the restored dependency directories even after copy-local trimming.
+- Tried `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` and `dotnet build Oni_mods_by_Identifier/ZoomSpeed/ZoomSpeed.csproj` to verify `Newtonsoft.Json.dll`/`PLib.dll` resolve from the projected directories, but the container still lacks the `.NET` host (`command not found: dotnet`). Please run the builds locally to confirm ILRepack succeeds without the assemblies remaining in `bin`.
+
