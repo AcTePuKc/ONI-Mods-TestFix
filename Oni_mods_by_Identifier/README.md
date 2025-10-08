@@ -14,6 +14,8 @@ This directory captures legacy identifiers of Oxygen Not Included mods that were
 ## Rebuild Reference
 This archive is self-contained. Treat `ContainerTooltips.csproj` inside `Oni_mods_by_Identifier/ContainerTooltips` as the authoritative project file when rebuilding or validating the mod. Restore packages and build directly against this project, using the `Directory.Build.props.user` override documented below to point MSBuild at your local ONI install. The legacy `ONIMods.sln` remains only as historical context; do not rely on the `src/` solution or its build graph when working from this repository.
 
+> **Compatibility note:** All archival projects must stay on `net471` so the merged assemblies remain compatible with Oxygen Not Included's bundled Harmony runtime. Do not bump the TFM without verifying both game and mod loader support.
+
 ## Aligning with `src/ContainerTooltips`
 1. **Optional sibling checkout** — If you also maintain the primary mods repository, keep it in a sibling folder so you can compare history. Only source code and translation assets from `src/ContainerTooltips` need to be synchronized here; all project metadata should remain owned by this archive.
 2. **Source of truth** — Treat `src/ContainerTooltips` in the maintained repository as the authoritative codebase for gameplay logic and localization. When updating this archive, copy over the mod's C# source files (excluding the project file) and the `Translations/` assets so the archival package reflects the latest behavior.

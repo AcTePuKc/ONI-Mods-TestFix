@@ -500,3 +500,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-01 - Identifier reference copy-local disable
 - Set the identifier-level `Directory.Build.props.default` to mark `Reference`, `ProjectReference`, and `PackageReference` items as non-private so only the merged assemblies land in mod output folders.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to confirm ONI assemblies stay under `$(GameFolder)`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to validate the copy-local behavior.
+
+## 2026-01-02 - Identifier TFMs pinned to net471
+- Downgraded the `ContainerTooltips` and `ZoomSpeed` archival projects to target `net471` so their merged assemblies match ONI's Harmony runtime.
+- Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Release` to confirm the net471 build and ILRepack packaging, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally (Debug/Release) to verify the merged assembly and release zip succeed under the new TFM.
