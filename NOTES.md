@@ -516,3 +516,8 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-03 - Identifier post-merge trimming guard
 - Added a `TrimReferenceCopies` MSBuild target to the legacy `ContainerTooltips` and `ZoomSpeed` projects so copy-local references, PLib helpers, and ILRepack staging folders are removed after the merged assembly is produced.
 - Tried `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Release` to validate Debug/Release workflows, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the merged outputs remain intact while the helper DLLs are trimmed from `$(TargetDir)` and the Release zip.
+
+## 2026-01-04 - Identifier copy-local target parity
+- Added an identifier-level `Directory.Build.targets` that mirrors the solution's `ClearCopyLocalReferences` hook so ONI DLLs are removed from `ReferenceCopyLocalPaths` immediately after `ResolveAssemblyReferences`.
+- Deferred porting the install-folder staging targets because the legacy projects already trim reference copies post-build; revisit if the distributables need the shared automation.
+- Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Debug` and `/p:Configuration=Release` to confirm the ONI assemblies stay out of `bin` and the release zip contents, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the builds locally to validate both configurations.
