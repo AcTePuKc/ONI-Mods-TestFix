@@ -8,6 +8,10 @@
 - Widened the override visibility for `CopyEntitySettingsTool`'s drag lifecycle hooks to `public` so they match `DragTool`'s declarations and clear the CS0507 accessibility mismatch.
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to confirm the access modifier adjustments compile without warnings.
 
+## 2025-12-24 - AzeLib OnLoad assembly fallback
+- Guarded `AzeUserMod.OnLoad` against `UserMod2.assembly` being `null` by capturing `assembly ?? GetType().Assembly` for version logging and `[OnLoad]` discovery so domain reloads no longer throw.
+- Attempted to run `dotnet build src/DevLoader/DevLoader.csproj` to satisfy the DevLoader rebuild requirement, but the container still reports `command not found: dotnet`. Please rebuild locally and verify the reload loop remains clean in `Player.log` once the ONI toolchain is available.
+
 ## 2025-12-22 - DefaultBuildingSettings door spawn visibility
 - Updated `DoorSpawnOpener`'s `OnSpawn` override visibility to `public` so Unity can invoke it when Harmony injects the helper
   component onto door prefabs during construction.

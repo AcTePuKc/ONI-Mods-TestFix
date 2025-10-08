@@ -59,3 +59,9 @@
 - **Resolution:** Removed the redundant `<Reference>` entries so DevLoader now inherits the managed assembly references from the shared build targets.
 - **Status:** Fixed
 
+## 2025-12-24 - AzeLib OnLoad assembly fallback
+- **Module:** AzeLib bootstrap sequencing
+- **Issue:** `UserMod2.assembly` may be `null` during some reload paths, causing `AzeUserMod.OnLoad` to throw while logging the version or discovering `[OnLoad]` hooks via reflection.
+- **Resolution:** Capture the module assembly via `assembly ?? GetType().Assembly` and reuse it for logging and reflection, guarding all accesses that previously relied on `UserMod.assembly`.
+- **Status:** Fixed
+
