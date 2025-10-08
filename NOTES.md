@@ -447,3 +447,7 @@ es the visibility compiler error.
 ## 2025-12-22 - SuppressNotifications string namespace qualification
 - Qualified the SuppressNotifications copy tools to use the game UI namespace aliases so the compiler resolves `STRINGS.UI` correctly.
 - Attempted to rebuild with `dotnet build src/SuppressNotifications/SuppressNotifications.csproj`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rerun the build locally to confirm the namespace bindings compile.
+
+## 2025-12-23 - DevLoader static content preload
+- Captured each mod DLL's root and added a reflection-based `KMod.Content` loader so static assets (strings, anims, templates) register before `OnLoad` executes.
+- Attempted to verify with `dotnet build src/DevLoader/DevLoader.csproj`, but the container still lacks the `.NET` host (`dotnet: command not found`). Please rebuild locally to ensure the helper compiles alongside the new preload workflow.
