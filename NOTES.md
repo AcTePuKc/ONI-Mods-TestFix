@@ -521,3 +521,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 - Added an identifier-level `Directory.Build.targets` that mirrors the solution's `ClearCopyLocalReferences` hook so ONI DLLs are removed from `ReferenceCopyLocalPaths` immediately after `ResolveAssemblyReferences`.
 - Deferred porting the install-folder staging targets because the legacy projects already trim reference copies post-build; revisit if the distributables need the shared automation.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Debug` and `/p:Configuration=Release` to confirm the ONI assemblies stay out of `bin` and the release zip contents, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the builds locally to validate both configurations.
+
+## 2026-01-05 - Identifier PLib copy-local override
+- Updated the legacy `ContainerTooltips` and `ZoomSpeed` projects to mark `PLib` as `Private` so the dependency is restored next to the target assembly before ILRepack runs.
+- Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Debug` and `/p:Configuration=Release` to confirm `PLib.dll` lands in `$(TargetDir)` ahead of `MergeDependencies`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to validate the packaging flow and merged assembly.
