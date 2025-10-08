@@ -65,6 +65,7 @@ artifacts/
 *.tmp
 *.tmp_proj
 *.log
+!Player.log
 *.vspscc
 *.vssscc
 .builds
