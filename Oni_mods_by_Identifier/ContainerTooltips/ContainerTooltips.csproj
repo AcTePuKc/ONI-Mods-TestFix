@@ -12,22 +12,28 @@
 
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>../lib/0Harmony.dll</HintPath>
+      <HintPath Condition="Exists('$(GameFolder)/0Harmony.dll')">$(GameFolder)/0Harmony.dll</HintPath>
+      <HintPath Condition="!Exists('$(GameFolder)/0Harmony.dll')">../lib/0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>../lib/Assembly-CSharp.dll</HintPath>
+      <HintPath Condition="Exists('$(GameFolder)/Assembly-CSharp.dll')">$(GameFolder)/Assembly-CSharp.dll</HintPath>
+      <HintPath Condition="!Exists('$(GameFolder)/Assembly-CSharp.dll')">../lib/Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>../lib/Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath Condition="Exists('$(GameFolder)/Assembly-CSharp-firstpass.dll')">$(GameFolder)/Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath Condition="!Exists('$(GameFolder)/Assembly-CSharp-firstpass.dll')">../lib/Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>../lib/UnityEngine.dll</HintPath>
+      <HintPath Condition="Exists('$(GameFolder)/UnityEngine.dll')">$(GameFolder)/UnityEngine.dll</HintPath>
+      <HintPath Condition="!Exists('$(GameFolder)/UnityEngine.dll')">../lib/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>../lib/UnityEngine.CoreModule.dll</HintPath>
+      <HintPath Condition="Exists('$(GameFolder)/UnityEngine.CoreModule.dll')">$(GameFolder)/UnityEngine.CoreModule.dll</HintPath>
+      <HintPath Condition="!Exists('$(GameFolder)/UnityEngine.CoreModule.dll')">../lib/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>../lib/UnityEngine.UI.dll</HintPath>
+      <HintPath Condition="Exists('$(GameFolder)/UnityEngine.UI.dll')">$(GameFolder)/UnityEngine.UI.dll</HintPath>
+      <HintPath Condition="!Exists('$(GameFolder)/UnityEngine.UI.dll')">../lib/UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
 
