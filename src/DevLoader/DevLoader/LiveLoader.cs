@@ -57,9 +57,9 @@ public static class LiveLoader
                                 string[] files = System.IO.Directory.GetFiles(item, "*.dll", SearchOption.AllDirectories);
 				Debug.Log((object)$"[DevLoader] Buscando DLLs en: {item} -> {files.Length} archivos");
 				string[] array = files;
-				foreach (string text in array)
-				{
-					num2++;
+                                foreach (string text in array)
+                                {
+                                        num2++;
                                         Stopwatch stopwatch3 = Stopwatch.StartNew();
                                         try
                                         {
@@ -69,6 +69,8 @@ public static class LiveLoader
                                                         Debug.Log((object)$"[DevLoader] Skipping {Path.GetFileName(text)} (already loaded as {assembly2.GetName().FullName})");
                                                         continue;
                                                 }
+                                                string modRoot = GetModRootForDll(text, out string modInfoPath);
+                                                TryLoadModContent(modRoot, modInfoPath);
                                                 byte[] rawAssembly = File.ReadAllBytes(text);
                                                 Assembly assembly = Assembly.Load(rawAssembly);
 						_loaded.Add(assembly);
@@ -153,6 +155,176 @@ public static class LiveLoader
                         }
                 }
                 return null;
+        }
+
+        private static string GetModRootForDll(string dllPath, out string modInfoPath)
+        {
+                modInfoPath = string.Empty;
+                string directoryName = Path.GetDirectoryName(dllPath) ?? string.Empty;
+                if (string.IsNullOrEmpty(directoryName))
+                {
+                        return string.Empty;
+                }
+                string text = directoryName;
+                while (!string.IsNullOrEmpty(text) && Directory.Exists(text))
+                {
+                        string text2 = Path.Combine(text, "mod_info.yaml");
+                        if (File.Exists(text2))
+                        {
+                                modInfoPath = text2;
+                                return text;
+                        }
+                        string directoryName2 = Path.GetDirectoryName(text);
+                        if (string.IsNullOrEmpty(directoryName2) || string.Equals(directoryName2, text, StringComparison.OrdinalIgnoreCase))
+                        {
+                                break;
+                        }
+                        text = directoryName2;
+                }
+                if (File.Exists(Path.Combine(directoryName, "mod_info.yaml")))
+                {
+                        modInfoPath = Path.Combine(directoryName, "mod_info.yaml");
+                }
+                return directoryName;
+        }
+
+        private static void TryLoadModContent(string modRoot, string modInfoPath)
+        {
+                if (string.IsNullOrEmpty(modRoot) || !Directory.Exists(modRoot))
+                {
+                        Debug.Log((object)$"[DevLoader] Static content skipped: invalid mod root for dll ({modRoot})");
+                        return;
+                }
+                if (string.IsNullOrEmpty(modInfoPath) || !File.Exists(modInfoPath))
+                {
+                        Debug.Log((object)$"[DevLoader] Static content skipped: no mod_info.yaml for {modRoot}");
+                        return;
+                }
+                try
+                {
+                        Type type = AccessTools.TypeByName("KMod.Content");
+                        if (type == null)
+                        {
+                                Debug.LogWarning((object)$"[DevLoader] Static content skipped: missing KMod.Content for {modRoot}");
+                                return;
+                        }
+                        object obj = CreateContentInstance(type, modRoot, modInfoPath);
+                        MethodInfo methodInfo = AccessTools.Method(type, "LoadAll") ?? AccessTools.Method(type, "Load");
+                        if (methodInfo == null)
+                        {
+                                Debug.LogWarning((object)$"[DevLoader] Static content skipped: no Load/LoadAll on KMod.Content for {modRoot}");
+                                return;
+                        }
+                        object target = methodInfo.IsStatic ? null : obj;
+                        if (!methodInfo.IsStatic && obj == null)
+                        {
+                                Debug.LogWarning((object)$"[DevLoader] Static content skipped: unable to construct KMod.Content for {modRoot}");
+                                return;
+                        }
+                        object[] array = BuildMethodArguments(methodInfo.GetParameters(), modRoot, modInfoPath);
+                        if (array == null)
+                        {
+                                Debug.LogWarning((object)$"[DevLoader] Static content skipped: unsupported Load signature for {modRoot}");
+                                return;
+                        }
+                        methodInfo.Invoke(target, array);
+                        Debug.Log((object)$"[DevLoader] Static content preloaded for {modRoot}");
+                }
+                catch (Exception ex)
+                {
+                        Debug.LogWarning((object)$"[DevLoader] Static content preload failed for {modRoot}: {ex.Message}");
+                }
+        }
+
+        private static object CreateContentInstance(Type contentType, string modRoot, string modInfoPath)
+        {
+                ConstructorInfo[] declaredConstructors = AccessTools.GetDeclaredConstructors(contentType);
+                foreach (ConstructorInfo constructorInfo in declaredConstructors.OrderBy((ConstructorInfo c) => c.GetParameters().Length))
+                {
+                        object[] array = BuildConstructorArguments(constructorInfo.GetParameters(), modRoot, modInfoPath);
+                        if (array == null)
+                        {
+                                continue;
+                        }
+                        try
+                        {
+                                return constructorInfo.Invoke(array);
+                        }
+                        catch
+                        {
+                        }
+                }
+                ConstructorInfo constructorInfo2 = AccessTools.Constructor(contentType, Type.EmptyTypes);
+                if (constructorInfo2 != null)
+                {
+                        try
+                        {
+                                return constructorInfo2.Invoke(Array.Empty<object>());
+                        }
+                        catch
+                        {
+                        }
+                }
+                return null;
+        }
+
+        private static object[] BuildConstructorArguments(ParameterInfo[] parameters, string modRoot, string modInfoPath)
+        {
+                if (parameters.Length == 0)
+                {
+                        return Array.Empty<object>();
+                }
+                object[] array = new object[parameters.Length];
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                        ParameterInfo parameterInfo = parameters[i];
+                        Type parameterType = parameterInfo.ParameterType;
+                        if (parameterType == typeof(string))
+                        {
+                                string text = parameterInfo.Name ?? string.Empty;
+                                array[i] = (text.IndexOf("info", StringComparison.OrdinalIgnoreCase) >= 0 || text.IndexOf("yaml", StringComparison.OrdinalIgnoreCase) >= 0 || text.IndexOf("file", StringComparison.OrdinalIgnoreCase) >= 0) ? modInfoPath : modRoot;
+                                continue;
+                        }
+                        if (parameterType == typeof(bool))
+                        {
+                                array[i] = false;
+                                continue;
+                        }
+                        return null;
+                }
+                return array;
+        }
+
+        private static object[] BuildMethodArguments(ParameterInfo[] parameters, string modRoot, string modInfoPath)
+        {
+                if (parameters.Length == 0)
+                {
+                        return Array.Empty<object>();
+                }
+                object[] array = new object[parameters.Length];
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                        ParameterInfo parameterInfo = parameters[i];
+                        Type parameterType = parameterInfo.ParameterType;
+                        if (parameterType == typeof(string))
+                        {
+                                string text = parameterInfo.Name ?? string.Empty;
+                                array[i] = (text.IndexOf("info", StringComparison.OrdinalIgnoreCase) >= 0 || text.IndexOf("yaml", StringComparison.OrdinalIgnoreCase) >= 0 || text.IndexOf("file", StringComparison.OrdinalIgnoreCase) >= 0) ? modInfoPath : modRoot;
+                                continue;
+                        }
+                        if (parameterType == typeof(bool))
+                        {
+                                array[i] = true;
+                                continue;
+                        }
+                        if (parameterType == typeof(string[]))
+                        {
+                                array[i] = Array.Empty<string>();
+                                continue;
+                        }
+                        return null;
+                }
+                return array;
         }
 
         public static void UnloadAll()
