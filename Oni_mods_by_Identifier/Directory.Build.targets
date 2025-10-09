@@ -1,42 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <!-- Game assemblies copied locally for IDE/offline builds -->
+
+  <!--Ignore the contents of the Previews folder.-->
   <ItemGroup>
-    <GameRefs Include="$(GameFolder)\Assembly-CSharp.dll" />
-    <GameRefs Include="$(GameFolder)\UnityEngine.CoreModule.dll" />
-    <GameRefs Include="$(GameFolder)\UnityEngine.dll" Condition="Exists('$(GameFolder)\UnityEngine.dll')" />
+    <Compile Remove="Previews\**" />
+    <EmbeddedResource Remove="Previews\**" />
+    <None Remove="Previews\**" />
   </ItemGroup>
 
-  <Target Name="PrepareLib" BeforeTargets="Build">
-    <MakeDir Directories="$(LibDir)" />
-    <Copy SourceFiles="@(GameRefs)" DestinationFolder="$(LibDir)" SkipUnchangedFiles="true" />
+  <!--Publicise the game's assemblies on rebuilds.-->
+  <Target Name="Publicise" AfterTargets="Clean" Condition="'$(MSBuildProjectName)' == 'AzeLib'">
+    <Publicise
+      InputAssemblies="@(PubliciseInputAssemblies)"
+      OutputPath="../lib/"/>
   </Target>
 
-  <Target Name="MergeDependencies" AfterTargets="Build">
+  <!--Increment the version number after each build, resetting each day.-->
+  <Import Project="AutoIncrement.targets" />
+  <Target Name="AutoIncrement" BeforeTargets="PrepareForBuild">
+    <AutoIncrement Path="$(IntermediateOutputPath)">
+      <Output
+        PropertyName="ProjectRevision"
+        TaskParameter="Revision" />
+    </AutoIncrement>
+    <PropertyGroup>
+      <Version>$([System.DateTime]::Now.Year).$([System.DateTime]::Now.Month).$([System.DateTime]::Now.Day).$(ProjectRevision)</Version>
+    </PropertyGroup>
+  </Target>
+
+  <!--Create and update the mod_info and mod file.-->
+  <Target Name="WriteModInfoFile" BeforeTargets="PreBuildEvent">
+    <WriteLinesToFile File="$(TargetDir)\mod_info.yaml" Overwrite="true" Lines=
+                      "APIVersion: 2;
+                      supportedContent: $(supportedContent);
+                      minimumSupportedBuild: $(minimumSupportedBuild);
+                      version: &quot;$(Version)&quot;" />
+
+    <PropertyGroup>
+      <ModFile>$(TargetDir)\mod.yaml</ModFile>
+      <Title Condition=" '$(Configuration)' == 'Debug' ">DEV: $(Title)</Title>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(ModFile)" Overwrite="true" Lines=
+                      "staticID: Aze.$(AssemblyName);
+                      description: &quot;$(Description)&quot;;
+                      title: &quot;$(Title)&quot;" />
+  </Target>
+
+  <!--Prevent game assemblies from being copied (and thus merged).-->
+  <Target Name="ClearCopyLocalReferences" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
-      <MergeAssemblies Include="$(TargetPath)" />
+      <ReferenceCopyLocalPaths Remove="$(GameFolder)\* " />
+    </ItemGroup>
+  </Target>
+
+  <!--Merge required assemblies.-->
+  <Target Name="ILRepack" AfterTargets="Build" Condition=" '$(AssemblyName)' != 'AzeLib'">
+    <!--The primary assembly must be the first one, so this is ugly.-->
+    <ItemGroup>
+      <InputAssemblies Include ="$(TargetPath)" />
+      <InputAssemblies
+        Include ="$(TargetDir)\*.dll"
+        Exclude ="$(TargetPath); **/System.*"/>
     </ItemGroup>
     <ILRepack
-      InputAssemblies="@(MergeAssemblies)"
-      OutputFile="$(TargetDir)$(AssemblyName).merged.dll"
-      TargetKind="SameAsPrimaryAssembly"
-      DebugInfo="true"
-      Parallel="true"
-      LibraryPath="$(TargetDir);$(GameFolder);$(RestorePackagesPath);$(NuGetPackageRoot);$(MSBuildThisFileDirectory)..\lib\" />
+      TargetPlatformVersion="v4"
+			TargetKind="SameAsPrimaryAssembly"
+			OutputFile="$(TargetPath)"
+			InputAssemblies="@(InputAssemblies)"
+			Wildcards="true"
+      LibraryPath="$(GameFolder)"
+      Parallel="true"/>
   </Target>
 
-  <Target Name="PackageRelease" AfterTargets="MergeDependencies" Condition="'$(Configuration)'=='Release'">
-    <PropertyGroup>
-      <PkgName>$(AssemblyName)-$(Configuration).zip</PkgName>
-      <PkgPath>$(DistributedDir)$(PkgName)</PkgPath>
-    </PropertyGroup>
-    <MakeDir Directories="$(DistributedDir)" />
+  <!--Clear the install folder while preserving current configs.-->
+  <Target Name="ClearInstallFolder" AfterTargets="ILRepack" Condition="'$(ShouldDistribute)' != 'false' And Exists($(InstallFolder))">
     <ItemGroup>
-      <ModPayload Include="$(TargetDir)**\*.dll" Exclude="$(TargetDir)**\*.pdb" />
-      <ModPayload Include="$(ProjectDir)mod_info.json" Condition="Exists('$(ProjectDir)mod_info.json')" />
-      <ModPayload Include="$(ProjectDir)strings\**\*" Condition="Exists('$(ProjectDir)strings')" />
-      <ModPayload Include="$(ProjectDir)translations\**\*" Condition="Exists('$(ProjectDir)translations')" />
+      <FilesToDelete Include="$(InstallFolder)\**\*.*" Exclude="$(InstallFolder)\config.json"/>
+      <DirsToDelete Include="$([System.IO.Directory]::GetDirectories('$(InstallFolder)', '*', System.IO.SearchOption.AllDirectories))" />
     </ItemGroup>
-    <Delete Files="$(PkgPath)" ContinueOnError="true" />
-    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(PkgPath)' -Force&quot;" />
+    <Delete Files="@(FilesToDelete)" />
+    <RemoveDir Directories="@(DirsToDelete)" />
   </Target>
+  
+  <!--Copy the mod to the install folder.-->
+  <Target Name="CopyArtifactsToInstallFolder" AfterTargets="ClearInstallFolder" Condition=" '$(ShouldDistribute)' != 'false' ">
+    <ItemGroup>
+      <AnimFiles Include="$(ProjectDir)\anim\**\*.*" />
+      <WorldGenFiles Include="$(ProjectDir)\worldgen\**\*.*" />
+      <YamlFiles Include="$(ProjectDir)\*.yaml" />
+      <SpriteFiles Include="$(ProjectDir)\*.dds" />
+      <TranslateFiles Include="$(TranslationsFolder)\$(MSBuildProjectName)\*.po" />
+      <InfoFiles Include="$(TargetDir)\*.yaml" />
+    </ItemGroup>
+    <Copy SourceFiles="@(AnimFiles)" DestinationFiles="@(AnimFiles->'$(InstallFolder)\anim\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(WorldGenFiles)" DestinationFiles="@(WorldGenFiles->'$(InstallFolder)\worldgen\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(YamlFiles)" DestinationFolder="$(InstallFolder)" />
+    <Copy SourceFiles="@(SpriteFiles)" DestinationFolder="$(InstallFolder)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(InstallFolder)\$(TargetFileName)" />
+    <Copy SourceFiles="@(InfoFiles)" DestinationFolder="$(InstallFolder)" />
+    <Copy SourceFiles="@(TranslateFiles)" DestinationFolder="$(InstallFolder)\Translations" />
+  </Target>
+
+  <!--If releasing, create a zipped version of the mod to distribute for manual downloads.-->
+  <Target Name="Zip" AfterTargets="CopyArtifactsToInstallFolder" Condition=" '$(Configuration)' == 'Release' And '$(ShouldDistribute)' != 'false' ">
+    <CreateItem
+      Include="$(InstallFolder)\**\*.*"
+      Exclude="$(InstallFolder)\*.zip">
+      <Output
+        ItemName="ZipFiles"
+        TaskParameter="Include"/>
+    </CreateItem>
+    <Zip
+      ZipFileName="$(DistributeFolder)\$(ProjectName).zip"
+      WorkingDirectory="$(InstallFolder)"
+      Files="@(ZipFiles)"
+      Flatten="false" />
+  </Target>
+
+  <!--If releasing, create a zipped version of the translations for manual downloads.-->
+  <Target Name="ZipTranslations" AfterTargets="Zip" Condition="'$(Configuration)' == 'Release' And '$(MSBuildProjectName)' == 'AzeLib'" >
+    <CreateItem
+      Include="$(TranslationsFolder)\**\*.*"
+      Exclude="$(TranslationsFolder)\*.zip">
+      <Output
+        ItemName="ZipTranslationFiles"
+        TaskParameter="Include"/>
+    </CreateItem>
+    <Zip
+      ZipFileName="$(TranslationsFolder)\Translations.zip"
+      WorkingDirectory="$(TranslationsFolder)"
+      Files="@(ZipTranslationFiles)"
+      Flatten="false" />
+  </Target>
+
 </Project>
