@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <!-- If your local Steam install lives elsewhere, copy this file to Directory.Build.props.user and customize it there. -->
   <PropertyGroup>
@@ -6,16 +6,4 @@
     <GameFolder>$(SteamFolder)\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed</GameFolder>
     <ModFolder>$(UserProfile)\Documents\Klei\OxygenNotIncluded\mods\dev</ModFolder>
   </PropertyGroup>
-
-  <ItemDefinitionGroup>
-    <Reference>
-      <Private>false</Private>
-    </Reference>
-    <ProjectReference>
-      <Private>false</Private>
-    </ProjectReference>
-    <PackageReference>
-      <Private>false</Private>
-    </PackageReference>
-  </ItemDefinitionGroup>
 </Project>
