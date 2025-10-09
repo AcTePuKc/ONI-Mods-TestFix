@@ -18,8 +18,8 @@
   <!--Default all references to CopyLocal False.-->
   <ItemDefinitionGroup>
     <Reference><Private>False</Private></Reference>
-    <ProjectReference><Private>False</ProjectReference>
-    <PackageReference><Private>False</PackageReference>
+    <ProjectReference><Private>False</Private></ProjectReference>
+    <PackageReference><Private>False</Private></PackageReference>
   </ItemDefinitionGroup>
 
   <!--Publicized References-->
