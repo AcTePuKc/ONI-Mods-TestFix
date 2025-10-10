@@ -558,3 +558,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-14 - Identifier AutoIncrement Newtonsoft reference path
 - Updated `Oni_mods_by_Identifier/AutoIncrement.targets` so the Newtonsoft reference resolves via `System.IO.Path.Combine`, avoiding platform-specific separators when MSBuild evaluates the task.
 - Attempted `dotnet msbuild Oni_mods_by_Identifier/ONIMods.sln /t:Build /p:Configuration=Debug` to confirm the AutoIncrement task now loads without the missing `Newtonsoft.Json.dll` warning, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally to verify MSBuild picks up the revised reference path.
+
+## 2026-01-15 - Identifier AutoIncrement default keyword explicitness
+- Replaced implicit `default` assignments in `Oni_mods_by_Identifier/AutoIncrement.targets` so the task's `TryExtractInt`/`TryExtractUShort` helpers now emit explicit `default(int)`/`default(ushort)` values for older Roslyn hosts.
+- Tried `dotnet msbuild Oni_mods_by_Identifier/ONIMods.sln` to confirm the CodeTaskFactory script compiles and discovers the AutoIncrement task, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to validate the task under a full MSBuild environment.
