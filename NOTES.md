@@ -95,6 +95,11 @@ es the visibility compiler error.
 - Relaxed the `ModifyHits` signature guard and added a bool-first fallback so Harmony locates the updated `InterfaceTool.GetObjectUnderCursor` overload even when U56 adds extra optional parameters.
 - Static inspection only; rebuilding still requires the ONI assemblies and a local .NET runtime, both unavailable in this container.
 
+## 2025-10-10 - Identifier AutoIncrement Newtonsoft cleanup
+- Removed the Newtonsoft.Json reference from the legacy identifier AutoIncrement inline task and replaced the deserializer/serializer with BCL-based helpers so the task no longer depends on external libraries.
+- Attempted to rebuild with `msbuild Oni_mods_by_Identifier/ONIMods.sln` to confirm the inline task compiles cleanly without the Newtonsoft reference, but the container lacks MSBuild (`command not found: msbuild`). Please rerun the solution build on a workstation with the ONI toolchain to validate.
+- Also tried `dotnet --version` to fall back to the SDK-based build, but the host is missing `dotnet` as well. Local verification remains required.
+
 ## 2025-10-11 - BetterInfoCards shadow bar tint option
 - Added configurable RGB sliders for the info card shadow bar and ensured stretched bars reuse the selected tint.
 - Unable to rebuild `BetterInfoCards` here because the container still lacks the ONI-managed assemblies and `dotnet`; maintainers should run `dotnet build src/oniMods.sln` locally after syncing the new option values.
