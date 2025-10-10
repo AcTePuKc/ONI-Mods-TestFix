@@ -537,3 +537,6 @@ lternate language locally to confirm the fallback strings resolve correctly.
 - Updated the `ContainerTooltips` and `ZoomSpeed` projects to generate ILRepack search paths from `@(ReferencePath)` and deduplicate them before invoking the merge task. Added a shared `ILRepackLibraryPath` property so the task now consumes the restored dependency directories even after copy-local trimming.
 - Tried `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` and `dotnet build Oni_mods_by_Identifier/ZoomSpeed/ZoomSpeed.csproj` to verify `Newtonsoft.Json.dll`/`PLib.dll` resolve from the projected directories, but the container still lacks the `.NET` host (`command not found: dotnet`). Please run the builds locally to confirm ILRepack succeeds without the assemblies remaining in `bin`.
 
+## 2026-01-11 - Identifier AutoIncrement parity
+- Copied the shared `AutoIncrement.targets` into the legacy identifier tree so the standalone build uses the same versioning task as the modern solution.
+- Attempted to evaluate the target via `dotnet msbuild Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /t:AutoIncrement /p:Configuration=Debug /p:Platform=AnyCPU /nologo`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please re-run the MSBuild evaluation locally to confirm the task resolves in Visual Studio.
