@@ -1,5 +1,9 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2026-01-09 - Identifier Publicise incremental metadata
+- Added incremental `Inputs`/`Outputs` metadata and `RunOnServer` to the identifier `Publicise` target so MSBuild can skip the publicizer once the `_public` hashes exist, avoiding repeated locking across projects.
+- Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm the `_public` assemblies generate once and stay unlocked, but the container still lacks the .NET host (`command not found: dotnet`). Please rerun the build locally where the ONI toolchain is available.
+
 ## 2026-01-08 - Identifier Directory.Build.props path normalization
 - Updated the legacy identifier `Directory.Build.props` to combine `GameFolder` with managed assembly filenames using `System.IO.Path` so MSBuild and the publicizer receive Windows-friendly paths.
 - Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm the `_public` assemblies regenerate and that the compiler resolves the ONI namespaces, but the container still lacks the .NET host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available.

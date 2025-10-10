@@ -9,7 +9,12 @@
   </ItemGroup>
 
   <!--Publicise the game's assemblies on rebuilds.-->
-  <Target Name="Publicise" BeforeTargets="ResolveReferences" Condition="'$(GeneratePublicAssemblies)' != 'false'">
+  <Target Name="Publicise"
+          BeforeTargets="ResolveReferences"
+          Condition="'$(GeneratePublicAssemblies)' != 'false'"
+          Inputs="@(PubliciseInputAssemblies)"
+          Outputs="@(PubliciseInputAssemblies->'../lib/%(Filename)_public.hash')"
+          RunOnServer="true">
     <Publicise
       InputAssemblies="@(PubliciseInputAssemblies)"
       OutputPath="../lib/"/>
