@@ -49,3 +49,4 @@ These mods are all very simple mods that I made for requests that I don't person
 - [Contribute to Translations](Translations)
 - [Send a donation](https://ko-fi.com/aze_tg)
   - Likes, favorites, awards, and comments on [Steam](https://steamcommunity.com/profiles/76561198044590606/myworkshopfiles/?appid=457140) are also appreciated.
+- Before compiling for the first time, copy each `Directory.Build.props.default` file to a matching `.user` file (for example `src/Directory.Build.props.user` and `Oni_mods_by_Identifier/Directory.Build.props.user`) and update the Steam- and game-folder paths so MSBuild can locate your local ONI install. Keep the `.user` files untracked in git.

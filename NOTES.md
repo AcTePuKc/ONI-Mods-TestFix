@@ -570,3 +570,8 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-16 - Identifier publicise scheduling
 - Moved the identifier-level `Publicise` target so it now runs before `ResolveReferences`, ensuring the `_public` assemblies exist before project references evaluate.
 - Attempted `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm `Assembly-CSharp_public.dll`, `Assembly-CSharp-firstpass_public.dll`, and `Unity.TextMeshPro_public.dll` regenerate under `Oni_mods_by_Identifier/lib/`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once MSBuild is available to validate the earlier execution point.
+
+## 2026-01-17 - Directory.Build.props.user hygiene
+- Removed the committed `Oni_mods_by_Identifier/Directory.Build.props.user` file and added an explicit ignore entry so each workstation keeps its Steam path overrides local-only.
+- Updated the root README to remind contributors to copy `Directory.Build.props.default` to `.user` in both the `src/` solution and the legacy identifier tree before building.
+- Planned to validate that MSBuild still succeeds after providing a `.user` file via `dotnet build Oni_mods_by_Identifier/ONIMods.sln`, but the container environment continues to lack the `.NET` host (`command not found: dotnet`). Please perform the build locally once a `.user` file is created to confirm the setup instructions remain accurate.
