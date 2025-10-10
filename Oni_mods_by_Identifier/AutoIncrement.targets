@@ -106,7 +106,7 @@ public class AutoIncrement : Task
         if (match.Success && int.TryParse(match.Groups[1].Value, out value))
             return true;
 
-        value = default;
+        value = default(int);
         return false;
     }
 
@@ -117,7 +117,7 @@ public class AutoIncrement : Task
         if (match.Success && ushort.TryParse(match.Groups[1].Value, out value))
             return true;
 
-        value = default;
+        value = default(ushort);
         return false;
     }
 
