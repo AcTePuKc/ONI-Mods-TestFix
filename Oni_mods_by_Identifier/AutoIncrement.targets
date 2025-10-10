@@ -13,12 +13,11 @@
 		</ParameterGroup>
 
 		<Task>
-				<Reference Include="$([System.IO.Path]::Combine('$(GameFolder)', 'Newtonsoft.Json.dll'))" />
-			<Code Type="Class" Language="cs">
-				<![CDATA[
+                        <Code Type="Class" Language="cs">
+                                <![CDATA[
 using Microsoft.Build.Utilities;
-using Newtonsoft.Json;
 using System.IO;
+using System.Text.RegularExpressions;
 
 public class AutoIncrement : Task
 {
@@ -41,14 +40,81 @@ public class AutoIncrement : Task
 
     private Version LoadVersion()
     {
-        if (!File.Exists(Path + "version.json"))
-            return new Version() { major = 0 };
-        using (StreamReader sr = new StreamReader(Path + "version.json")) { return JsonConvert.DeserializeObject<Version>(sr.ReadToEnd()); }
+        var versionPath = System.IO.Path.Combine(Path ?? string.Empty, "version.json");
+
+        if (!File.Exists(versionPath))
+            return new Version();
+
+        try
+        {
+            var content = File.ReadAllText(versionPath);
+
+            if (string.IsNullOrWhiteSpace(content))
+                return new Version();
+
+            var version = new Version();
+
+            if (TryExtractInt(content, "major", out var major))
+                version.major = major;
+
+            if (TryExtractInt(content, "minor", out var minor))
+                version.minor = minor;
+
+            if (TryExtractInt(content, "build", out var build))
+                version.build = build;
+
+            if (TryExtractUShort(content, "revision", out var revision))
+                version.revision = revision;
+
+            return version;
+        }
+        catch (IOException)
+        {
+            return new Version();
+        }
+        catch (System.UnauthorizedAccessException)
+        {
+            return new Version();
+        }
     }
 
     private void WriteVersion(Version version)
     {
-        using (StreamWriter sw = new StreamWriter(Path + "version.json")) { sw.Write(JsonConvert.SerializeObject(version)); }
+        var versionPath = System.IO.Path.Combine(Path ?? string.Empty, "version.json");
+        var payload = string.Concat(
+            "{\"major\":",
+            version.major.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ",\"minor\":",
+            version.minor.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ",\"build\":",
+            version.build.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ",\"revision\":",
+            version.revision.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            "}");
+
+        File.WriteAllText(versionPath, payload);
+    }
+
+    private bool TryExtractInt(string content, string propertyName, out int value)
+    {
+        var match = Regex.Match(content, "\\\"" + propertyName + "\\\"\\s*:\\s*(-?\\d+)");
+
+        if (match.Success && int.TryParse(match.Groups[1].Value, out value))
+            return true;
+
+        value = default;
+        return false;
+    }
+
+    private bool TryExtractUShort(string content, string propertyName, out ushort value)
+    {
+        var match = Regex.Match(content, "\\\"" + propertyName + "\\\"\\s*:\\s*(\\d+)");
+
+        if (match.Success && ushort.TryParse(match.Groups[1].Value, out value))
+            return true;
+
+        value = default;
+        return false;
     }
 
     private class Version
