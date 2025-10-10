@@ -7,6 +7,10 @@
     <Description>Allows adjustable zoom in/out speed (useful when using a trackpad to slow down the zoom speed).</Description>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <UsesAzeLib>false</UsesAzeLib>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="mod.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
