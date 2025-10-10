@@ -1,5 +1,9 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2026-01-08 - Identifier Directory.Build.props path normalization
+- Updated the legacy identifier `Directory.Build.props` to combine `GameFolder` with managed assembly filenames using `System.IO.Path` so MSBuild and the publicizer receive Windows-friendly paths.
+- Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm the `_public` assemblies regenerate and that the compiler resolves the ONI namespaces, but the container still lacks the .NET host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available.
+
 ## 2025-10-08 - Identifier ILRepack library path quoting fix
 - Updated the `LibraryPath` attribute in the legacy identifier mods to drop the stray escaped quote so ILRepack's search path list terminates cleanly with the repo-local `lib` folder.
 - Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj -c Debug` to confirm ILRepack accepts the revised path list, but the container still lacks the .NET host (`command not found: dotnet`). Please retry the build locally once the ONI toolchain is available.
