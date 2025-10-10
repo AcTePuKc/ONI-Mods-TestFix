@@ -13,7 +13,7 @@
 		</ParameterGroup>
 
 		<Task>
-			<Reference Include="$(GameFolder)/Newtonsoft.Json.dll" />
+				<Reference Include="$([System.IO.Path]::Combine('$(GameFolder)', 'Newtonsoft.Json.dll'))" />
 			<Code Type="Class" Language="cs">
 				<![CDATA[
 using Microsoft.Build.Utilities;
