@@ -544,3 +544,8 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-12 - Identifier UsesAzeLib override parity
 - Added `<UsesAzeLib>false</UsesAzeLib>` to the legacy `ContainerTooltips` and `ZoomSpeed` projects so MSBuild stops searching for the unused `AzeLib` project when evaluating the standalone solution.
 - Tried `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm MSBuild no longer probes `../AzeLib/AzeLib.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to validate the property override removes the stale project reference lookup.
+
+## 2026-01-13 - Identifier publicise target toggle
+- Swapped the `Publicise` target guard from the `AzeLib` project name check to a `GeneratePublicAssemblies` property so any legacy project can emit the `_public.dll` copies when needed.
+- Enabled `<GeneratePublicAssemblies>true</GeneratePublicAssemblies>` in the identifier-level `Directory.Build.props` so the publicising step runs by default and can be disabled per project when necessary.
+- Attempted to clean/rebuild via `dotnet msbuild Oni_mods_by_Identifier/ONIMods.sln /t:Clean;Build`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the clean/build locally to confirm `Assembly-CSharp_public.dll`, `Assembly-CSharp-firstpass_public.dll`, and `Unity.TextMeshPro_public.dll` regenerate under `Oni_mods_by_Identifier/lib/`.
