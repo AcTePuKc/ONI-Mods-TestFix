@@ -54,16 +54,20 @@ public class AutoIncrement : Task
 
             var version = new Version();
 
-            if (TryExtractInt(content, "major", out var major))
+            int major;
+            if (TryExtractInt(content, "major", out major))
                 version.major = major;
 
-            if (TryExtractInt(content, "minor", out var minor))
+            int minor;
+            if (TryExtractInt(content, "minor", out minor))
                 version.minor = minor;
 
-            if (TryExtractInt(content, "build", out var build))
+            int build;
+            if (TryExtractInt(content, "build", out build))
                 version.build = build;
 
-            if (TryExtractUShort(content, "revision", out var revision))
+            ushort revision;
+            if (TryExtractUShort(content, "revision", out revision))
                 version.revision = revision;
 
             return version;
