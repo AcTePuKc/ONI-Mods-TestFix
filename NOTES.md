@@ -562,3 +562,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-15 - Identifier AutoIncrement default keyword explicitness
 - Replaced implicit `default` assignments in `Oni_mods_by_Identifier/AutoIncrement.targets` so the task's `TryExtractInt`/`TryExtractUShort` helpers now emit explicit `default(int)`/`default(ushort)` values for older Roslyn hosts.
 - Tried `dotnet msbuild Oni_mods_by_Identifier/ONIMods.sln` to confirm the CodeTaskFactory script compiles and discovers the AutoIncrement task, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to validate the task under a full MSBuild environment.
+
+## 2026-01-16 - Identifier publicise scheduling
+- Moved the identifier-level `Publicise` target so it now runs before `ResolveReferences`, ensuring the `_public` assemblies exist before project references evaluate.
+- Attempted `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm `Assembly-CSharp_public.dll`, `Assembly-CSharp-firstpass_public.dll`, and `Unity.TextMeshPro_public.dll` regenerate under `Oni_mods_by_Identifier/lib/`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once MSBuild is available to validate the earlier execution point.

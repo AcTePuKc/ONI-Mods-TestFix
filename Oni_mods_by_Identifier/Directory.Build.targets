@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <!--Publicise the game's assemblies on rebuilds.-->
-  <Target Name="Publicise" AfterTargets="Clean" Condition="'$(GeneratePublicAssemblies)' != 'false'">
+  <Target Name="Publicise" BeforeTargets="ResolveReferences" Condition="'$(GeneratePublicAssemblies)' != 'false'">
     <Publicise
       InputAssemblies="@(PubliciseInputAssemblies)"
       OutputPath="../lib/"/>
