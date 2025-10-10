@@ -540,3 +540,7 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-11 - Identifier AutoIncrement parity
 - Copied the shared `AutoIncrement.targets` into the legacy identifier tree so the standalone build uses the same versioning task as the modern solution.
 - Attempted to evaluate the target via `dotnet msbuild Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /t:AutoIncrement /p:Configuration=Debug /p:Platform=AnyCPU /nologo`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please re-run the MSBuild evaluation locally to confirm the task resolves in Visual Studio.
+
+## 2026-01-12 - Identifier UsesAzeLib override parity
+- Added `<UsesAzeLib>false</UsesAzeLib>` to the legacy `ContainerTooltips` and `ZoomSpeed` projects so MSBuild stops searching for the unused `AzeLib` project when evaluating the standalone solution.
+- Tried `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm MSBuild no longer probes `../AzeLib/AzeLib.csproj`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to validate the property override removes the stale project reference lookup.

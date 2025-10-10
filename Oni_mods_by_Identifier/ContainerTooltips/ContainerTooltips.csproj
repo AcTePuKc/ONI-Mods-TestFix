@@ -5,6 +5,10 @@
     <Description>Shows the contents of containers to their tooltips (info cards).</Description>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <UsesAzeLib>false</UsesAzeLib>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="preview.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
