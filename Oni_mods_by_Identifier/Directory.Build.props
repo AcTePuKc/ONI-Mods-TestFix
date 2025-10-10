@@ -26,9 +26,9 @@
   <!--Publicized References-->
   <ItemGroup>
     <PubliciseInputAssemblies Include="
-                                        $(GameFolder)/Assembly-CSharp.dll;
-                                        $(GameFolder)/Assembly-CSharp-firstpass.dll;
-                    $(GameFolder)/Unity.TextMeshPro.dll"/>
+                                        $([System.IO.Path]::Combine('$(GameFolder)', 'Assembly-CSharp.dll'));
+                                        $([System.IO.Path]::Combine('$(GameFolder)', 'Assembly-CSharp-firstpass.dll'));
+                    $([System.IO.Path]::Combine('$(GameFolder)', 'Unity.TextMeshPro.dll'))"/>
     <Reference Include="Assembly-CSharp_public" HintPath="../lib/Assembly-CSharp_public.dll"  />
     <Reference Include="Assembly-CSharp-firstpass_public" HintPath="../lib/Assembly-CSharp-firstpass_public.dll" />
     <Reference Include="Unity.TextMeshPro_public" HintPath="../lib/Unity.TextMeshPro_public.dll" />
@@ -45,16 +45,16 @@
     <PackageReference Include ="System.ValueTuple" Version="4.5.0"/>
 
     <!--Game References-->
-    <Reference Include="0Harmony" HintPath="$(GameFolder)/0Harmony.dll" />
-    <Reference Include="Newtonsoft.Json" HintPath="$(GameFolder)/Newtonsoft.Json.dll" />
-    <Reference Include="UnityEngine" HintPath="$(GameFolder)/UnityEngine.dll" />
-    <Reference Include="UnityEngine.CoreModule" HintPath="$(GameFolder)/UnityEngine.CoreModule.dll" />
-    <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(GameFolder)/UnityEngine.ImageConversionModule.dll" />
-    <Reference Include="UnityEngine.ImageConversionModule" HintPath="$(GameFolder)/UnityEngine.IMGUIModule.dll" />
-    <Reference Include="UnityEngine.InputLegacyModule" HintPath="$(GameFolder)/UnityEngine.InputLegacyModule.dll" />
-    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(GameFolder)/UnityEngine.TextRenderingModule.dll" />
-    <Reference Include="UnityEngine.UI" HintPath="$(GameFolder)/UnityEngine.UI.dll" />
-    <Reference Include="UnityEngine.UIModule" HintPath="$(GameFolder)/UnityEngine.UIModule.dll" />
+    <Reference Include="0Harmony" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', '0Harmony.dll'))" />
+    <Reference Include="Newtonsoft.Json" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'Newtonsoft.Json.dll'))" />
+    <Reference Include="UnityEngine" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.dll'))" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.CoreModule.dll'))" />
+    <Reference Include="UnityEngine.ImageConversionModule" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.ImageConversionModule.dll'))" />
+    <Reference Include="UnityEngine.ImageConversionModule" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.IMGUIModule.dll'))" />
+    <Reference Include="UnityEngine.InputLegacyModule" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.InputLegacyModule.dll'))" />
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.TextRenderingModule.dll'))" />
+    <Reference Include="UnityEngine.UI" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.UI.dll'))" />
+    <Reference Include="UnityEngine.UIModule" HintPath="$([System.IO.Path]::Combine('$(GameFolder)', 'UnityEngine.UIModule.dll'))" />
   </ItemGroup>
 
   <PropertyGroup>
