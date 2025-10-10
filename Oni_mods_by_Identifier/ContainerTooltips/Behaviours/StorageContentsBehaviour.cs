@@ -13,7 +13,7 @@ namespace ContainerTooltips
         private Storage? storage;
         private KSelectable? selectable;
 
-        protected override void OnPrefabInit()
+        public override void OnPrefabInit()
         {
             base.OnPrefabInit();
             storage = GetComponent<Storage>();
@@ -21,13 +21,13 @@ namespace ContainerTooltips
             Subscribe((int)GameHashes.OnStorageChange, OnStorageChangedHandler);
         }
 
-        protected override void OnSpawn()
+        public override void OnSpawn()
         {
             base.OnSpawn();
             RefreshStatus();
         }
 
-        protected override void OnCleanUp()
+        public override void OnCleanUp()
         {
             ClearStatus();
             Unsubscribe((int)GameHashes.OnStorageChange, OnStorageChangedHandler);

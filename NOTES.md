@@ -579,3 +579,6 @@ lternate language locally to confirm the fallback strings resolve correctly.
 - Removed the committed `Oni_mods_by_Identifier/Directory.Build.props.user` file and added an explicit ignore entry so each workstation keeps its Steam path overrides local-only.
 - Updated the root README to remind contributors to copy `Directory.Build.props.default` to `.user` in both the `src/` solution and the legacy identifier tree before building.
 - Planned to validate that MSBuild still succeeds after providing a `.user` file via `dotnet build Oni_mods_by_Identifier/ONIMods.sln`, but the container environment continues to lack the `.NET` host (`command not found: dotnet`). Please perform the build locally once a `.user` file is created to confirm the setup instructions remain accurate.
+## 2025-10-10 - ContainerTooltips access modifier exposure
+- Updated `StorageContentsBehaviour` to expose the `OnPrefabInit`, `OnSpawn`, and `OnCleanUp` overrides so external callers can hook the behaviour lifecycle.
+- Attempted to validate with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the workspace still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the access-modifier change resolves without regressions.
