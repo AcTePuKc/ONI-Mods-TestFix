@@ -1,5 +1,14 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2026-01-19 - EventSystem handle and boxing guidance sync
+- Logged the EventSystem subscription migration highlighted in `dev_log.md`, noting the requirement to pass explicit context
+  arguments alongside static dispatcher closures so subscription handles (`Subscribe(..., context) -> handle`) can be cached
+  and released via `Unsubscribe(ref handle)` instead of relying on obsolete delegate overloads.
+- Documented the pooled boxing expectation for value-type event payloads: emit events through `BoxingTrigger` (or its
+  overrides) and unbox with `Boxed<T>.Unbox(data)` to reuse the shared wrappers and avoid per-call allocations.
+- Validation: static documentation review only; queued a follow-up audit to update any mods or guides still referencing the
+  legacy `Subscribe`/`Unsubscribe` overloads or direct boxing so the repositories stay aligned with the handle-based workflow.
+
 ## 2026-01-18 - CannedFoodNGoods DLC gating check
 - Updated `CannedBeansConfig.GetDlcIds` to return `DlcManager.DLC2_ID` so the canned beans item is correctly limited to the U56 DLC.
 - Confirmed via static inspection that `GetRequiredDlcIds` mirrors the same identifier and `GetForbiddenDlcIds` remains `null`, keeping the restriction matrix internally consistent.
