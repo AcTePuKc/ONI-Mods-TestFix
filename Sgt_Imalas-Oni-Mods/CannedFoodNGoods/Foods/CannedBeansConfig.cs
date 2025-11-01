@@ -49,7 +49,7 @@ namespace CannedFoods.Foods
 			return EntityTemplates.ExtendEntityToFood(prefab, foodInfo);
 		}
 
-		public string[] GetDlcIds() => RequiredDlc;
+		public string[] GetDlcIds() => [DlcManager.DLC2_ID];
 
 		public string[] GetForbiddenDlcIds() => null;
 
