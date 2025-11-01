@@ -8,6 +8,7 @@ This document inventories the current in-code `TODO` comments across the reposit
 | --- | --- | --- | --- |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/CanScrapConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/EmptyCanConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
+| [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/ModAssets.cs` | Replace the `Lazy<ExportSettings>` initializer with the post-U56 export-settings singleton pattern and remove the TODO once complete. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBBQConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBreadConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedMilkConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
