@@ -130,6 +130,9 @@ namespace ContainerTooltips
             }
         }
 
+        // TODO: Update the summarizer to follow the revised ContainerTooltips spec by
+        // introducing the deterministic comparer pipeline and converting the child/disease
+        // accessors into the expression-bodied helpers the spec now requires.
         private sealed class ContentSummaryCollection
         {
             private readonly int depth;
