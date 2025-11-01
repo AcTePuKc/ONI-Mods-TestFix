@@ -1,8 +1,8 @@
 {
   "mods": [
     {
-      "id": "DietVariety",
-      "title": "DietVariety",
+      "id": "pether-pg.DietVariety",
+      "title": "[Vanilla + DLC] Diet Variety",
       "path": "ONI_Mods_byPether/DietVariety",
       "counts": {
         "A": 0,
