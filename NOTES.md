@@ -1,3 +1,7 @@
+## 2026-01-18 - Claim New Notification bootstrap
+- Replaced the local UserMod2 entry point with AzeLib's `[OnLoad]` bootstrap hooks so only the shared AzeUserMod remains in the assembly.
+- Attempted to rebuild via `dotnet build src/ONIMods.sln` to verify the DLL layout and loader behaviour, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the duplicate entry-point error is resolved and that only the AzeLib-provided `UserMod2` ships in the compiled mod.
+
 # AzeLib OnLoad benchmark (2024-06-17)
 
 ## 2026-01-20 - ClaimNewNotification ModAssets packaging copy
