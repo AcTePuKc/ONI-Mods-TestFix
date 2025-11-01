@@ -95,7 +95,7 @@ def parse_simple_yaml(path: Path) -> Tuple[str, str]:
         lines = path.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
         raise ModParseError(f"Unable to read {path}: {exc}") from exc
-    key_pattern = re.compile(r"^(?P<key>[A-Za-z0-9_]+)\\s*:\\s*(?P<value>.+?)\\s*$")
+    key_pattern = re.compile(r"^(?P<key>[A-Za-z0-9_]+)\s*:\s*(?P<value>.+?)\s*$")
     for raw_line in lines:
         line = raw_line.strip()
         if not line or line.startswith("#"):
