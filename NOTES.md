@@ -1,5 +1,12 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2026-01-18 - ContainerTooltips storage summarizer comparer pipeline
+- Replaced the legacy `ContentSummaryCollection` aggregation/sort routine with the deterministic comparer pipeline so summaries
+  always apply the full tie-breaking chain (name, mass, calories, units, count, tag) regardless of the configured sort mode.
+- Converted the child and disease helpers to expression-bodied members per the revised spec. With `dotnet` still unavailable in
+  this workspace, validated determinism manually by reviewing the comparer pipeline fallbacks and ensuring every stage has a
+  stable tie-breaker down to the tag hash.
+
 ## 2026-01-09 - Identifier Publicise incremental metadata
 - Added incremental `Inputs`/`Outputs` metadata and `RunOnServer` to the identifier `Publicise` target so MSBuild can skip the publicizer once the `_public` hashes exist, avoiding repeated locking across projects.
 - Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm the `_public` assemblies generate once and stay unlocked, but the container still lacks the .NET host (`command not found: dotnet`). Please rerun the build locally where the ONI toolchain is available.

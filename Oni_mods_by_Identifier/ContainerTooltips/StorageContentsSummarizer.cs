@@ -47,15 +47,11 @@ namespace ContainerTooltips
 
             internal ContentSummaryCollection? Children => children;
 
-            internal ContentSummaryCollection EnsureChildren()
-            {
-                return children ??= new ContentSummaryCollection(Depth + 1);
-            }
+            internal ContentSummaryCollection EnsureChildren() =>
+                children ??= new ContentSummaryCollection(Depth + 1);
 
-            internal Dictionary<byte, int> EnsureDiseases()
-            {
-                return diseases ??= new Dictionary<byte, int>();
-            }
+            internal Dictionary<byte, int> EnsureDiseases() =>
+                diseases ??= new Dictionary<byte, int>();
 
             internal void AddDisease(byte diseaseIdx, int amount)
             {
@@ -130,9 +126,6 @@ namespace ContainerTooltips
             }
         }
 
-        // TODO: Update the summarizer to follow the revised ContainerTooltips spec by
-        // introducing the deterministic comparer pipeline and converting the child/disease
-        // accessors into the expression-bodied helpers the spec now requires.
         private sealed class ContentSummaryCollection
         {
             private readonly int depth;
@@ -164,10 +157,7 @@ namespace ContainerTooltips
 
             internal void Sort(ContentSortMode sortMode)
             {
-                if (sortMode == ContentSortMode.Default)
-                    return;
-
-                items.Sort(new ContentSummaryComparer(sortMode));
+                ContentSummaryComparer.Sort(items, sortMode);
                 foreach (var item in items)
                     item.Children?.Sort(sortMode);
             }
@@ -175,11 +165,63 @@ namespace ContainerTooltips
 
         private sealed class ContentSummaryComparer : IComparer<ContentSummary>
         {
-            private readonly ContentSortMode mode;
-
-            internal ContentSummaryComparer(ContentSortMode mode)
+            private static readonly Comparison<ContentSummary>[] DefaultPipeline =
             {
-                this.mode = mode;
+                CompareName,
+                CompareMass,
+                CompareCalories,
+                CompareUnits,
+                CompareCount,
+                CompareTag
+            };
+
+            private static readonly Comparison<ContentSummary>[] AlphabeticalPipeline =
+            {
+                CompareName,
+                CompareMass,
+                CompareCalories,
+                CompareUnits,
+                CompareCount,
+                CompareTag
+            };
+
+            private static readonly Comparison<ContentSummary>[] AmountPipeline =
+            {
+                CompareMass,
+                CompareCalories,
+                CompareUnits,
+                CompareCount,
+                CompareName,
+                CompareTag
+            };
+
+            private static readonly ContentSummaryComparer DefaultComparer = new(DefaultPipeline);
+
+            private static readonly ContentSummaryComparer AlphabeticalComparer = new(AlphabeticalPipeline);
+
+            private static readonly ContentSummaryComparer AmountComparer = new(AmountPipeline);
+
+            private readonly IReadOnlyList<Comparison<ContentSummary>> pipeline;
+
+            private ContentSummaryComparer(IReadOnlyList<Comparison<ContentSummary>> pipeline) =>
+                this.pipeline = pipeline;
+
+            internal static void Sort(List<ContentSummary> items, ContentSortMode sortMode)
+            {
+                if (items.Count <= 1)
+                    return;
+
+                items.Sort(GetComparer(sortMode));
+            }
+
+            private static ContentSummaryComparer GetComparer(ContentSortMode sortMode)
+            {
+                return sortMode switch
+                {
+                    ContentSortMode.Amount => AmountComparer,
+                    ContentSortMode.Alphabetical => AlphabeticalComparer,
+                    _ => DefaultComparer
+                };
             }
 
             public int Compare(ContentSummary? x, ContentSummary? y)
@@ -191,39 +233,33 @@ namespace ContainerTooltips
                 if (y is null)
                     return 1;
 
-                return mode switch
+                foreach (var comparison in pipeline)
                 {
-                    ContentSortMode.Alphabetical => CompareAlphabetical(x, y),
-                    ContentSortMode.Amount => CompareAmount(x, y),
-                    _ => 0
-                };
+                    var result = comparison(x, y);
+                    if (result != 0)
+                        return result;
+                }
+
+                return 0;
             }
 
-            private static int CompareAlphabetical(ContentSummary x, ContentSummary y)
-            {
-                var value = string.Compare(x.Name, y.Name, StringComparison.CurrentCultureIgnoreCase);
-                return value == 0 ? CompareAmount(x, y) : value;
-            }
+            private static int CompareName(ContentSummary x, ContentSummary y) =>
+                string.Compare(x.Name, y.Name, StringComparison.CurrentCultureIgnoreCase);
 
-            private static int CompareAmount(ContentSummary x, ContentSummary y)
-            {
-                var value = y.Mass.CompareTo(x.Mass);
-                if (value != 0)
-                    return value;
+            private static int CompareMass(ContentSummary x, ContentSummary y) =>
+                y.Mass.CompareTo(x.Mass);
 
-                value = y.Calories.CompareTo(x.Calories);
-                if (value != 0)
-                    return value;
+            private static int CompareCalories(ContentSummary x, ContentSummary y) =>
+                y.Calories.CompareTo(x.Calories);
 
-                value = y.Units.CompareTo(x.Units);
-                if (value != 0)
-                    return value;
+            private static int CompareUnits(ContentSummary x, ContentSummary y) =>
+                y.Units.CompareTo(x.Units);
 
-                value = y.Count.CompareTo(x.Count);
-                return value == 0
-                    ? string.Compare(x.Name, y.Name, StringComparison.CurrentCultureIgnoreCase)
-                    : value;
-            }
+            private static int CompareCount(ContentSummary x, ContentSummary y) =>
+                y.Count.CompareTo(x.Count);
+
+            private static int CompareTag(ContentSummary x, ContentSummary y) =>
+                x.Tag.GetHashCode().CompareTo(y.Tag.GetHashCode());
         }
 
         private static bool loggedInvalidDiseaseIndex;
