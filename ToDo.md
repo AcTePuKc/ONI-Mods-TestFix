@@ -17,7 +17,7 @@ This document inventories the current in-code `TODO` comments across the reposit
 | [x] | BetterInfoCards - Util | `src/BetterInfoCards/Util/ResetPool.cs` | Consider adding logic to shrink the reset pool when demand drops. |
 | [x] | BetterInfoCards - Converters | `src/BetterInfoCards/Converters/ConverterManager.cs` | Decide whether the default and title converters should live outside the shared converter dictionary for clarity or reuse. |
 | [x] | ContainerTooltips | `Oni_mods_by_Identifier/ContainerTooltips/StorageContentsSummarizer.cs` | Refactor the storage summarizer to follow the new comparer-driven spec, convert the helper accessors to expression-bodied members, validate the behavior, and remove the in-code TODO upon completion (validated via manual reasoning; dotnet unavailable). |
-| [ ] | DietVariety | `DietVariety/VarietyMonitor.cs` | Migrate the eater completion and death tag delegates to the new event/delegate specification. |
+| [x] | DietVariety | `DietVariety/VarietyMonitor.cs` | Migrated the eater completion and death tag hooks to the reflection-backed event adapters and confirmed via manual reasoning that meal variety refreshes and death cleanup still execute when the new payload shapes arrive. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBeansConfig.cs` | Implement the DLC restriction requirements introduced with U56 so `GetDlcIds` can stop returning `null` and the temporary gating TODO can be cleared. |
 
-*Last updated: 2025-11-03 00:00 UTC*
+*Last updated: 2026-01-18 00:00 UTC*
