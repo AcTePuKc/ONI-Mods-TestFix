@@ -7,7 +7,8 @@ namespace CannedFoods.EmptyCans
 	{
 		public const string ID = "CF_EmptyCan";
 
-		public string[] GetDlcIds() => null;
+                // TODO: U56 DLC gating - stop returning null once this matches the beans' restriction matrix.
+                public string[] GetDlcIds() => null;
 
 		public GameObject CreatePrefab()
 		{

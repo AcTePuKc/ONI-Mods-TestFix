@@ -47,7 +47,8 @@ namespace CannedFoods.Foods
 			return EntityTemplates.ExtendEntityToFood(prefab, foodInfo);
 		}
 
-		public string[] GetDlcIds() => null;
+                // TODO: U56 DLC gating - stop returning null once this matches the beans' restriction matrix.
+                public string[] GetDlcIds() => null;
 
 		public void OnPrefabInit(GameObject inst)
 		{
