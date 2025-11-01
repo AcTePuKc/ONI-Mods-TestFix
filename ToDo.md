@@ -6,6 +6,12 @@ This document inventories the current in-code `TODO` comments across the reposit
 
 | Status | Mod/Area | File | Summary |
 | --- | --- | --- | --- |
+| [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/CanScrapConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
+| [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/EmptyCanConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
+| [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBBQConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
+| [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBreadConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
+| [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedMilkConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
+| [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedTunaConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [x] | DefaultBuildingSettings | `src/DefaultBuildingSettings/OnBuild_Patch.cs` | Confirmed building defaults are stamped onto prefabs so no Harmony build hook is required. |
 | [x] | AzeLib - Extensions | `src/AzeLib/Extensions/TranspilerExt.cs` | Optimize `MethodRemover` so it only emits stack pops when required and handles label preservation or fix-ups cleanly. |
 | [x] | AzeLib - Extensions | `src/AzeLib/Extensions/TranspilerExt.cs` | Evaluate whether the operand-targeted `Manipulator` overload is sufficiently general to keep or should be removed. |
@@ -20,4 +26,4 @@ This document inventories the current in-code `TODO` comments across the reposit
 | [x] | DietVariety | `DietVariety/VarietyMonitor.cs` | Migrated the eater completion and death tag hooks to the reflection-backed event adapters and confirmed via manual reasoning that meal variety refreshes and death cleanup still execute when the new payload shapes arrive. |
 | [x] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBeansConfig.cs` | Implemented the U56 DLC restriction logic, updated `GetDlcIds` to require `DLC2`, and verified by static inspection that the required/forbidden matrices align (runtime validation blocked pending in-game check). |
 
-*Last updated: 2026-01-18 00:00 UTC*
+*Last updated: 2025-11-01 05:46 UTC*

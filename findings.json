@@ -8,8 +8,8 @@
         "A": 0,
         "B": 0,
         "C": 0,
-        "D": 1,
-        "E": 1
+        "D": 0,
+        "E": 5
       },
       "files": [
         {
@@ -17,21 +17,36 @@
           "findings": [
             {
               "category": "E",
-              "line": 13,
-              "text": "private static readonly EventSystem.IntraObjectHandler<VarietyMonitor> OnDeadTagAddedDelegate = GameUtil.CreateHasTagHandler<VarietyMonitor>(GameTags.Dead, (System.Action<VarietyMonitor, object>)((component, data) => component.OnDeath(data)));"
+              "line": 126,
+              "text": "private static readonly EventSystem.IntraObjectHandler<VarietyMonitor> OnDeadTagAddedLegacy = GameUtil.CreateHasTagHandler<VarietyMonitor>(GameTags.Dead, (component, data) => component.OnDeath(data));"
             },
             {
-              "category": "D",
-              "line": 27,
-              "text": "Edible edible = (Edible)data;"
+              "category": "E",
+              "line": 259,
+              "text": ".Where(m => m.Name.IndexOf(methodContains, System.StringComparison.OrdinalIgnoreCase) >= 0"
+            },
+            {
+              "category": "E",
+              "line": 386,
+              "text": ".Where(m => m.Name.IndexOf(keyword, System.StringComparison.OrdinalIgnoreCase) >= 0"
+            },
+            {
+              "category": "E",
+              "line": 394,
+              "text": ".Where(m => m.Name.IndexOf(keyword, System.StringComparison.OrdinalIgnoreCase) >= 0"
+            },
+            {
+              "category": "E",
+              "line": 565,
+              "text": "var parameterExpressions = parameters.Select(p => System.Linq.Expressions.Expression.Parameter(p.ParameterType, p.Name)).ToArray();"
             }
           ]
         }
       ]
     },
     {
-      "id": "GridCellHelper",
-      "title": "GridCellHelper",
+      "id": "testMod",
+      "title": "Test Mod",
       "path": "ONI_Mods_byPether/GridCellHelper",
       "counts": {
         "A": 0,
@@ -43,8 +58,8 @@
       "files": []
     },
     {
-      "id": "UninstalledModCrashHandler",
-      "title": "UninstalledModCrashHandler",
+      "id": "testMod",
+      "title": "Test Mod",
       "path": "ONI_Mods_byPether/UninstalledModCrashHandler",
       "counts": {
         "A": 0,
@@ -56,8 +71,8 @@
       "files": []
     },
     {
-      "id": "BiobotUpgrades",
-      "title": "BiobotUpgrades",
+      "id": "pether-pg.BiobotUpgrades",
+      "title": "[Vanilla + DLC] Biobot Upgrades",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/BiobotUpgrades",
       "counts": {
         "A": 0,
@@ -69,8 +84,8 @@
       "files": []
     },
     {
-      "id": "CheckpointAutomation",
-      "title": "CheckpointAutomation",
+      "id": "pether-pg.CheckpointAutomation",
+      "title": "[Vanilla + DLC] Checkpoint Automation",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/CheckpointAutomation",
       "counts": {
         "A": 0,
@@ -82,8 +97,8 @@
       "files": []
     },
     {
-      "id": "CombinedConduitDisplay",
-      "title": "CombinedConduitDisplay",
+      "id": "pether-pg.CombinedConduitDisplay",
+      "title": "[Vanilla + DLC] Combined Conduit Display",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/CombinedConduitDisplay",
       "counts": {
         "A": 0,
@@ -95,8 +110,8 @@
       "files": []
     },
     {
-      "id": "ConfigurableBuildMenus",
-      "title": "ConfigurableBuildMenus",
+      "id": "pether-pg.ConfigurableBuildMenus",
+      "title": "[Vanilla + DLC] Configurable Build Menus",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/ConfigurableBuildMenus",
       "counts": {
         "A": 0,
@@ -108,8 +123,8 @@
       "files": []
     },
     {
-      "id": "ConveyorRailDisplay",
-      "title": "ConveyorRailDisplay",
+      "id": "pether-pg.ConveyorRailDisplay",
+      "title": "[Vanilla + DLC] Conveyor Rail Display",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/ConveyorRailDisplay",
       "counts": {
         "A": 0,
@@ -121,8 +136,8 @@
       "files": []
     },
     {
-      "id": "DietVariety",
-      "title": "DietVariety",
+      "id": "pether-pg.DietVariety",
+      "title": "[Vanilla + DLC] Diet Variety",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/DietVariety",
       "counts": {
         "A": 0,
@@ -134,8 +149,8 @@
       "files": []
     },
     {
-      "id": "DiseasesExpanded",
-      "title": "DiseasesExpanded",
+      "id": "pether-pg.DiseasesExpanded",
+      "title": "[Vanilla + DLC] Diseases Expanded",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/DiseasesExpanded",
       "counts": {
         "A": 0,
@@ -147,8 +162,8 @@
       "files": []
     },
     {
-      "id": "FragrantFlowers",
-      "title": "FragrantFlowers",
+      "id": "pether-pg.FragrantFlowers",
+      "title": "Fragrant Flowers",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/FragrantFlowers",
       "counts": {
         "A": 0,
@@ -160,8 +175,8 @@
       "files": []
     },
     {
-      "id": "FreeSkillpoints",
-      "title": "FreeSkillpoints",
+      "id": "pether-pg.FreeSkillpoints",
+      "title": "[Vanilla + DLC] Free Skillpoints",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/FreeSkillpoints",
       "counts": {
         "A": 0,
@@ -173,8 +188,8 @@
       "files": []
     },
     {
-      "id": "IlluminationSensor",
-      "title": "IlluminationSensor",
+      "id": "pether-pg.IlluminationSensor",
+      "title": "[Vanilla + DLC] Illumination Sensor",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/IlluminationSensor",
       "counts": {
         "A": 0,
@@ -186,8 +201,8 @@
       "files": []
     },
     {
-      "id": "InterplanarAutomation",
-      "title": "InterplanarAutomation",
+      "id": "pether-pg.InterplanarAutomation",
+      "title": "[DLC] Interplanar Automation",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/InterplanarAutomation",
       "counts": {
         "A": 0,
@@ -199,8 +214,8 @@
       "files": []
     },
     {
-      "id": "MoreLogicPorts",
-      "title": "MoreLogicPorts",
+      "id": "pether-pg.MoreLogicPorts",
+      "title": "[Vanilla + DLC] More Logic Ports",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/MoreLogicPorts",
       "counts": {
         "A": 0,
@@ -212,8 +227,8 @@
       "files": []
     },
     {
-      "id": "MultiplayerStorage",
-      "title": "MultiplayerStorage",
+      "id": "pether-pg.MultiplayerStorage",
+      "title": "[Vanilla + DLC] Multiplayer Storage",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/MultiplayerStorage",
       "counts": {
         "A": 0,
@@ -225,8 +240,8 @@
       "files": []
     },
     {
-      "id": "RadiationRebalanced",
-      "title": "RadiationRebalanced",
+      "id": "pether-pg.RadiationRebalanced",
+      "title": "[DLC] Radiation Rebalanced",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/RadiationRebalanced",
       "counts": {
         "A": 0,
@@ -238,8 +253,8 @@
       "files": []
     },
     {
-      "id": "RealCaloriesInfo",
-      "title": "RealCaloriesInfo",
+      "id": "pether-pg.RealCaloriesInfo",
+      "title": "[Vanilla + DLC] Real Calories Info",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/RealCaloriesInfo",
       "counts": {
         "A": 0,
@@ -251,8 +266,8 @@
       "files": []
     },
     {
-      "id": "ResearchRequirements",
-      "title": "ResearchRequirements",
+      "id": "pether-pg.ResearchRequirements",
+      "title": "[Vanilla + DLC] Research Requirements",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/ResearchRequirements",
       "counts": {
         "A": 0,
@@ -264,8 +279,8 @@
       "files": []
     },
     {
-      "id": "2021_07_24_471618_vanilla",
-      "title": "2021_07_24_471618_vanilla",
+      "id": "pether-pg.ResearchRequirements",
+      "title": "[Vanilla + DLC] Research Requirements",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/ResearchRequirements/archived_versions/2021_07_24_471618_vanilla",
       "counts": {
         "A": 0,
@@ -277,8 +292,8 @@
       "files": []
     },
     {
-      "id": "RocketPresencePort",
-      "title": "RocketPresencePort",
+      "id": "pether-pg.RocketPresenceAutomationPort",
+      "title": "[Vanilla + DLC] Rocket Presence Port",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/RocketPresencePort",
       "counts": {
         "A": 0,
@@ -290,8 +305,8 @@
       "files": []
     },
     {
-      "id": "RoomsExpanded",
-      "title": "RoomsExpanded",
+      "id": "pether-pg.RoomsExpanded",
+      "title": "[Vanilla + DLC] Rooms Expanded",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/RoomsExpanded",
       "counts": {
         "A": 0,
@@ -303,8 +318,8 @@
       "files": []
     },
     {
-      "id": "SignsTagsAndRibbons",
-      "title": "SignsTagsAndRibbons",
+      "id": "pether-pg.SignsTagsAndRibbons",
+      "title": "[Vanilla + DLC] Signs Tags and Ribbons",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/SignsTagsAndRibbons",
       "counts": {
         "A": 0,
@@ -316,8 +331,8 @@
       "files": []
     },
     {
-      "id": "SymbioticGerms",
-      "title": "SymbioticGerms",
+      "id": "pether-pg.SymbioticGerms",
+      "title": "[Vanilla + DLC] Symbiotic Germs",
       "path": "ONI_Mods_byPether/UploadFiles_Steam/SymbioticGerms",
       "counts": {
         "A": 0,
@@ -330,14 +345,14 @@
     },
     {
       "id": "ContainerTooltips",
-      "title": "ContainerTooltips",
+      "title": "Container Tooltips",
       "path": "Oni_mods_by_Identifier/ContainerTooltips",
       "counts": {
         "A": 0,
         "B": 0,
         "C": 0,
         "D": 0,
-        "E": 9
+        "E": 17
       },
       "files": [
         {
@@ -365,33 +380,73 @@
             },
             {
               "category": "E",
-              "line": 144,
+              "line": 50,
+              "text": "internal ContentSummaryCollection EnsureChildren() =>"
+            },
+            {
+              "category": "E",
+              "line": 53,
+              "text": "internal Dictionary<byte, int> EnsureDiseases() =>"
+            },
+            {
+              "category": "E",
+              "line": 140,
               "text": "internal IReadOnlyList<ContentSummary> Items => items;"
             },
             {
               "category": "E",
-              "line": 146,
+              "line": 142,
               "text": "internal int Count => items.Count;"
             },
             {
               "category": "E",
-              "line": 148,
+              "line": 144,
               "text": "internal int Depth => depth;"
             },
             {
               "category": "E",
-              "line": 193,
-              "text": "ContentSortMode.Alphabetical => CompareAlphabetical(x, y),"
-            },
-            {
-              "category": "E",
               "line": 194,
-              "text": "ContentSortMode.Amount => CompareAmount(x, y),"
+              "text": "private ContentSummaryComparer(IReadOnlyList<Comparison<ContentSummary>> pipeline) =>"
             },
             {
               "category": "E",
-              "line": 195,
-              "text": "_ => 0"
+              "line": 209,
+              "text": "ContentSortMode.Amount => AmountComparer,"
+            },
+            {
+              "category": "E",
+              "line": 210,
+              "text": "_ => DefaultComparer"
+            },
+            {
+              "category": "E",
+              "line": 233,
+              "text": "private static int CompareName(ContentSummary x, ContentSummary y) =>"
+            },
+            {
+              "category": "E",
+              "line": 236,
+              "text": "private static int CompareMass(ContentSummary x, ContentSummary y) =>"
+            },
+            {
+              "category": "E",
+              "line": 239,
+              "text": "private static int CompareCalories(ContentSummary x, ContentSummary y) =>"
+            },
+            {
+              "category": "E",
+              "line": 242,
+              "text": "private static int CompareUnits(ContentSummary x, ContentSummary y) =>"
+            },
+            {
+              "category": "E",
+              "line": 245,
+              "text": "private static int CompareCount(ContentSummary x, ContentSummary y) =>"
+            },
+            {
+              "category": "E",
+              "line": 248,
+              "text": "private static int CompareTag(ContentSummary x, ContentSummary y) =>"
             }
           ]
         }
@@ -399,7 +454,7 @@
     },
     {
       "id": "ZoomSpeed",
-      "title": "ZoomSpeed",
+      "title": "Zoom Speed",
       "path": "Oni_mods_by_Identifier/ZoomSpeed",
       "counts": {
         "A": 0,
@@ -411,8 +466,8 @@
       "files": []
     },
     {
-      "id": "DevLoader",
-      "title": "DevLoader",
+      "id": "dev_loader",
+      "title": "Dev Loader",
       "path": "Reference/DevLoader",
       "counts": {
         "A": 0,
@@ -424,8 +479,8 @@
       "files": []
     },
     {
-      "id": "CannedFoodNGoods",
-      "title": "CannedFoodNGoods",
+      "id": "CannedFoods",
+      "title": "Canned Food",
       "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods",
       "counts": {
         "A": 0,
@@ -440,7 +495,7 @@
           "findings": [
             {
               "category": "E",
-              "line": 10,
+              "line": 11,
               "text": "public string[] GetDlcIds() => null;"
             }
           ]
@@ -450,7 +505,7 @@
           "findings": [
             {
               "category": "E",
-              "line": 10,
+              "line": 11,
               "text": "public string[] GetDlcIds() => null;"
             }
           ]
@@ -460,7 +515,7 @@
           "findings": [
             {
               "category": "E",
-              "line": 47,
+              "line": 48,
               "text": "public string[] GetDlcIds() => null;"
             }
           ]
@@ -470,18 +525,18 @@
           "findings": [
             {
               "category": "E",
-              "line": 48,
-              "text": "public string[] GetDlcIds() => null;//TODO: remove after U56"
+              "line": 52,
+              "text": "public string[] GetDlcIds() => [DlcManager.DLC2_ID];"
             },
             {
               "category": "E",
-              "line": 50,
+              "line": 54,
               "text": "public string[] GetForbiddenDlcIds() => null;"
             },
             {
               "category": "E",
-              "line": 52,
-              "text": "public string[] GetRequiredDlcIds() => [DlcManager.DLC2_ID];"
+              "line": 56,
+              "text": "public string[] GetRequiredDlcIds() => RequiredDlc;"
             }
           ]
         },
@@ -490,7 +545,7 @@
           "findings": [
             {
               "category": "E",
-              "line": 47,
+              "line": 48,
               "text": "public string[] GetDlcIds() => null;"
             }
           ]
@@ -500,7 +555,7 @@
           "findings": [
             {
               "category": "E",
-              "line": 47,
+              "line": 48,
               "text": "public string[] GetDlcIds() => null;"
             }
           ]
@@ -510,7 +565,7 @@
           "findings": [
             {
               "category": "E",
-              "line": 50,
+              "line": 51,
               "text": "public string[] GetDlcIds() => null;"
             }
           ]
@@ -532,8 +587,8 @@
     "A": 0,
     "B": 0,
     "C": 0,
-    "D": 1,
-    "E": 20,
+    "D": 0,
+    "E": 32,
     "mods": 28,
     "files_touched": 11
   }
