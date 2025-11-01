@@ -462,7 +462,7 @@ namespace DietVariety
                             return false;
                         args[i] = candidateDelegate;
                     }
-                    else if (paramType.Name.IndexOf("Handle", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    else if (paramType.IsValueType && paramType.Name.IndexOf("Handle", System.StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         args[i] = System.Activator.CreateInstance(paramType);
                     }
