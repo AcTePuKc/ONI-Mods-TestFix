@@ -71,3 +71,9 @@
 - **Resolution:** Clear the unseen cache and refresh the inventory snapshot when the closet activates, and add a shutdown hook so the singleton unsubscribes during unload.
 - **Status:** Fixed
 
+## 2026-01-19 - ClaimNewNotification drop quantity traversal default
+- **Module:** ClaimNewNotification closet snapshot capture
+- **Issue:** `GetDropQuantity` aggregated nullable reflection reads without a non-null fallback, causing the method to return `int?` and fail to compile.
+- **Resolution:** Added a final `?? 0` so the helper always returns a concrete integer when traversal lookups are missing.
+- **Status:** Fixed
+

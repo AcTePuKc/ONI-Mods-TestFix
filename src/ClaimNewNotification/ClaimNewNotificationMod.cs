@@ -401,7 +401,7 @@ namespace ClaimNewNotification
             if (hasItemsToShowMethod == null)
                 return;
 
-            if (!(hasItemsToShowMethod.Invoke(null, Array.Empty<object>()) is bool hasItems && hasItems))
+            if (hasItemsToShowMethod.Invoke(null, Array.Empty<object>()) is not true)
                 return;
 
             var snapshot = BuildInventorySnapshot();
@@ -460,7 +460,8 @@ namespace ClaimNewNotification
             return traverse.Property<int>("quantity")?.Value
                 ?? traverse.Property<int>("Quantity")?.Value
                 ?? traverse.Field<int>("quantity")?.Value
-                ?? traverse.Field<int>("Quantity")?.Value;
+                ?? traverse.Field<int>("Quantity")?.Value
+                ?? 0;
         }
 
         private void Load()
