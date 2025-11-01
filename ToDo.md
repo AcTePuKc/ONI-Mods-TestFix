@@ -16,6 +16,7 @@ This document inventories the current in-code `TODO` comments across the reposit
 | [x] | Build Tooling | `src/AutoIncrement.targets` | Modernized the AutoIncrement inline task to resolve `RoslynCodeTaskFactory` via `$(MSBuildToolsPath)` and hardened the JSON parser/serializer across runtimes. |
 | [x] | BetterInfoCards - Util | `src/BetterInfoCards/Util/ResetPool.cs` | Consider adding logic to shrink the reset pool when demand drops. |
 | [x] | BetterInfoCards - Converters | `src/BetterInfoCards/Converters/ConverterManager.cs` | Decide whether the default and title converters should live outside the shared converter dictionary for clarity or reuse. |
+| [ ] | ContainerTooltips | `Oni_mods_by_Identifier/ContainerTooltips/StorageContentsSummarizer.cs` | Refactor the storage summarizer to follow the new comparer-driven spec, convert the helper accessors to expression-bodied members, validate the behavior, and remove the in-code TODO upon completion. |
 | [ ] | DietVariety | `DietVariety/VarietyMonitor.cs` | Migrate the eater completion and death tag delegates to the new event/delegate specification. |
 
-*Last updated: 2025-10-02 08:15 UTC*
+*Last updated: 2025-11-01 03:31 UTC*
