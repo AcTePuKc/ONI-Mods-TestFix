@@ -7,4 +7,9 @@
     <Title>Claim New Notification</Title>
     <Description>Tracks supply closet claims and highlights newly acquired blueprint items until acknowledged.</Description>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="ModAssets\New.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

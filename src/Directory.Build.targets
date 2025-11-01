@@ -91,6 +91,7 @@
       <SpriteFiles Include="$(ProjectDir)\*.dds" />
       <TranslateFiles Include="$(TranslationsFolder)\$(MSBuildProjectName)\*.po" />
       <InfoFiles Include="$(TargetDir)\*.yaml" />
+      <ModAssetOutput Include="$(TargetDir)ModAssets\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(AnimFiles)" DestinationFiles="@(AnimFiles->'$(InstallFolder)\anim\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(WorldGenFiles)" DestinationFiles="@(WorldGenFiles->'$(InstallFolder)\worldgen\%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -99,6 +100,7 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(InstallFolder)\$(TargetFileName)" />
     <Copy SourceFiles="@(InfoFiles)" DestinationFolder="$(InstallFolder)" />
     <Copy SourceFiles="@(TranslateFiles)" DestinationFolder="$(InstallFolder)\Translations" />
+    <Copy SourceFiles="@(ModAssetOutput)" DestinationFiles="@(ModAssetOutput->'$(InstallFolder)\ModAssets\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
 
   <!--If releasing, create a zipped version of the mod to distribute for manual downloads.-->
