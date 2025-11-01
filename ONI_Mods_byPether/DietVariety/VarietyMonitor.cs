@@ -10,6 +10,7 @@ namespace DietVariety
     {
         public const string EFFECT_ID = "DietVarietyEffect";
 
+        // TODO (DietVariety/VarietyMonitor.cs): Migrate the OnDeadTagAddedDelegate and OnEatComplete subscriptions to the updated event/delegate specification once the new hooks are available.
         private static readonly EventSystem.IntraObjectHandler<VarietyMonitor> OnDeadTagAddedDelegate = GameUtil.CreateHasTagHandler<VarietyMonitor>(GameTags.Dead, (System.Action<VarietyMonitor, object>)((component, data) => component.OnDeath(data)));
 
         protected override void OnSpawn()
