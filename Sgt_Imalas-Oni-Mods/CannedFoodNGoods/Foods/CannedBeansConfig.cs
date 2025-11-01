@@ -6,6 +6,8 @@ namespace CannedFoods.Foods
 {
 	internal class CannedBeansConfig : IEntityConfig, IHasDlcRestrictions
 	{
+		private static readonly string[] RequiredDlc = [DlcManager.DLC2_ID];
+
 		public const string ID = "CF_CannedBeans";
 		public static ComplexRecipe recipe;
 
@@ -40,7 +42,9 @@ namespace CannedFoods.Foods
 				preserveTemperatue: TUNING.FOOD.DEFAULT_PRESERVE_TEMPERATURE,
 				rotTemperature: TUNING.FOOD.DEFAULT_ROT_TEMPERATURE,
 				spoilTime: TUNING.FOOD.SPOIL_TIME.VERYSLOW,
-				can_rot: false, [DlcManager.DLC2_ID], null);
+				can_rot: false,
+				dlc_ids: RequiredDlc,
+				forbidden_dlc_ids: null);
 
 			return EntityTemplates.ExtendEntityToFood(prefab, foodInfo);
 		}
@@ -49,7 +53,7 @@ namespace CannedFoods.Foods
 
 		public string[] GetForbiddenDlcIds() => null;
 
-		public string[] GetRequiredDlcIds() => [DlcManager.DLC2_ID];
+		public string[] GetRequiredDlcIds() => RequiredDlc;
 
 		public void OnPrefabInit(GameObject inst)
 		{
