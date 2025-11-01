@@ -9,6 +9,11 @@
 - Extended `CopyArtifactsToInstallFolder` to mirror any `ModAssets` files from `$(TargetDir)` into the install directory, keeping project-local asset folders intact after deployment.
 - Verification blocked: the container still lacks the .NET toolchain (`dotnet` is unavailable), so the ClaimNewNotification project could not be rebuilt and the install folder contents could not be inspected. Please rebuild locally and confirm `ModAssets/New.png` lands in the generated mod directory and renders in-game.
 
+## 2026-01-21 - ClaimNewNotification claim tracking implementation
+- Wired the Supply Closet claim tracker singleton, handle-based event subscriptions, and Harmony patches that monitor button refreshes, claim actions, closet activation, and row binding.
+- Added persistence for `seen.json`, toast messaging, badge toggles on the Supply Closet button, and per-item “NEW” overlays sourced from `ModAssets/New.png`.
+- Validation remains blocked in this environment: rebuilding the project and exercising the UI in-game both require the ONI toolchain. Manual review confirmed JSON persistence paths, badge creation, and toast formatting.
+
 ## 2025-11-01 - ClaimNewNotification scaffold and planning
 - Scaffolded the `ClaimNewNotification` project, metadata, and asset placeholder so the solution can compile once the .NET toolchain is available locally.
 - Captured design notes covering blueprint claim flow instrumentation, handle-based event subscriptions, persistence in `seen.json`, and Harmony patch targets for toasts, badges, and NEW chips.

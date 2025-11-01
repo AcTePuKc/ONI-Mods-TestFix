@@ -17,27 +17,27 @@
           "findings": [
             {
               "category": "E",
-              "line": 126,
+              "line": 125,
               "text": "private static readonly EventSystem.IntraObjectHandler<VarietyMonitor> OnDeadTagAddedLegacy = GameUtil.CreateHasTagHandler<VarietyMonitor>(GameTags.Dead, (component, data) => component.OnDeath(data));"
             },
             {
               "category": "E",
-              "line": 259,
+              "line": 258,
               "text": ".Where(m => m.Name.IndexOf(methodContains, System.StringComparison.OrdinalIgnoreCase) >= 0"
             },
             {
               "category": "E",
-              "line": 386,
+              "line": 410,
               "text": ".Where(m => m.Name.IndexOf(keyword, System.StringComparison.OrdinalIgnoreCase) >= 0"
             },
             {
               "category": "E",
-              "line": 394,
+              "line": 418,
               "text": ".Where(m => m.Name.IndexOf(keyword, System.StringComparison.OrdinalIgnoreCase) >= 0"
             },
             {
               "category": "E",
-              "line": 565,
+              "line": 596,
               "text": "var parameterExpressions = parameters.Select(p => System.Linq.Expressions.Expression.Parameter(p.ParameterType, p.Name)).ToArray();"
             }
           ]
@@ -581,6 +581,50 @@
           ]
         }
       ]
+    },
+    {
+      "id": "AcTePuKc.ClaimNewNotification",
+      "title": "Claim New Notification",
+      "path": "src/ClaimNewNotification",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 5
+      },
+      "files": [
+        {
+          "path": "src/ClaimNewNotification/ClaimNewNotificationMod.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 45,
+              "text": "internal static readonly Action<object, object> OnClosetButtonRefreshedDispatcher = (data, context) =>"
+            },
+            {
+              "category": "E",
+              "line": 48,
+              "text": "internal static readonly Action<object, object> OnClaimCompletedDispatcher = (data, context) =>"
+            },
+            {
+              "category": "E",
+              "line": 51,
+              "text": "internal static readonly Action<object, object> OnDatabaseReloadedDispatcher = (data, context) =>"
+            },
+            {
+              "category": "E",
+              "line": 366,
+              "text": "private static string FormatBlueprintName(string id) => string.IsNullOrWhiteSpace(id)"
+            },
+            {
+              "category": "E",
+              "line": 483,
+              "text": "Unseen = unseen.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase),"
+            }
+          ]
+        }
+      ]
     }
   ],
   "totals": {
@@ -588,8 +632,8 @@
     "B": 0,
     "C": 0,
     "D": 0,
-    "E": 32,
-    "mods": 28,
-    "files_touched": 11
+    "E": 37,
+    "mods": 29,
+    "files_touched": 12
   }
 }
