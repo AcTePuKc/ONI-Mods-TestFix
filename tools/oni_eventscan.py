@@ -85,7 +85,7 @@ def parse_mod_metadata(mod_root: Path, config_name: str) -> Dict[str, str]:
         mod_id = mod_root.name
     if not title:
         title = mod_root.name
-    return {"id": mod_id, "title": title, "config": str(config_path.relative_to(REPO_ROOT))}
+    return {"id": mod_id, "title": title}
 
 
 def parse_simple_yaml(path: Path) -> Tuple[str, str]:
