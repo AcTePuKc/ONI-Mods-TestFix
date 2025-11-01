@@ -1,0 +1,540 @@
+{
+  "mods": [
+    {
+      "id": "DietVariety",
+      "title": "DietVariety",
+      "path": "ONI_Mods_byPether/DietVariety",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 1,
+        "E": 1
+      },
+      "files": [
+        {
+          "path": "ONI_Mods_byPether/DietVariety/VarietyMonitor.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 13,
+              "text": "private static readonly EventSystem.IntraObjectHandler<VarietyMonitor> OnDeadTagAddedDelegate = GameUtil.CreateHasTagHandler<VarietyMonitor>(GameTags.Dead, (System.Action<VarietyMonitor, object>)((component, data) => component.OnDeath(data)));"
+            },
+            {
+              "category": "D",
+              "line": 27,
+              "text": "Edible edible = (Edible)data;"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GridCellHelper",
+      "title": "GridCellHelper",
+      "path": "ONI_Mods_byPether/GridCellHelper",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "UninstalledModCrashHandler",
+      "title": "UninstalledModCrashHandler",
+      "path": "ONI_Mods_byPether/UninstalledModCrashHandler",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "BiobotUpgrades",
+      "title": "BiobotUpgrades",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/BiobotUpgrades",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "CheckpointAutomation",
+      "title": "CheckpointAutomation",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/CheckpointAutomation",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "CombinedConduitDisplay",
+      "title": "CombinedConduitDisplay",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/CombinedConduitDisplay",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "ConfigurableBuildMenus",
+      "title": "ConfigurableBuildMenus",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/ConfigurableBuildMenus",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "ConveyorRailDisplay",
+      "title": "ConveyorRailDisplay",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/ConveyorRailDisplay",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "DietVariety",
+      "title": "DietVariety",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/DietVariety",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "DiseasesExpanded",
+      "title": "DiseasesExpanded",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/DiseasesExpanded",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "FragrantFlowers",
+      "title": "FragrantFlowers",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/FragrantFlowers",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "FreeSkillpoints",
+      "title": "FreeSkillpoints",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/FreeSkillpoints",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "IlluminationSensor",
+      "title": "IlluminationSensor",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/IlluminationSensor",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "InterplanarAutomation",
+      "title": "InterplanarAutomation",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/InterplanarAutomation",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "MoreLogicPorts",
+      "title": "MoreLogicPorts",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/MoreLogicPorts",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "MultiplayerStorage",
+      "title": "MultiplayerStorage",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/MultiplayerStorage",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "RadiationRebalanced",
+      "title": "RadiationRebalanced",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/RadiationRebalanced",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "RealCaloriesInfo",
+      "title": "RealCaloriesInfo",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/RealCaloriesInfo",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "ResearchRequirements",
+      "title": "ResearchRequirements",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/ResearchRequirements",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "2021_07_24_471618_vanilla",
+      "title": "2021_07_24_471618_vanilla",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/ResearchRequirements/archived_versions/2021_07_24_471618_vanilla",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "RocketPresencePort",
+      "title": "RocketPresencePort",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/RocketPresencePort",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "RoomsExpanded",
+      "title": "RoomsExpanded",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/RoomsExpanded",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "SignsTagsAndRibbons",
+      "title": "SignsTagsAndRibbons",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/SignsTagsAndRibbons",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "SymbioticGerms",
+      "title": "SymbioticGerms",
+      "path": "ONI_Mods_byPether/UploadFiles_Steam/SymbioticGerms",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "ContainerTooltips",
+      "title": "ContainerTooltips",
+      "path": "Oni_mods_by_Identifier/ContainerTooltips",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 9
+      },
+      "files": [
+        {
+          "path": "Oni_mods_by_Identifier/ContainerTooltips/Behaviours/StorageContentsBehaviour.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 10,
+              "text": "new((component, _) => component.OnStorageChanged());"
+            }
+          ]
+        },
+        {
+          "path": "Oni_mods_by_Identifier/ContainerTooltips/StorageContentsSummarizer.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 46,
+              "text": "internal IReadOnlyDictionary<byte, int>? Diseases => diseases;"
+            },
+            {
+              "category": "E",
+              "line": 48,
+              "text": "internal ContentSummaryCollection? Children => children;"
+            },
+            {
+              "category": "E",
+              "line": 144,
+              "text": "internal IReadOnlyList<ContentSummary> Items => items;"
+            },
+            {
+              "category": "E",
+              "line": 146,
+              "text": "internal int Count => items.Count;"
+            },
+            {
+              "category": "E",
+              "line": 148,
+              "text": "internal int Depth => depth;"
+            },
+            {
+              "category": "E",
+              "line": 193,
+              "text": "ContentSortMode.Alphabetical => CompareAlphabetical(x, y),"
+            },
+            {
+              "category": "E",
+              "line": 194,
+              "text": "ContentSortMode.Amount => CompareAmount(x, y),"
+            },
+            {
+              "category": "E",
+              "line": 195,
+              "text": "_ => 0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZoomSpeed",
+      "title": "ZoomSpeed",
+      "path": "Oni_mods_by_Identifier/ZoomSpeed",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "DevLoader",
+      "title": "DevLoader",
+      "path": "Reference/DevLoader",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0
+      },
+      "files": []
+    },
+    {
+      "id": "CannedFoodNGoods",
+      "title": "CannedFoodNGoods",
+      "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods",
+      "counts": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 10
+      },
+      "files": [
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/CanScrapConfig.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 10,
+              "text": "public string[] GetDlcIds() => null;"
+            }
+          ]
+        },
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/EmptyCanConfig.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 10,
+              "text": "public string[] GetDlcIds() => null;"
+            }
+          ]
+        },
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBBQConfig.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 47,
+              "text": "public string[] GetDlcIds() => null;"
+            }
+          ]
+        },
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBeansConfig.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 48,
+              "text": "public string[] GetDlcIds() => null;//TODO: remove after U56"
+            },
+            {
+              "category": "E",
+              "line": 50,
+              "text": "public string[] GetForbiddenDlcIds() => null;"
+            },
+            {
+              "category": "E",
+              "line": 52,
+              "text": "public string[] GetRequiredDlcIds() => [DlcManager.DLC2_ID];"
+            }
+          ]
+        },
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBreadConfig.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 47,
+              "text": "public string[] GetDlcIds() => null;"
+            }
+          ]
+        },
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedMilkConfig.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 47,
+              "text": "public string[] GetDlcIds() => null;"
+            }
+          ]
+        },
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedTunaConfig.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 50,
+              "text": "public string[] GetDlcIds() => null;"
+            }
+          ]
+        },
+        {
+          "path": "Sgt_Imalas-Oni-Mods/CannedFoodNGoods/ModAssets.cs",
+          "findings": [
+            {
+              "category": "E",
+              "line": 16,
+              "text": "new Lazy<ExportSettings>(() => new ExportSettings());"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 1,
+    "E": 20,
+    "mods": 28,
+    "files_touched": 11
+  }
+}
