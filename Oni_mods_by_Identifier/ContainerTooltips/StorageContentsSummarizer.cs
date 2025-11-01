@@ -175,16 +175,6 @@ namespace ContainerTooltips
                 CompareTag
             };
 
-            private static readonly Comparison<ContentSummary>[] AlphabeticalPipeline =
-            {
-                CompareName,
-                CompareMass,
-                CompareCalories,
-                CompareUnits,
-                CompareCount,
-                CompareTag
-            };
-
             private static readonly Comparison<ContentSummary>[] AmountPipeline =
             {
                 CompareMass,
@@ -196,8 +186,6 @@ namespace ContainerTooltips
             };
 
             private static readonly ContentSummaryComparer DefaultComparer = new(DefaultPipeline);
-
-            private static readonly ContentSummaryComparer AlphabeticalComparer = new(AlphabeticalPipeline);
 
             private static readonly ContentSummaryComparer AmountComparer = new(AmountPipeline);
 
@@ -219,7 +207,6 @@ namespace ContainerTooltips
                 return sortMode switch
                 {
                     ContentSortMode.Amount => AmountComparer,
-                    ContentSortMode.Alphabetical => AlphabeticalComparer,
                     _ => DefaultComparer
                 };
             }
