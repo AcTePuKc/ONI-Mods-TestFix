@@ -6,6 +6,8 @@ This document inventories the current in-code `TODO` comments across the reposit
 
 | Status | Mod/Area | File | Summary |
 | --- | --- | --- | --- |
+| [ ] | ClaimNewNotification | `src/ClaimNewNotification/ClaimNewNotificationMod.cs` | Wire supply-closet claim tracking and event subscriptions before enabling runtime patches. |
+| [ ] | ClaimNewNotification | `src/ClaimNewNotification/ClaimNewNotificationMod.cs` | Re-run `python tools/oni_eventscan.py` after wiring the event hooks so `findings.json` stays current. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/CanScrapConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/EmptyCanConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/ModAssets.cs` | Replace the `Lazy<ExportSettings>` initializer with the post-U56 export-settings singleton pattern and remove the TODO once complete. |

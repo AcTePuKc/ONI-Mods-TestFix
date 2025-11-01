@@ -1,5 +1,11 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2025-11-01 - ClaimNewNotification scaffold and planning
+- Scaffolded the `ClaimNewNotification` project, metadata, and asset placeholder so the solution can compile once the .NET toolchain is available locally.
+- Captured design notes covering blueprint claim flow instrumentation, handle-based event subscriptions, persistence in `seen.json`, and Harmony patch targets for toasts, badges, and NEW chips.
+- Documented follow-up work: wire the TODOs in `ClaimNewNotificationMod.cs`, add localized strings, and rerun `python tools/oni_eventscan.py` after the new event hooks are implemented.
+- Validation: static planning only; `dotnet` is unavailable in the container so no builds or Harmony patch smoke tests could run.
+
 ## 2026-01-19 - EventSystem handle and boxing guidance sync
 - Logged the EventSystem subscription migration highlighted in `dev_log.md`, noting the requirement to pass explicit context
   arguments alongside static dispatcher closures so subscription handles (`Subscribe(..., context) -> handle`) can be cached
