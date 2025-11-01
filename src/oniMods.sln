@@ -50,6 +50,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoDoorIdle", "NoDoorIdle\No
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanHUD", "CleanHUD\CleanHUD.csproj", "{B020E733-68EB-4A85-BF19-09F2DEB3BB77}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClaimNewNotification", "ClaimNewNotification\ClaimNewNotification.csproj", "{ACDFA778-0B19-4EA9-B534-C137B7B4D114}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClarifiedMaxDecor", "ClarifiedMaxDecor\ClarifiedMaxDecor.csproj", "{1099F06F-268C-458B-88C6-950E101E1AAC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoMeteors", "NoMeteors\NoMeteors.csproj", "{3BB9F39A-1041-4AED-B22B-5BF865622479}"
@@ -142,6 +144,10 @@ Global
 		{B020E733-68EB-4A85-BF19-09F2DEB3BB77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B020E733-68EB-4A85-BF19-09F2DEB3BB77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B020E733-68EB-4A85-BF19-09F2DEB3BB77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACDFA778-0B19-4EA9-B534-C137B7B4D114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACDFA778-0B19-4EA9-B534-C137B7B4D114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACDFA778-0B19-4EA9-B534-C137B7B4D114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACDFA778-0B19-4EA9-B534-C137B7B4D114}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1099F06F-268C-458B-88C6-950E101E1AAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1099F06F-268C-458B-88C6-950E101E1AAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1099F06F-268C-458B-88C6-950E101E1AAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
