@@ -1,5 +1,12 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2026-01-18 - ContainerTooltips storage summarizer comparer pipeline
+- Replaced the legacy `ContentSummaryCollection` aggregation/sort routine with the deterministic comparer pipeline so summaries
+  always apply the full tie-breaking chain (name, mass, calories, units, count, tag) regardless of the configured sort mode.
+- Converted the child and disease helpers to expression-bodied members per the revised spec. With `dotnet` still unavailable in
+  this workspace, validated determinism manually by reviewing the comparer pipeline fallbacks and ensuring every stage has a
+  stable tie-breaker down to the tag hash.
+
 ## 2026-01-09 - Identifier Publicise incremental metadata
 - Added incremental `Inputs`/`Outputs` metadata and `RunOnServer` to the identifier `Publicise` target so MSBuild can skip the publicizer once the `_public` hashes exist, avoiding repeated locking across projects.
 - Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm the `_public` assemblies generate once and stay unlocked, but the container still lacks the .NET host (`command not found: dotnet`). Please rerun the build locally where the ONI toolchain is available.
@@ -542,6 +549,10 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-05 - Identifier PLib copy-local override
 - Updated the legacy `ContainerTooltips` and `ZoomSpeed` projects to mark `PLib` as `Private` so the dependency is restored next to the target assembly before ILRepack runs.
 - Attempted `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj /p:Configuration=Debug` and `/p:Configuration=Release` to confirm `PLib.dll` lands in `$(TargetDir)` ahead of `MergeDependencies`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to validate the packaging flow and merged assembly.
+## 2026-01-18 - ContainerTooltips tag comparison determinism
+- Replaced the `ContentSummary` tag tie-breaker to compare tag names ordinally so collisions in `GetHashCode()` no longer affect summary ordering.
+- Tried `dotnet test Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj` to confirm the sort pipeline remains deterministic, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun locally when the toolchain is available.
+
 ## 2026-01-09 - Identifier ILRepack NuGet search paths
 - Extended the ILRepack `LibraryPath` for `ContainerTooltips` and `ZoomSpeed` so it now probes `$(RestorePackagesPath)` and `$(NuGetPackageRoot)` alongside the build output, configured `GameFolder`, and repo-local `lib` directory.
 - Attempted to rebuild with `dotnet build Oni_mods_by_Identifier/ONIMods.sln` to confirm NuGet-resolved assemblies like `Newtonsoft.Json.dll` merge without being copied into `bin`, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rerun the build locally once the ONI toolchain is available to verify ILRepack consumes the restored package outputs.
