@@ -45,7 +45,7 @@ namespace CannedFoods.Foods
 			return EntityTemplates.ExtendEntityToFood(prefab, foodInfo);
 		}
 
-		public string[] GetDlcIds() => null;//TODO: remove after U56
+		public string[] GetDlcIds() => [DlcManager.DLC2_ID];
 
 		public string[] GetForbiddenDlcIds() => null;
 

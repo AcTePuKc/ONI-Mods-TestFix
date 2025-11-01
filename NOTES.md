@@ -1,5 +1,10 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2026-01-18 - CannedFoodNGoods DLC gating check
+- Updated `CannedBeansConfig.GetDlcIds` to return `DlcManager.DLC2_ID` so the canned beans item is correctly limited to the U56 DLC.
+- Confirmed via static inspection that `GetRequiredDlcIds` mirrors the same identifier and `GetForbiddenDlcIds` remains `null`, keeping the restriction matrix internally consistent.
+- Runtime validation (launching ONI to confirm the item only appears when DLC2 is active) remains blocked in this container because the ONI runtime and toolchain are unavailable.
+
 ## 2026-01-18 - ContainerTooltips storage summarizer comparer pipeline
 - Replaced the legacy `ContentSummaryCollection` aggregation/sort routine with the deterministic comparer pipeline so summaries
   always apply the full tie-breaking chain (name, mass, calories, units, count, tag) regardless of the configured sort mode.
