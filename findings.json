@@ -1,8 +1,8 @@
 {
   "mods": [
     {
-      "id": "testMod",
-      "title": "Test Mod",
+      "id": "DietVariety",
+      "title": "DietVariety",
       "path": "ONI_Mods_byPether/DietVariety",
       "counts": {
         "A": 0,
