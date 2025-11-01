@@ -246,7 +246,7 @@ namespace ContainerTooltips
                 y.Count.CompareTo(x.Count);
 
             private static int CompareTag(ContentSummary x, ContentSummary y) =>
-                x.Tag.GetHashCode().CompareTo(y.Tag.GetHashCode());
+                string.Compare(x.Tag.Name, y.Tag.Name, StringComparison.Ordinal);
         }
 
         private static bool loggedInvalidDiseaseIndex;
