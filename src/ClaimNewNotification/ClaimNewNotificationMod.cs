@@ -1,18 +1,28 @@
 using HarmonyLib;
-using KMod;
 
 namespace ClaimNewNotification
 {
     /// <summary>
-    /// Entry point for the Claim New Notification mod. Wires Harmony patches and runtime services once implementation lands.
+    /// Boots the Claim New Notification mod via AzeLib's load hooks.
     /// </summary>
-    public sealed class ClaimNewNotificationMod : UserMod2
+    internal static class ClaimNewNotificationBootstrap
     {
-        /// <inheritdoc />
-        public override void OnLoad(Harmony harmony)
+        /// <summary>
+        /// Configures non-Harmony services once runtime wiring is ready.
+        /// </summary>
+        [AzeLib.Attributes.OnLoad]
+        public static void OnLoad()
         {
-            base.OnLoad(harmony);
             // TODO: Wire supply-closet claim tracking and event subscriptions before enabling runtime patches.
+        }
+
+        /// <summary>
+        /// Wires Harmony patches when the implementation lands.
+        /// </summary>
+        /// <param name="harmony">Harmony instance provided by AzeLib's bootstrapper.</param>
+        [AzeLib.Attributes.OnLoad]
+        public static void OnLoad(Harmony harmony)
+        {
             // TODO: Re-run tools/oni_eventscan.py after the event hooks are implemented to refresh findings.json.
         }
     }
