@@ -16,14 +16,13 @@ namespace DietVariety
         private struct EatCompleteSubscription
         {
             public object Handle;
-            public Delegate Handler;
             public object Target;
+            public bool UsedModernApi;
         }
 
         private struct TagSubscription
         {
             public object Handle;
-            public Delegate Handler;
             public KPrefabID Prefab;
             public bool UsedModernApi;
         }
@@ -52,8 +51,8 @@ namespace DietVariety
         private EatCompleteSubscription SubscribeToEatComplete()
         {
             var eater = this.GetComponent<Eater>();
-            if (eater != null && EventBindingAdapter.TrySubscribeToEatComplete(eater, this, out var handle, out var handler))
-                return new EatCompleteSubscription { Handle = handle, Handler = handler, Target = eater };
+            if (eater != null && EventBindingAdapter.TrySubscribeToEatComplete(eater, this, out var handle))
+                return new EatCompleteSubscription { Handle = handle, Target = eater, UsedModernApi = true };
 
             this.Subscribe((int)GameHashes.EatCompleteEater, OnEatCompleteLegacy);
             return default;
@@ -61,7 +60,7 @@ namespace DietVariety
 
         private void UnsubscribeFromEatComplete(EatCompleteSubscription subscription)
         {
-            if (subscription.Target is Eater eater && EventBindingAdapter.TryUnsubscribeFromEatComplete(eater, subscription.Handle, subscription.Handler))
+            if (subscription.UsedModernApi && subscription.Target is Eater eater && EventBindingAdapter.TryUnsubscribeFromEatComplete(eater, this, subscription.Handle))
                 return;
 
             this.Unsubscribe((int)GameHashes.EatCompleteEater, OnEatCompleteLegacy);
@@ -70,8 +69,8 @@ namespace DietVariety
         private TagSubscription SubscribeToDeadTag()
         {
             var prefab = this.GetComponent<KPrefabID>();
-            if (prefab != null && TagBindingAdapter.TrySubscribeToTagAdded(prefab, GameTags.Dead, this, out var handle, out var handler))
-                return new TagSubscription { Handle = handle, Handler = handler, Prefab = prefab, UsedModernApi = true };
+            if (prefab != null && TagBindingAdapter.TrySubscribeToTagAdded(prefab, GameTags.Dead, this, out var handle))
+                return new TagSubscription { Handle = handle, Prefab = prefab, UsedModernApi = true };
 
             GameUtil.SubscribeToTags<VarietyMonitor>(this, OnDeadTagAddedLegacy, true);
             return default;
@@ -82,7 +81,7 @@ namespace DietVariety
             if (subscription.UsedModernApi)
             {
                 if (subscription.Prefab != null)
-                    TagBindingAdapter.TryUnsubscribeFromTagAdded(subscription.Prefab, GameTags.Dead, subscription.Handle, subscription.Handler);
+                    TagBindingAdapter.TryUnsubscribeFromTagAdded(subscription.Prefab, GameTags.Dead, this, subscription.Handle);
                 return;
             }
 
@@ -261,35 +260,33 @@ namespace DietVariety
                     .ToArray();
             }
 
-            internal static bool TrySubscribeToEatComplete(Eater eater, VarietyMonitor monitor, out object handle, out Delegate handler)
+            internal static bool TrySubscribeToEatComplete(Eater eater, VarietyMonitor monitor, out object handle)
             {
                 handle = null;
-                handler = null;
 
                 foreach (var method in SubscribeCandidates)
                 {
-                    if (TryInvoke(method, eater, monitor, out handle, out handler))
+                    if (TryInvoke(method, eater, monitor, out handle))
                         return true;
                 }
 
                 return false;
             }
 
-            internal static bool TryUnsubscribeFromEatComplete(Eater eater, object handle, Delegate handler)
+            internal static bool TryUnsubscribeFromEatComplete(Eater eater, VarietyMonitor monitor, object handle)
             {
                 foreach (var method in UnsubscribeCandidates)
                 {
-                    if (TryInvoke(method, eater, handle, handler))
+                    if (TryInvoke(method, eater, monitor, handle))
                         return true;
                 }
 
                 return false;
             }
 
-            private static bool TryInvoke(MethodInfo method, Eater eater, VarietyMonitor monitor, out object handle, out Delegate handler)
+            private static bool TryInvoke(MethodInfo method, Eater eater, VarietyMonitor monitor, out object handle)
             {
                 handle = null;
-                handler = null;
 
                 var parameters = method.GetParameters();
                 var args = new object[parameters.Length];
@@ -297,7 +294,14 @@ namespace DietVariety
 
                 for (int i = 0; i < parameters.Length; i++)
                 {
-                    var parameterType = parameters[i].ParameterType;
+                    var parameterInfo = parameters[i];
+                    var parameterType = parameterInfo.ParameterType;
+                    if (parameterType.IsByRef)
+                        parameterType = parameterType.GetElementType();
+
+                    if (parameterType == null)
+                        return false;
+
                     if (typeof(Delegate).IsAssignableFrom(parameterType) || parameterType.BaseType == typeof(MulticastDelegate))
                     {
                         candidateDelegate = DelegateFactory.CreateForEatComplete(parameterType, monitor);
@@ -308,6 +312,10 @@ namespace DietVariety
                     else if (parameterType == typeof(bool))
                     {
                         args[i] = true;
+                    }
+                    else if (parameterType == typeof(object) || parameterType.IsAssignableFrom(typeof(VarietyMonitor)))
+                    {
+                        args[i] = monitor;
                     }
                     else if (parameterType.IsValueType && parameterType.Name.IndexOf("Handle", System.StringComparison.OrdinalIgnoreCase) >= 0)
                     {
@@ -329,31 +337,47 @@ namespace DietVariety
                             handle = args[i];
                     }
                 }
-
-                handler = candidateDelegate;
                 return true;
             }
 
-            private static bool TryInvoke(MethodInfo method, Eater eater, object handle, Delegate handler)
+            private static bool TryInvoke(MethodInfo method, Eater eater, VarietyMonitor monitor, object handle)
             {
                 var parameters = method.GetParameters();
                 var args = new object[parameters.Length];
 
                 for (int i = 0; i < parameters.Length; i++)
                 {
-                    var parameterType = parameters[i].ParameterType;
+                    var parameterInfo = parameters[i];
+                    var parameterType = parameterInfo.ParameterType;
+                    bool isByRef = parameterType.IsByRef;
+                    if (isByRef)
+                        parameterType = parameterType.GetElementType();
+
+                    if (parameterType == null)
+                        return false;
 
                     if (typeof(Delegate).IsAssignableFrom(parameterType) || parameterType.BaseType == typeof(MulticastDelegate))
                     {
-                        args[i] = handler;
+                        var unsubscribeDelegate = DelegateFactory.CreateForEatComplete(parameterType, monitor);
+                        if (unsubscribeDelegate == null)
+                            return false;
+                        args[i] = unsubscribeDelegate;
                     }
                     else if (parameterType.IsInstanceOfType(handle))
                     {
                         args[i] = handle;
                     }
-                    else if (parameterType.IsByRef && handle != null)
+                    else if (parameterInfo.ParameterType.IsByRef && handle != null)
                     {
                         args[i] = handle;
+                    }
+                    else if (parameterType == typeof(object) || parameterType.IsAssignableFrom(typeof(VarietyMonitor)))
+                    {
+                        args[i] = monitor;
+                    }
+                    else if (parameterType == typeof(bool))
+                    {
+                        args[i] = true;
                     }
                     else
                     {
@@ -396,35 +420,33 @@ namespace DietVariety
                     .ToArray();
             }
 
-            internal static bool TrySubscribeToTagAdded(KPrefabID prefab, Tag tag, VarietyMonitor monitor, out object handle, out Delegate handler)
+            internal static bool TrySubscribeToTagAdded(KPrefabID prefab, Tag tag, VarietyMonitor monitor, out object handle)
             {
                 handle = null;
-                handler = null;
 
                 foreach (var method in SubscribeCandidates)
                 {
-                    if (TryInvoke(method, prefab, tag, monitor, out handle, out handler))
+                    if (TryInvoke(method, prefab, tag, monitor, out handle))
                         return true;
                 }
 
                 return false;
             }
 
-            internal static bool TryUnsubscribeFromTagAdded(KPrefabID prefab, Tag tag, object handle, Delegate handler)
+            internal static bool TryUnsubscribeFromTagAdded(KPrefabID prefab, Tag tag, VarietyMonitor monitor, object handle)
             {
                 foreach (var method in UnsubscribeCandidates)
                 {
-                    if (TryInvoke(method, prefab, tag, handle, handler))
+                    if (TryInvoke(method, prefab, tag, monitor, handle))
                         return true;
                 }
 
                 return false;
             }
 
-            private static bool TryInvoke(MethodInfo method, KPrefabID prefab, Tag tag, VarietyMonitor monitor, out object handle, out Delegate handler)
+            private static bool TryInvoke(MethodInfo method, KPrefabID prefab, Tag tag, VarietyMonitor monitor, out object handle)
             {
                 handle = null;
-                handler = null;
 
                 var parameters = method.GetParameters();
                 var args = new object[parameters.Length];
@@ -455,6 +477,10 @@ namespace DietVariety
                     {
                         args[i] = true;
                     }
+                    else if (paramType == typeof(object) || paramType.IsAssignableFrom(typeof(VarietyMonitor)))
+                    {
+                        args[i] = monitor;
+                    }
                     else if (typeof(Delegate).IsAssignableFrom(paramType) || paramType.BaseType == typeof(MulticastDelegate))
                     {
                         candidateDelegate = DelegateFactory.CreateForTag(paramType, monitor);
@@ -484,12 +510,10 @@ namespace DietVariety
                             handle = args[i];
                     }
                 }
-
-                handler = candidateDelegate;
                 return true;
             }
 
-            private static bool TryInvoke(MethodInfo method, KPrefabID prefab, Tag tag, object handle, Delegate handler)
+            private static bool TryInvoke(MethodInfo method, KPrefabID prefab, Tag tag, VarietyMonitor monitor, object handle)
             {
                 var parameters = method.GetParameters();
                 var args = new object[parameters.Length];
@@ -517,7 +541,10 @@ namespace DietVariety
                     }
                     else if (typeof(Delegate).IsAssignableFrom(paramType) || paramType.BaseType == typeof(MulticastDelegate))
                     {
-                        args[i] = handler;
+                        var unsubscribeDelegate = DelegateFactory.CreateForTag(paramType, monitor);
+                        if (unsubscribeDelegate == null)
+                            return false;
+                        args[i] = unsubscribeDelegate;
                     }
                     else if (handle != null && paramType.IsInstanceOfType(handle))
                     {
@@ -530,6 +557,10 @@ namespace DietVariety
                     else if (paramType == typeof(bool))
                     {
                         args[i] = true;
+                    }
+                    else if (paramType == typeof(object) || paramType.IsAssignableFrom(typeof(VarietyMonitor)))
+                    {
+                        args[i] = monitor;
                     }
                     else
                     {
