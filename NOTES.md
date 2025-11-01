@@ -1,3 +1,7 @@
+## 2026-01-22 - ClaimNewNotification badge persistence fix
+- Cleared the claim tracker cache when the Supply Closet activates and added a shutdown hook so event subscriptions release when the mod unloads, preventing the NEW badge from sticking across sessions.
+- Validation remains blocked: rebuilding or running ONI requires the unavailable .NET/ONI toolchain. Please retest in-game to confirm the badge clears after opening the closet and that disabling the mod no longer logs dangling subscription warnings.
+
 ## 2026-01-18 - Claim New Notification bootstrap
 - Replaced the local UserMod2 entry point with AzeLib's `[OnLoad]` bootstrap hooks so only the shared AzeUserMod remains in the assembly.
 - Attempted to rebuild via `dotnet build src/ONIMods.sln` to verify the DLL layout and loader behaviour, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the duplicate entry-point error is resolved and that only the AzeLib-provided `UserMod2` ships in the compiled mod.

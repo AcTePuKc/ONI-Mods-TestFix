@@ -30,6 +30,15 @@ namespace ClaimNewNotification
         }
 
         /// <summary>
+        /// Tears down registered hooks when the mod unloads.
+        /// </summary>
+        [AzeLib.Attributes.OnUnload]
+        public static void OnUnload()
+        {
+            ClaimState.Shutdown();
+        }
+
+        /// <summary>
         /// Wires Harmony patches when the implementation lands.
         /// </summary>
         /// <param name="harmony">Harmony instance provided by AzeLib's bootstrapper.</param>
@@ -111,6 +120,21 @@ namespace ClaimNewNotification
         {
             var state = Instance;
             state.RegisterEventHooks();
+        }
+
+        /// <summary>
+        /// Disposes the singleton instance when the mod unloads.
+        /// </summary>
+        public static void Shutdown()
+        {
+            lock (InstanceLock)
+            {
+                if (instance == null)
+                    return;
+
+                instance.Dispose();
+                instance = null;
+            }
         }
 
         /// <inheritdoc />
@@ -196,19 +220,24 @@ namespace ClaimNewNotification
         {
             try
             {
-                var seenIds = BuildInventorySnapshot().Keys.ToList();
-                if (seenIds.Count == 0)
-                    return;
+                var snapshot = BuildInventorySnapshot();
+                var shouldSave = false;
 
                 lock (syncRoot)
                 {
-                    var removed = false;
-                    foreach (var id in seenIds)
-                        removed |= unseen.Remove(id);
+                    if (unseen.Count > 0)
+                    {
+                        unseen.Clear();
+                        shouldSave = true;
+                    }
 
-                    if (removed)
-                        Save();
+                    closetSnapshot.Clear();
+                    foreach (var pair in snapshot)
+                        closetSnapshot[pair.Key] = pair.Value;
                 }
+
+                if (shouldSave)
+                    Save();
 
                 RefreshBadge();
             }
@@ -365,7 +394,7 @@ namespace ClaimNewNotification
 
         private static string FormatBlueprintName(string id) => string.IsNullOrWhiteSpace(id)
             ? global::STRINGS.UI.SUPPLYCLOSET.NAME.ToString()
-            : id;
+            : Assets.GetPrefab(new Tag(id))?.GetProperName() ?? id;
 
         private void CaptureClosetSnapshot()
         {
@@ -499,7 +528,8 @@ namespace ClaimNewNotification
             if (string.IsNullOrWhiteSpace(documents))
                 documents = Environment.GetEnvironmentVariable("USERPROFILE") ?? string.Empty;
 
-            var folder = Path.Combine(documents, "Klei", "OxygenNotIncluded", "mods", "Local", "AcTePuKc.ClaimNewNotification");
+            var staticId = AzeMod.UserMod?.mod?.staticID ?? "AcTePuKc.ClaimNewNotification";
+            var folder = Path.Combine(documents, "Klei", "OxygenNotIncluded", "mods", "Local", staticId);
             return Path.Combine(folder, PersistenceFileName);
         }
 
