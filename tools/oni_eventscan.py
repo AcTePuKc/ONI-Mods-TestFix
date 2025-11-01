@@ -105,7 +105,7 @@ def parse_simple_yaml(path: Path) -> Tuple[str, str]:
             continue
         key = match.group("key")
         value = match.group("value").split("#", 1)[0].strip()
-        if value.startswith(("'", '"')) and value.endswith(("'", '"')) and len(value) >= 2:
+        if len(value) >= 2 and ((value.startswith("'") and value.endswith("'")) or (value.startswith('"') and value.endswith('"'))):
             value = value[1:-1]
         if key in {"staticID", "id"} and not mod_id:
             mod_id = value
