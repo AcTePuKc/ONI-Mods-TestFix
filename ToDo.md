@@ -6,8 +6,8 @@ This document inventories the current in-code `TODO` comments across the reposit
 
 | Status | Mod/Area | File | Summary |
 | --- | --- | --- | --- |
-| [ ] | ClaimNewNotification | `src/ClaimNewNotification/ClaimNewNotificationMod.cs` | Wire supply-closet claim tracking and event subscriptions before enabling runtime patches. |
-| [ ] | ClaimNewNotification | `src/ClaimNewNotification/ClaimNewNotificationMod.cs` | Re-run `python tools/oni_eventscan.py` after wiring the event hooks so `findings.json` stays current. |
+| [x] | ClaimNewNotification | `src/ClaimNewNotification/ClaimNewNotificationMod.cs` | Wire supply-closet claim tracking and event subscriptions before enabling runtime patches. |
+| [x] | ClaimNewNotification | `src/ClaimNewNotification/ClaimNewNotificationMod.cs` | Re-run `python tools/oni_eventscan.py` after wiring the event hooks so `findings.json` stays current. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/CanScrapConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/EmptyCans/EmptyCanConfig.cs` | Stop returning null from `GetDlcIds` once the post-U56 DLC restriction matrix is wired up like beans. |
 | [ ] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/ModAssets.cs` | Replace the `Lazy<ExportSettings>` initializer with the post-U56 export-settings singleton pattern and remove the TODO once complete. |
@@ -29,4 +29,4 @@ This document inventories the current in-code `TODO` comments across the reposit
 | [x] | DietVariety | `DietVariety/VarietyMonitor.cs` | Migrated the eater completion and death tag hooks to the reflection-backed event adapters and confirmed via manual reasoning that meal variety refreshes and death cleanup still execute when the new payload shapes arrive. |
 | [x] | CannedFoodNGoods | `Sgt_Imalas-Oni-Mods/CannedFoodNGoods/Foods/CannedBeansConfig.cs` | Implemented the U56 DLC restriction logic, updated `GetDlcIds` to require `DLC2`, and verified by static inspection that the required/forbidden matrices align (runtime validation blocked pending in-game check). |
 
-*Last updated: 2025-11-01 05:46 UTC*
+*Last updated: 2026-01-21 00:00 UTC*

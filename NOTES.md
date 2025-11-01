@@ -1,3 +1,7 @@
+## 2026-01-22 - ClaimNewNotification badge persistence fix
+- Cleared the claim tracker cache when the Supply Closet activates and added a shutdown hook so event subscriptions release when the mod unloads, preventing the NEW badge from sticking across sessions.
+- Validation remains blocked: rebuilding or running ONI requires the unavailable .NET/ONI toolchain. Please retest in-game to confirm the badge clears after opening the closet and that disabling the mod no longer logs dangling subscription warnings.
+
 ## 2026-01-18 - Claim New Notification bootstrap
 - Replaced the local UserMod2 entry point with AzeLib's `[OnLoad]` bootstrap hooks so only the shared AzeUserMod remains in the assembly.
 - Attempted to rebuild via `dotnet build src/ONIMods.sln` to verify the DLL layout and loader behaviour, but the container still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the duplicate entry-point error is resolved and that only the AzeLib-provided `UserMod2` ships in the compiled mod.
@@ -8,6 +12,11 @@
 - Declared `ModAssets\New.png` as project content so MSBuild copies the badge art into the build output alongside the DLL.
 - Extended `CopyArtifactsToInstallFolder` to mirror any `ModAssets` files from `$(TargetDir)` into the install directory, keeping project-local asset folders intact after deployment.
 - Verification blocked: the container still lacks the .NET toolchain (`dotnet` is unavailable), so the ClaimNewNotification project could not be rebuilt and the install folder contents could not be inspected. Please rebuild locally and confirm `ModAssets/New.png` lands in the generated mod directory and renders in-game.
+
+## 2026-01-21 - ClaimNewNotification claim tracking implementation
+- Wired the Supply Closet claim tracker singleton, handle-based event subscriptions, and Harmony patches that monitor button refreshes, claim actions, closet activation, and row binding.
+- Added persistence for `seen.json`, toast messaging, badge toggles on the Supply Closet button, and per-item “NEW” overlays sourced from `ModAssets/New.png`.
+- Validation remains blocked in this environment: rebuilding the project and exercising the UI in-game both require the ONI toolchain. Manual review confirmed JSON persistence paths, badge creation, and toast formatting.
 
 ## 2025-11-01 - ClaimNewNotification scaffold and planning
 - Scaffolded the `ClaimNewNotification` project, metadata, and asset placeholder so the solution can compile once the .NET toolchain is available locally.
@@ -619,6 +628,10 @@ lternate language locally to confirm the fallback strings resolve correctly.
 - Removed the committed `Oni_mods_by_Identifier/Directory.Build.props.user` file and added an explicit ignore entry so each workstation keeps its Steam path overrides local-only.
 - Updated the root README to remind contributors to copy `Directory.Build.props.default` to `.user` in both the `src/` solution and the legacy identifier tree before building.
 - Planned to validate that MSBuild still succeeds after providing a `.user` file via `dotnet build Oni_mods_by_Identifier/ONIMods.sln`, but the container environment continues to lack the `.NET` host (`command not found: dotnet`). Please perform the build locally once a `.user` file is created to confirm the setup instructions remain accurate.
+
+## 2026-01-19 - ClaimNewNotification drop quantity fallback
+- Noticed the reflection helper that aggregates Supply Closet drop counts (`GetDropQuantity`) returned `int?`, tripping a compile-time type mismatch after the review update. Added a terminal `?? 0` so the helper always yields a concrete integer and kept the rest of the traversal logic unchanged.
+- Validating the assembly still requires `dotnet build`, but the container lacks the .NET host (`command not found: dotnet`). Please rebuild locally to confirm the snapshot capture compiles cleanly.
 ## 2025-10-10 - ContainerTooltips access modifier exposure
 - Updated `StorageContentsBehaviour` to expose the `OnPrefabInit`, `OnSpawn`, and `OnCleanUp` overrides so external callers can hook the behaviour lifecycle.
 - Attempted to validate with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the workspace still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the access-modifier change resolves without regressions.
