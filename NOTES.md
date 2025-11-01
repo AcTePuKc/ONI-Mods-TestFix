@@ -1,5 +1,10 @@
 # AzeLib OnLoad benchmark (2024-06-17)
 
+## 2026-01-20 - ClaimNewNotification ModAssets packaging copy
+- Declared `ModAssets\New.png` as project content so MSBuild copies the badge art into the build output alongside the DLL.
+- Extended `CopyArtifactsToInstallFolder` to mirror any `ModAssets` files from `$(TargetDir)` into the install directory, keeping project-local asset folders intact after deployment.
+- Verification blocked: the container still lacks the .NET toolchain (`dotnet` is unavailable), so the ClaimNewNotification project could not be rebuilt and the install folder contents could not be inspected. Please rebuild locally and confirm `ModAssets/New.png` lands in the generated mod directory and renders in-game.
+
 ## 2025-11-01 - ClaimNewNotification scaffold and planning
 - Scaffolded the `ClaimNewNotification` project, metadata, and asset placeholder so the solution can compile once the .NET toolchain is available locally.
 - Captured design notes covering blueprint claim flow instrumentation, handle-based event subscriptions, persistence in `seen.json`, and Harmony patch targets for toasts, badges, and NEW chips.
