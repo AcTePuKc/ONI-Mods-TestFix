@@ -71,7 +71,7 @@ namespace ClaimNewNotification
         private const string PersistenceFileName = "seen.json";
         private const int PersistenceVersion = 1;
 
-        private static ClaimState instance;
+        private static volatile ClaimState instance;
         private static readonly object InstanceLock = new();
 
         private readonly object syncRoot = new();
@@ -106,10 +106,15 @@ namespace ClaimNewNotification
         {
             get
             {
-                lock (InstanceLock)
+                if (instance == null)
                 {
-                    return instance ??= new ClaimState();
+                    lock (InstanceLock)
+                    {
+                        instance ??= new ClaimState();
+                    }
                 }
+
+                return instance;
             }
         }
 
@@ -361,7 +366,7 @@ namespace ClaimNewNotification
                     closetSnapshot[pair.Key] = pair.Value;
 
                 if (claimed.Count > 0)
-                    Save();
+                    SaveLocked();
             }
 
             if (claimed.Count > 0)
@@ -502,35 +507,37 @@ namespace ClaimNewNotification
         {
             lock (syncRoot)
             {
-                try
-                {
-                    var directory = Path.GetDirectoryName(persistencePath);
-                    if (!string.IsNullOrWhiteSpace(directory))
-                        Directory.CreateDirectory(directory);
-                    var payload = new PersistencePayload
-                    {
-                        Version = PersistenceVersion,
-                        Unseen = unseen.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase),
-                    };
+                SaveLocked();
+            }
+        }
 
-                    var json = JsonConvert.SerializeObject(payload, Formatting.Indented);
-                    File.WriteAllText(persistencePath, json);
-                }
-                catch (Exception ex)
+        private void SaveLocked()
+        {
+            try
+            {
+                var directory = Path.GetDirectoryName(persistencePath);
+                if (!string.IsNullOrWhiteSpace(directory))
+                    Directory.CreateDirectory(directory);
+                var payload = new PersistencePayload
                 {
-                    Debug.LogWarning($"[{nameof(ClaimNewNotification)}] Failed to persist Supply Closet state: {ex}");
-                }
+                    Version = PersistenceVersion,
+                    Unseen = unseen.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase),
+                };
+
+                var json = JsonConvert.SerializeObject(payload, Formatting.Indented);
+                File.WriteAllText(persistencePath, json);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[{nameof(ClaimNewNotification)}] Failed to persist Supply Closet state: {ex}");
             }
         }
 
         private static string BuildPersistencePath()
         {
-            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            if (string.IsNullOrWhiteSpace(documents))
-                documents = Environment.GetEnvironmentVariable("USERPROFILE") ?? string.Empty;
-
+            var saveDataRoot = GenericGameUtil.GetSavePrefix();
             var staticId = AzeMod.UserMod?.mod?.staticID ?? "AcTePuKc.ClaimNewNotification";
-            var folder = Path.Combine(documents, "Klei", "OxygenNotIncluded", "mods", "Local", staticId);
+            var folder = Path.Combine(saveDataRoot, "mods", "Local", staticId);
             return Path.Combine(folder, PersistenceFileName);
         }
 
