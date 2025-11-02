@@ -266,3 +266,4 @@ __pycache__/
 *.pyc
 # Localization binaries
 *.mo
+Find-ONI-ReflectionHotspots.ps1
