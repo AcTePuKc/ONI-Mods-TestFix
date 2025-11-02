@@ -40,10 +40,8 @@ namespace AzeLib
             return loadableTypes
                 .Where(type => type != null
                     && type.DeclaringType == null
-                    && IsInNamespace(type, locStringNamespace)
-                    && ContainsLocStrings(type))
-                .OrderBy(type => type.FullName, StringComparer.Ordinal)
-                .ToList();
+                    && IsInNamespace(type, locStringNamespace))
+                .OrderBy(type => type.FullName, StringComparer.Ordinal);
         }
 
         internal static Dictionary<string, object> MakeRuntimeLocStringTree(Type rootType)
@@ -70,7 +68,6 @@ namespace AzeLib
             }
 
             foreach (var nestedType in type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(ContainsLocStrings)
                 .OrderBy(nested => nested.Name, StringComparer.Ordinal))
             {
                 var nestedTree = BuildTree(nestedType);
@@ -79,19 +76,6 @@ namespace AzeLib
             }
 
             return result;
-        }
-
-        private static bool ContainsLocStrings(Type type)
-        {
-            if (type == null)
-                return false;
-
-            if (type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
-                .Any(field => field.FieldType == typeof(LocString)))
-                return true;
-
-            return type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic)
-                .Any(ContainsLocStrings);
         }
 
         private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
