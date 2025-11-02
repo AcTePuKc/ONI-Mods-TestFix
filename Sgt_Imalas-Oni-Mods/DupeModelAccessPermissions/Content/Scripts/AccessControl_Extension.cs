@@ -40,7 +40,7 @@ namespace DupeModelAccessPermissions.Content.Scripts
 		public override void OnSpawn()
 		{
 			if(_defaultPermissionBionics == (AccessControl.Permission)(-1))
-				_defaultPermissionBionics = accessControl.DefaultPermission;
+				_defaultPermissionBionics = AccessControlPermissionCompat.GetDoorDefaultPermission(accessControl);
 
 			base.OnSpawn();
 			if (accessControl.registered) //RestorePermissions mirror

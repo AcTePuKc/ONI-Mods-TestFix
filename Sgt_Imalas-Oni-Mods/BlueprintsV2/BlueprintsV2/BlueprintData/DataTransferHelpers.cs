@@ -9,8 +9,11 @@ using UtilLibs;
 
 namespace BlueprintsV2.BlueprintData
 {
-	internal class DataTransferHelpers
-	{
+        internal class DataTransferHelpers
+        {
+			private static AccessControl.Permission ReadDefaultDoorPermission(AccessControl accessControl) => AccessControlPermissionCompat.GetDoorDefaultPermission(accessControl);
+			private static void WriteDefaultDoorPermission(AccessControl accessControl, AccessControl.Permission permission) => AccessControlPermissionCompat.SetDoorDefaultPermission(accessControl, permission);
+
 		internal class DataTransfer_UserNameable
 		{
 			internal static JObject TryGetData(GameObject arg)
@@ -931,11 +934,11 @@ namespace BlueprintsV2.BlueprintData
 						SgtLogger.l("" + item.Key + " " + item.Value);
 					}
 
-					return new JObject()
-					{
-						{ "DefaultPermission", (int)component.DefaultPermission},
-						{ "savedPermissions", JsonConvert.SerializeObject(customPermissions)}
-					};
+                                        return new JObject()
+                                        {
+                                                { "DefaultPermission", (int)ReadDefaultDoorPermission(component)},
+                                                { "savedPermissions", JsonConvert.SerializeObject(customPermissions)}
+                                        };
 				}
 				return null;
 			}
@@ -950,8 +953,8 @@ namespace BlueprintsV2.BlueprintData
 						return;
 					var DefaultPermission = t1.Value<int>();
 
-					//applying values
-					targetComponent.DefaultPermission = (AccessControl.Permission)DefaultPermission;
+                                        //applying values
+                                        WriteDefaultDoorPermission(targetComponent, (AccessControl.Permission)DefaultPermission);
 
 					var t2 = jObject.GetValue("savedPermissions");
 					if (t2 == null)
