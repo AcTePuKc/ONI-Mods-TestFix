@@ -28,7 +28,7 @@ namespace BetterInfoCards
         private static readonly string[] shadowPoolFieldNames = { "shadowBarPool", "shadowBars", "m_ShadowBars" };
         private static volatile FieldInfo shadowPoolField;
         private static volatile bool shadowPoolUnavailable;
-        private static readonly object shadowPoolLock = new();
+        private static readonly object _shadowPoolLock = new();
         private static float lastShadowPoolWarningTime;
         private static readonly object _warningLock = new();
 
@@ -46,7 +46,7 @@ namespace BetterInfoCards
 
             if (!shadowPoolUnavailable && shadowPoolField == null)
             {
-                lock (shadowPoolLock)
+                lock (_shadowPoolLock)
                 {
                     if (!shadowPoolUnavailable && shadowPoolField == null)
                     {
