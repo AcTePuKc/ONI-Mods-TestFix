@@ -95,7 +95,19 @@ namespace UtilLibs
             if (field != null)
             {
                 SgtLogger.warning($"Falling back to field '{field.Name}' for AccessControl default permission reads.");
-                return accessControl => (AccessControl.Permission)field.GetValue(accessControl);
+                try
+                {
+                    var param = System.Linq.Expressions.Expression.Parameter(accessControlType, "accessControl");
+                    var fieldAccess = System.Linq.Expressions.Expression.Field(param, field);
+                    var lambda = System.Linq.Expressions.Expression.Lambda<Func<AccessControl, AccessControl.Permission>>(fieldAccess, param);
+                    return lambda.Compile();
+                }
+                catch (Exception ex)
+                {
+                    SgtLogger.warning($"Failed to compile field getter delegate for '{field.Name}', falling back to reflection. {ex.GetType().Name}: {ex.Message}");
+                    // Fallback to slower reflection on failure
+                    return accessControl => (AccessControl.Permission)field.GetValue(accessControl);
+                }
             }
 
             // 4) Final fallback
@@ -162,7 +174,21 @@ namespace UtilLibs
             if (field != null)
             {
                 SgtLogger.warning($"Falling back to field '{field.Name}' for AccessControl default permission writes.");
-                return (accessControl, permission) => field.SetValue(accessControl, permission);
+                try
+                {
+                    var targetExp = System.Linq.Expressions.Expression.Parameter(accessControlType, "target");
+                    var valueExp = System.Linq.Expressions.Expression.Parameter(typeof(AccessControl.Permission), "value");
+                    var fieldExp = System.Linq.Expressions.Expression.Field(targetExp, field);
+                    var assignExp = System.Linq.Expressions.Expression.Assign(fieldExp, valueExp);
+                    var lambda = System.Linq.Expressions.Expression.Lambda<Action<AccessControl, AccessControl.Permission>>(assignExp, targetExp, valueExp);
+                    return lambda.Compile();
+                }
+                catch (Exception ex)
+                {
+                    SgtLogger.warning($"Failed to compile field setter delegate for '{field.Name}', falling back to reflection. {ex.GetType().Name}: {ex.Message}");
+                    // Fallback to slower reflection on failure
+                    return (accessControl, permission) => field.SetValue(accessControl, permission);
+                }
             }
 
             // 4) Final fallback (no-op)
