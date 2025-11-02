@@ -60,8 +60,8 @@ namespace AzeLib
 
             Dictionary<string, object> GetStringsTree() =>
                 CreateStringsTree(
-                    Localization.CollectLocStringTreeRoots(lsNamespace, lsAssembly).ToList(),
-                    Localization.MakeRuntimeLocStringTree,
+                    LocStringTreeBuilder.CollectLocStringTreeRoots(lsNamespace, lsAssembly).ToList(),
+                    LocStringTreeBuilder.MakeRuntimeLocStringTree,
                     type => type.Name)
                 .Concat(extraStringsTree.EmptyIfNull())
                 .ToDictionary();
