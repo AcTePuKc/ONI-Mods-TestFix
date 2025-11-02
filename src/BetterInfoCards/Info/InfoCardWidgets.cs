@@ -26,9 +26,11 @@ namespace BetterInfoCards
         private static readonly object rectFieldCacheLock = new();
         private static readonly MethodInfo drawMethod = PoolType != null ? AccessTools.Method(PoolType, "Draw") : null;
         private static readonly string[] shadowPoolFieldNames = { "shadowBarPool", "shadowBars", "m_ShadowBars" };
-        private static FieldInfo shadowPoolField;
-        private static bool shadowPoolUnavailable;
+        private static volatile FieldInfo shadowPoolField;
+        private static volatile bool shadowPoolUnavailable;
+        private static readonly object shadowPoolLock = new();
         private static float lastShadowPoolWarningTime;
+        private static readonly object _warningLock = new();
 
         public static MethodInfo DrawMethod => drawMethod;
 
@@ -44,21 +46,27 @@ namespace BetterInfoCards
 
             if (!shadowPoolUnavailable && shadowPoolField == null)
             {
-                var flags = BindingFlags.Instance | BindingFlags.NonPublic;
-                var type = typeof(HoverTextDrawer);
-
-                foreach (var name in shadowPoolFieldNames)
+                lock (shadowPoolLock)
                 {
-                    var field = type.GetField(name, flags);
-                    if (field != null && field.FieldType == PoolType)
+                    if (!shadowPoolUnavailable && shadowPoolField == null)
                     {
-                        shadowPoolField = field;
-                        break;
+                        var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                        var type = typeof(HoverTextDrawer);
+
+                        foreach (var name in shadowPoolFieldNames)
+                        {
+                            var field = type.GetField(name, flags);
+                            if (field != null && field.FieldType == PoolType)
+                            {
+                                shadowPoolField = field;
+                                break;
+                            }
+                        }
+
+                        if (shadowPoolField == null)
+                            shadowPoolUnavailable = true;
                     }
                 }
-
-                if (shadowPoolField == null)
-                    shadowPoolUnavailable = true;
             }
 
             if (shadowPoolUnavailable)
@@ -85,11 +93,14 @@ namespace BetterInfoCards
 
         private static bool WarnOncePerSecond(ref float lastWarningTime)
         {
-            var time = Time.unscaledTime;
-            if (time - lastWarningTime >= 1f)
+            lock (_warningLock)
             {
-                lastWarningTime = time;
-                return true;
+                var time = Time.unscaledTime;
+                if (time - lastWarningTime >= 1f)
+                {
+                    lastWarningTime = time;
+                    return true;
+                }
             }
 
             return false;
