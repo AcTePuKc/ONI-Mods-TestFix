@@ -26,11 +26,8 @@ namespace AzeLib
 
         internal static IEnumerable<Type> CollectLocStringTreeRoots(string locStringNamespace, Assembly assembly)
         {
-            if (collectLocStringTreeRoots != null)
-            {
-                if (collectLocStringTreeRoots.Invoke(null, new object[] { locStringNamespace, assembly }) is IEnumerable<Type> legacyRoots)
-                    return legacyRoots;
-            }
+            if (collectLocStringTreeRoots?.Invoke(null, new object[] { locStringNamespace, assembly }) is IEnumerable<Type> legacyRoots)
+                return legacyRoots;
 
             if (assembly == null)
                 return Enumerable.Empty<Type>();
@@ -38,19 +35,15 @@ namespace AzeLib
             var loadableTypes = GetLoadableTypes(assembly);
 
             return loadableTypes
-                .Where(type => type != null
-                    && type.DeclaringType == null
+                .Where(type => type.DeclaringType == null
                     && IsInNamespace(type, locStringNamespace))
                 .OrderBy(type => type.FullName, StringComparer.Ordinal);
         }
 
         internal static Dictionary<string, object> MakeRuntimeLocStringTree(Type rootType)
         {
-            if (makeRuntimeLocStringTree != null)
-            {
-                if (makeRuntimeLocStringTree.Invoke(null, new object[] { rootType }) is Dictionary<string, object> legacyTree)
-                    return legacyTree;
-            }
+            if (makeRuntimeLocStringTree?.Invoke(null, new object[] { rootType }) is Dictionary<string, object> legacyTree)
+                return legacyTree;
 
             return rootType == null ? new Dictionary<string, object>() : BuildTree(rootType);
         }
