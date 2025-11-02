@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text;
 using HarmonyLib;
@@ -9,6 +10,8 @@ namespace PeterHan.PLib.Core;
 
 public static class ExtensionMethods
 {
+	private static readonly ConcurrentDictionary<(Type type, string name), Lazy<MethodInfo>> METHOD_CACHE = new ConcurrentDictionary<(Type, string), Lazy<MethodInfo>>();
+
 	public static string F(this string message, params object[] args)
 	{
 		return string.Format(message, args);
@@ -151,9 +154,10 @@ public static class ExtensionMethods
 		{
 			throw new ArgumentNullException("methodName");
 		}
+		(Type, string) key = (type, methodName);
 		try
 		{
-			MethodInfo method = type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+			MethodInfo method = METHOD_CACHE.GetOrAdd(key, (value) => new Lazy<MethodInfo>(() => value.type.GetMethod(value.name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))).Value;
 			if (method != null)
 			{
 				instance.Patch((MethodBase)method, prefix, postfix, (HarmonyMethod)null, (HarmonyMethod)null);
@@ -163,6 +167,7 @@ public static class ExtensionMethods
 		}
 		catch (AmbiguousMatchException thrown)
 		{
+			METHOD_CACHE.TryRemove(key, out var _);
 			PUtil.LogException(thrown);
 		}
 	}
@@ -199,9 +204,10 @@ public static class ExtensionMethods
 		{
 			throw new ArgumentNullException("methodName");
 		}
+		(Type, string) key = (type, methodName);
 		try
 		{
-			MethodInfo method = type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+			MethodInfo method = METHOD_CACHE.GetOrAdd(key, (value) => new Lazy<MethodInfo>(() => value.type.GetMethod(value.name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))).Value;
 			if (method != null)
 			{
 				instance.Patch((MethodBase)method, (HarmonyMethod)null, (HarmonyMethod)null, transpiler, (HarmonyMethod)null);
@@ -211,10 +217,12 @@ public static class ExtensionMethods
 		}
 		catch (AmbiguousMatchException thrown)
 		{
+			METHOD_CACHE.TryRemove(key, out var _);
 			PUtil.LogException(thrown);
 		}
 		catch (FormatException ex)
 		{
+			METHOD_CACHE.TryRemove(key, out var _);
 			PUtil.LogWarning("Unable to transpile method {0}: {1}".F(methodName, ex.Message));
 		}
 	}
