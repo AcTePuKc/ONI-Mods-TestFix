@@ -30,7 +30,7 @@ namespace BetterInfoCards
                 {
                     return AccessTools.Method(typeof(InterfaceTool), nameof(InterfaceTool.GetObjectUnderCursor)).MakeGenericMethod(typeof(KSelectable));
                 }
-                catch (System.Exception ex)
+                catch (System.Exception ex) when (ex is System.Reflection.AmbiguousMatchException || ex is System.ArgumentException || ex is System.InvalidOperationException || ex is System.NotSupportedException)
                 {
                     if (logFailure)
                         Debug.LogError($"[BetterInfoCards] Failed to resolve {nameof(InterfaceTool.GetObjectUnderCursor)} for {nameof(KSelectable)}: {ex}");
