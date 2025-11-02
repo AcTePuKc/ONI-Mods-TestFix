@@ -13,9 +13,31 @@ namespace BetterInfoCards
         [HarmonyPatch]
         private static class ChangeHits_Patch
         {
+            private static readonly MethodInfo cachedTargetMethod = ResolveTargetMethod(logFailure: true);
             private static KSelectable priorSelected;
 
-            static MethodBase TargetMethod() => AccessTools.Method(typeof(InterfaceTool), nameof(InterfaceTool.GetObjectUnderCursor)).MakeGenericMethod(typeof(KSelectable));
+            static MethodBase TargetMethod()
+            {
+                if (cachedTargetMethod != null)
+                    return cachedTargetMethod;
+
+                return ResolveTargetMethod(logFailure: false);
+            }
+
+            private static MethodInfo ResolveTargetMethod(bool logFailure)
+            {
+                try
+                {
+                    return AccessTools.Method(typeof(InterfaceTool), nameof(InterfaceTool.GetObjectUnderCursor)).MakeGenericMethod(typeof(KSelectable));
+                }
+                catch (System.Exception ex)
+                {
+                    if (logFailure)
+                        Debug.LogError($"[BetterInfoCards] Failed to resolve {nameof(InterfaceTool.GetObjectUnderCursor)} for {nameof(KSelectable)}: {ex}");
+
+                    return null;
+                }
+            }
 
             static void Postfix(bool cycleSelection, ref KSelectable __result, List<InterfaceTool.Intersection> ___intersections)
             {
