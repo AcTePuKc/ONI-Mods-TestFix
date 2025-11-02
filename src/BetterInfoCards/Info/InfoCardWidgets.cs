@@ -25,39 +25,74 @@ namespace BetterInfoCards
         private static readonly Dictionary<System.Type, FieldInfo> rectFieldCache = new();
         private static readonly object rectFieldCacheLock = new();
         private static readonly MethodInfo drawMethod = PoolType != null ? AccessTools.Method(PoolType, "Draw") : null;
-        private static readonly MemberInfo shadowBarPoolMember = PoolType != null ? FindShadowBarPoolMember() : null;
+        private static readonly string[] shadowPoolFieldNames = { "shadowBarPool", "shadowBars", "m_ShadowBars" };
+        private static FieldInfo shadowPoolField;
+        private static bool shadowPoolUnavailable;
+        private static float lastShadowPoolWarningTime;
 
         public static MethodInfo DrawMethod => drawMethod;
-        public static MemberInfo ShadowBarPoolMember => shadowBarPoolMember;
 
-        private static MemberInfo FindShadowBarPoolMember()
+        public static bool TryGetShadowPool(HoverTextDrawer drawer, out object pool)
         {
-            var type = typeof(HoverTextDrawer);
-            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            pool = null;
 
-            foreach (var field in type.GetFields(flags))
-                if (field.FieldType == PoolType)
-                    return field;
+            if (drawer == null || PoolType == null)
+            {
+                WarnShadowPoolFailure();
+                return false;
+            }
 
-            foreach (var property in type.GetProperties(flags))
-                if (property.PropertyType == PoolType && property.GetIndexParameters().Length == 0)
-                    return property;
+            if (!shadowPoolUnavailable && shadowPoolField == null)
+            {
+                var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                var type = typeof(HoverTextDrawer);
 
-            return null;
+                foreach (var name in shadowPoolFieldNames)
+                {
+                    var field = type.GetField(name, flags);
+                    if (field != null && field.FieldType == PoolType)
+                    {
+                        shadowPoolField = field;
+                        break;
+                    }
+                }
+
+                if (shadowPoolField == null)
+                    shadowPoolUnavailable = true;
+            }
+
+            if (shadowPoolUnavailable)
+            {
+                WarnShadowPoolFailure();
+                return false;
+            }
+
+            pool = shadowPoolField.GetValue(drawer);
+            if (pool == null)
+            {
+                WarnShadowPoolFailure();
+                return false;
+            }
+
+            return true;
+
+            void WarnShadowPoolFailure()
+            {
+                if (WarnOncePerSecond(ref lastShadowPoolWarningTime))
+                    Debug.LogWarning("[BetterInfoCards] Unable to access the HoverTextDrawer shadow bar pool; skipping width resize.");
+            }
         }
 
-        public static object GetShadowBarPool(HoverTextDrawer drawer)
+        private static bool WarnOncePerSecond(ref float lastWarningTime)
         {
-            if (drawer == null || shadowBarPoolMember == null)
-                return null;
+            var time = Time.unscaledTime;
+            if (time - lastWarningTime >= 1f)
+            {
+                lastWarningTime = time;
+                return true;
+            }
 
-            if (shadowBarPoolMember is FieldInfo field)
-                return field.GetValue(drawer);
-
-            if (shadowBarPoolMember is PropertyInfo property)
-                return property.GetValue(drawer);
-
-            return null;
+            return false;
         }
 
         public static RectTransform GetRect(object entry)
@@ -139,12 +174,8 @@ namespace BetterInfoCards
             // Genius idea from Peter to just add new ones to fill the gap.
             var rect = shadowBar.Rect;
             var drawer = InterceptHoverDrawer.drawerInstance;
-            var pool = HoverTextEntryAccess.GetShadowBarPool(drawer);
-            if (pool == null)
-            {
-                Debug.LogWarning("[BetterInfoCards] Unable to access the HoverTextDrawer shadow bar pool; skipping width resize.");
+            if (!HoverTextEntryAccess.TryGetShadowPool(drawer, out var pool))
                 return;
-            }
 
             var drawMethod = HoverTextEntryAccess.DrawMethod;
             if (drawMethod == null)
