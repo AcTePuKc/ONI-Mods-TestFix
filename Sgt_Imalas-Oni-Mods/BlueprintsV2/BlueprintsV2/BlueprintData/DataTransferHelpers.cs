@@ -11,8 +11,8 @@ namespace BlueprintsV2.BlueprintData
 {
         internal class DataTransferHelpers
         {
-                private static AccessControl.Permission ReadDefaultDoorPermission(AccessControl accessControl) => AccessControlPermissionCompat.GetDoorDefaultPermission(accessControl);
-                private static void WriteDefaultDoorPermission(AccessControl accessControl, AccessControl.Permission permission) => AccessControlPermissionCompat.SetDoorDefaultPermission(accessControl, permission);
+			private static AccessControl.Permission ReadDefaultDoorPermission(AccessControl accessControl) => AccessControlPermissionCompat.GetDoorDefaultPermission(accessControl);
+			private static void WriteDefaultDoorPermission(AccessControl accessControl, AccessControl.Permission permission) => AccessControlPermissionCompat.SetDoorDefaultPermission(accessControl, permission);
 
 		internal class DataTransfer_UserNameable
 		{
