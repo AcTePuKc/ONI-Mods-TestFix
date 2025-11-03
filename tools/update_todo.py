@@ -13,6 +13,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 TODO_PATH = REPO_ROOT / "ToDo.md"
+"""Add new Directories to scan if needed below."""
 DEFAULT_PROJECTS = (
     "Sgt_Imalas-Oni-Mods",
     "ONI_Mods_byPether",
