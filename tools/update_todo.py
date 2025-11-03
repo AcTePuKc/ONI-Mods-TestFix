@@ -138,7 +138,7 @@ def format_project_section(name: str, hits: list[ReflectionHit]) -> list[str]:
     for rel_path, file_hits in groupby(sorted_hits, key=attrgetter("rel_path")):
         lines.append(f"### {rel_path}")
         for hit in file_hits:
-            tag = "**HOT**" if hit.is_hot else "COLD"
+            snippet = hit.snippet
             snippet = hit.snippet.replace("|", "\\|")
             lines.append(f"- {tag} @ L{hit.line_number} — `{snippet}`")
         lines.append("")
