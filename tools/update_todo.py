@@ -105,6 +105,7 @@ def group_hits_by_project(hits: list[ReflectionHit], projects: set[str]) -> dict
     for hit in hits:
         if hit.project in projects:
             grouped.setdefault(hit.project, []).append(hit)
+            grouped[hit.project].append(hit)
     return grouped
     return {project: group for project, group in grouped.items() if group}
 
@@ -136,9 +137,14 @@ def format_project_section(name: str, hits: list[ReflectionHit]) -> list[str]:
     for rel_path, file_hits in groupby(sorted_hits, key=attrgetter("rel_path")):
         lines.append(f"### {rel_path}")
         for hit in file_hits:
-            snippet = hit.snippet
+            tag = "**HOT**" if hit.is_hot else "COLD"
             snippet = hit.snippet.replace("|", "\\|")
-            lines.append(f"- {tag} @ L{hit.line_number} — `{snippet}`")
+            fence = "`"
+            if "`" in snippet:
+                fence = "``"
+                # Add spaces for separation as per CommonMark spec for code spans
+                snippet = f" {snippet} "
+            lines.append(f"- {tag} @ L{hit.line_number} — {fence}{snippet}{fence}")
         lines.append("")
     lines.append("")
     return lines
@@ -166,7 +172,7 @@ def build_todo_contents(project_sections: list[tuple[str, list[ReflectionHit]]])
     for name, hits in project_sections:
         body_lines.extend(format_project_section(name, hits))
 
-        body_lines.append("No reflection hotspots were detected in the selected projects.")
+    if not body_lines:
         body_lines.append("No reflection hotspots were detected in the selected projects.\n")
 
     return "\n".join(header_lines + body_lines).rstrip("\n") + "\n"
