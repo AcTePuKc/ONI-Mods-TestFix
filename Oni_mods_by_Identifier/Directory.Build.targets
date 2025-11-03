@@ -13,8 +13,7 @@
           BeforeTargets="ResolveReferences"
           Condition="'$(GeneratePublicAssemblies)' != 'false'"
           Inputs="@(PubliciseInputAssemblies)"
-          Outputs="@(PubliciseInputAssemblies->'../lib/%(Filename)_public.hash')"
-          RunOnServer="true">
+          Outputs="@(PubliciseInputAssemblies->'../lib/%(Filename)_public.hash')">
     <Publicise
       InputAssemblies="@(PubliciseInputAssemblies)"
       OutputPath="../lib/"/>
