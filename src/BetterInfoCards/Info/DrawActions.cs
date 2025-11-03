@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace BetterInfoCards
@@ -15,6 +16,27 @@ namespace BetterInfoCards
             TextStyleSetting style;
             Color color;
             bool overrideColor;
+
+            private static HoverTextDrawer.Skin cachedSkin;
+            private static TextStyleSetting cachedSkinStyle;
+            internal static bool loggedMissingFallbackStyle;
+
+            internal static void ResetLogging()
+            {
+                loggedMissingFallbackStyle = false;
+            }
+
+            private static readonly string[] skinStyleMembers = new[]
+            {
+                "defaultStyle",
+                "defaultTextStyle",
+                "stringTextStyle",
+                "stringStyle",
+                "bodyTextStyle",
+                "textStyle",
+                "basicTextStyle",
+                "basicStyle"
+            };
 
             public TextStyleSetting Style => style;
 
@@ -35,13 +57,137 @@ namespace BetterInfoCards
                     return;
                 }
 
-                if (style == null)
+                var resolvedStyle = EnsureStyle(style, drawer);
+                if (resolvedStyle == null)
                 {
-                    Debug.LogWarning("[BetterInfoCards] Skipping DrawText replay because the captured TextStyleSetting is missing.");
+                    if (!loggedMissingFallbackStyle)
+                    {
+                        Debug.LogWarning("[BetterInfoCards] Skipping DrawText replay because no fallback TextStyleSetting could be resolved.");
+                        loggedMissingFallbackStyle = true;
+                    }
                     return;
                 }
 
-                drawer.DrawText(ti.GetTextOverride(cards), style, color, overrideColor);
+                style = resolvedStyle;
+                drawer.DrawText(ti.GetTextOverride(cards), resolvedStyle, color, overrideColor);
+            }
+
+            internal static TextStyleSetting EnsureStyle(TextStyleSetting current, HoverTextDrawer drawer)
+            {
+                if (current != null)
+                    return current;
+
+                var resolved = ResolveFallbackStyle(drawer)
+                    ?? ResolveFallbackStyle(InterceptHoverDrawer.drawerInstance)
+                    ?? ResolveFallbackStyle(HoverTextScreen.Instance != null ? HoverTextScreen.Instance.drawer : null);
+
+                return resolved;
+            }
+
+            private static TextStyleSetting ResolveFallbackStyle(HoverTextDrawer drawer)
+            {
+                if (drawer == null)
+                    return null;
+
+                var skin = drawer.skin;
+                if (skin == null)
+                    return null;
+
+                if (cachedSkin == skin && cachedSkinStyle != null)
+                    return cachedSkinStyle;
+
+                var styleFromSkin = ExtractStyleFromSkin(skin);
+                if (styleFromSkin != null)
+                {
+                    cachedSkin = skin;
+                    cachedSkinStyle = styleFromSkin;
+                }
+
+                return styleFromSkin;
+            }
+
+            private static TextStyleSetting ExtractStyleFromSkin(object skin)
+            {
+                if (skin == null)
+                    return null;
+
+                var type = skin.GetType();
+
+                foreach (var memberName in skinStyleMembers)
+                {
+                    var style = GetStyleFromMember(type, skin, memberName);
+                    if (style != null)
+                        return style;
+                }
+
+                const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                var fields = type.GetFields(flags);
+                var properties = type.GetProperties(flags);
+
+                foreach (var field in fields)
+                {
+                    if (!typeof(TextStyleSetting).IsAssignableFrom(field.FieldType))
+                        continue;
+
+                    if (field.GetValue(skin) is TextStyleSetting fieldStyle && fieldStyle != null)
+                        return fieldStyle;
+                }
+
+                foreach (var property in properties)
+                {
+                    if (!property.CanRead || !typeof(TextStyleSetting).IsAssignableFrom(property.PropertyType))
+                        continue;
+
+                    if (property.GetValue(skin, null) is TextStyleSetting propertyStyle && propertyStyle != null)
+                        return propertyStyle;
+                }
+
+                foreach (var field in fields)
+                {
+                    if (!typeof(IEnumerable<TextStyleSetting>).IsAssignableFrom(field.FieldType))
+                        continue;
+
+                    if (field.GetValue(skin) is IEnumerable<TextStyleSetting> fieldStyles)
+                    {
+                        foreach (var candidate in fieldStyles)
+                            if (candidate != null)
+                                return candidate;
+                    }
+                }
+
+                foreach (var property in properties)
+                {
+                    if (!property.CanRead || !typeof(IEnumerable<TextStyleSetting>).IsAssignableFrom(property.PropertyType))
+                        continue;
+
+                    if (property.GetValue(skin, null) is IEnumerable<TextStyleSetting> propertyStyles)
+                    {
+                        foreach (var candidate in propertyStyles)
+                            if (candidate != null)
+                                return candidate;
+                    }
+                }
+
+                return null;
+            }
+
+            private static TextStyleSetting GetStyleFromMember(System.Type type, object instance, string memberName)
+            {
+                var field = type.GetField(memberName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (field != null && typeof(TextStyleSetting).IsAssignableFrom(field.FieldType))
+                {
+                    if (field.GetValue(instance) is TextStyleSetting fieldStyle && fieldStyle != null)
+                        return fieldStyle;
+                }
+
+                var property = type.GetProperty(memberName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (property?.CanRead == true && typeof(TextStyleSetting).IsAssignableFrom(property.PropertyType))
+                {
+                    if (property.GetValue(instance, null) is TextStyleSetting propertyStyle && propertyStyle != null)
+                        return propertyStyle;
+                }
+
+                return null;
             }
         }
 

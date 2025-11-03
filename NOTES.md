@@ -636,6 +636,10 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2026-01-19 - ClaimNewNotification drop quantity fallback
 - Noticed the reflection helper that aggregates Supply Closet drop counts (`GetDropQuantity`) returned `int?`, tripping a compile-time type mismatch after the review update. Added a terminal `?? 0` so the helper always yields a concrete integer and kept the rest of the traversal logic unchanged.
 - Validating the assembly still requires `dotnet build`, but the container lacks the .NET host (`command not found: dotnet`). Please rebuild locally to confirm the snapshot capture compiles cleanly.
+## 2025-11-03 - BetterInfoCards hover style fallback
+- Updated the Better Info Cards text replay to resolve a missing `TextStyleSetting` from the live hover drawer skin before replaying pooled draws.
+- Could not verify by rebuilding Better Info Cards in-container because the `.NET` host is unavailable (`command not found: dotnet`). Please rebuild locally and sanity-check hover cards in-game to confirm the fallback renders without warnings.
+
 ## 2025-10-10 - ContainerTooltips access modifier exposure
 - Updated `StorageContentsBehaviour` to expose the `OnPrefabInit`, `OnSpawn`, and `OnCleanUp` overrides so external callers can hook the behaviour lifecycle.
 - Attempted to validate with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the workspace still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the access-modifier change resolves without regressions.
