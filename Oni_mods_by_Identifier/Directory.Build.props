@@ -12,7 +12,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GeneratePublicAssemblies>true</GeneratePublicAssemblies>
 
-    <supportedContent>ALL</supportedContent>
+    <requiredDlcIds>[]</requiredDlcIds>
+    <forbiddenDlcIds>[]</forbiddenDlcIds>
     <minimumSupportedBuild>469369</minimumSupportedBuild>
   </PropertyGroup>
 

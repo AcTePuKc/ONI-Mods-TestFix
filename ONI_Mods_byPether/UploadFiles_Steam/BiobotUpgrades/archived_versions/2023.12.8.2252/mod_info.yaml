@@ -1,5 +1,7 @@
-# either or both of VANILLA_ID, EXPANSION1_ID, ALL
-supportedContent: VANILLA_ID, EXPANSION1_ID
+# requiredDlcIds lists DLC IDs that must be enabled (leave [] to support all content)
+# forbiddenDlcIds lists DLC IDs that must be disabled (leave [] unless you need to block a DLC)
+requiredDlcIds: []
+forbiddenDlcIds: []
 # The build number of the last version of the game you tested your mod with
 minimumSupportedBuild: 583750
 # An arbitrary string that will be displayed to users on the mod screen. is prepended with a "v" in the UI
