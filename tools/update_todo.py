@@ -99,15 +99,13 @@ def detect_hits(path: Path) -> list[ReflectionHit]:
         )
     return hits
 
-
 def group_hits_by_project(hits: list[ReflectionHit], projects: set[str]) -> dict[str, list[ReflectionHit]]:
     """Group hits by top-level project directory respecting the allow-list."""
-
-    grouped: dict[str, list[ReflectionHit]] = {project: [] for project in projects}
+    grouped: dict[str, list[ReflectionHit]] = {}
     for hit in hits:
         if hit.project in projects:
             grouped.setdefault(hit.project, []).append(hit)
-    # Drop empty default entries for projects that were never requested.
+    return grouped
     return {project: group for project, group in grouped.items() if group}
 
 
