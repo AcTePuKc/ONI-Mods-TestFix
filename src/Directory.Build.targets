@@ -29,30 +29,35 @@
   </Target>
 
   <!--Create and update the mod_info and mod file.-->
-	<Target Name="WriteModInfoFile" BeforeTargets="PreBuildEvent">
-	  <ItemGroup>
-	    <ModInfoFileLines Include="APIVersion: 2" />
-	    <ModInfoFileLines Include="requiredDlcIds: []" />
-	    <ModInfoFileLines Include="forbiddenDlcIds: []" />
-	    <ModInfoFileLines Include="minimumSupportedBuild: $(minimumSupportedBuild)" />
-	    <ModInfoFileLines Include='version: "$(Version)"' />
-	  </ItemGroup>
-	
-	  <WriteLinesToFile
-	      File="$(TargetDir)\mod_info.yaml"
-	      Overwrite="true"
-	      Lines="@(ModInfoFileLines)" />
-	
-	  <PropertyGroup>
-	    <ModFile>$(TargetDir)\mod.yaml</ModFile>
-	    <Title Condition=" '$(Configuration)' == 'Debug' ">DEV: $(Title)</Title>
-	  </PropertyGroup>
-	</Target>
+  <Target Name="WriteModInfoFile" BeforeTargets="PreBuildEvent">
+    <ItemGroup>
+      <ModInfoFileLines Include="APIVersion: 2" />
+      <ModInfoFileLines Include="requiredDlcIds: []" />
+      <ModInfoFileLines Include="forbiddenDlcIds: []" />
+      <ModInfoFileLines Include="minimumSupportedBuild: $(minimumSupportedBuild)" />
+      <ModInfoFileLines Include='version: "$(Version)"' />
+    </ItemGroup>
 
-    <WriteLinesToFile File="$(ModFile)" Overwrite="true" Lines=
-                      "staticID: Aze.$(AssemblyName);
-                      description: &quot;$(Description)&quot;;
-                      title: &quot;$(Title)&quot;" />
+    <WriteLinesToFile
+      File="$(TargetDir)\mod_info.yaml"
+      Overwrite="true"
+      Lines="@(ModInfoFileLines)" />
+
+    <PropertyGroup>
+      <ModFile>$(TargetDir)\mod.yaml</ModFile>
+      <Title Condition=" '$(Configuration)' == 'Debug' ">DEV: $(Title)</Title>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ModFileLines Include="staticID: Aze.$(AssemblyName)" />
+      <ModFileLines Include="description: &quot;$(Description)&quot;" />
+      <ModFileLines Include="title: &quot;$(Title)&quot;" />
+    </ItemGroup>
+
+    <WriteLinesToFile
+      File="$(ModFile)"
+      Overwrite="true"
+      Lines="@(ModFileLines)" />
   </Target>
 
   <!--Prevent game assemblies from being copied (and thus merged).-->
