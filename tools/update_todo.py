@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import bisect
 import re
 from dataclasses import dataclass
 from collections.abc import Iterable
@@ -14,6 +13,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 TODO_PATH = REPO_ROOT / "ToDo.md"
+"""Add new Directories to scan if needed below."""
 DEFAULT_PROJECTS = (
     "Sgt_Imalas-Oni-Mods",
     "ONI_Mods_byPether",
@@ -76,12 +76,11 @@ def detect_hits(path: Path) -> list[ReflectionHit]:
         text = path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         text = path.read_text(encoding="utf-8", errors="ignore")
-
     lines = text.splitlines()
-    line_starts = [0] + [match.end() for match in re.finditer(r"\n", text)]
+    text = "\n".join(lines)
     hits: list[ReflectionHit] = []
     for match in REFLECTION_PATTERN.finditer(text):
-        line_number = bisect.bisect_right(line_starts, match.start())
+        line_number = text.count("\n", 0, match.start()) + 1
         lo = max(0, line_number - CONTEXT_RADIUS - 1)
         hi = min(len(lines), line_number + CONTEXT_RADIUS)
         window = "\n".join(lines[lo:hi])
@@ -100,15 +99,13 @@ def detect_hits(path: Path) -> list[ReflectionHit]:
         )
     return hits
 
-
 def group_hits_by_project(hits: list[ReflectionHit], projects: set[str]) -> dict[str, list[ReflectionHit]]:
     """Group hits by top-level project directory respecting the allow-list."""
-
-    grouped: dict[str, list[ReflectionHit]] = {project: [] for project in projects}
+    grouped: dict[str, list[ReflectionHit]] = {}
     for hit in hits:
         if hit.project in projects:
             grouped.setdefault(hit.project, []).append(hit)
-    # Drop empty default entries for projects that were never requested.
+    return grouped
     return {project: group for project, group in grouped.items() if group}
 
 
@@ -191,9 +188,11 @@ def main() -> int:
     projects = set(DEFAULT_PROJECTS)
     if args.projects:
         projects.update(args.projects)
-
     all_hits: list[ReflectionHit] = []
-    for path in iter_source_files(REPO_ROOT):
+    with ProcessPoolExecutor() as executor:
+        paths = list(iter_source_files(REPO_ROOT))
+        for hits_in_file in executor.map(detect_hits, paths):
+            all_hits.extend(hits_in_file)
         all_hits.extend(detect_hits(path))
 
     grouped = group_hits_by_project(all_hits, projects)
