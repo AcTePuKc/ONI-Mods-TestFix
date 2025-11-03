@@ -188,9 +188,11 @@ def main() -> int:
     projects = set(DEFAULT_PROJECTS)
     if args.projects:
         projects.update(args.projects)
-
     all_hits: list[ReflectionHit] = []
-    for path in iter_source_files(REPO_ROOT):
+    with ProcessPoolExecutor() as executor:
+        paths = list(iter_source_files(REPO_ROOT))
+        for hits_in_file in executor.map(detect_hits, paths):
+            all_hits.extend(hits_in_file)
         all_hits.extend(detect_hits(path))
 
     grouped = group_hits_by_project(all_hits, projects)
