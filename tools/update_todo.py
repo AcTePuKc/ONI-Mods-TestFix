@@ -144,7 +144,7 @@ def format_project_section(name: str, hits: list[ReflectionHit]) -> list[str]:
                 fence = "``"
                 # Add spaces for separation as per CommonMark spec for code spans
                 snippet = f" {snippet} "
-                lines.append(f"- {tag} @ L{hit.line_number} — {fence}{snippet}{fence}")
+            lines.append(f"- {tag} @ L{hit.line_number} — {fence}{snippet}{fence}")
         lines.append("")
     lines.append("")
     return lines
