@@ -166,7 +166,7 @@ def build_todo_contents(project_sections: list[tuple[str, list[ReflectionHit]]])
     for name, hits in project_sections:
         body_lines.extend(format_project_section(name, hits))
 
-    if not body_lines:
+        body_lines.append("No reflection hotspots were detected in the selected projects.")
         body_lines.append("No reflection hotspots were detected in the selected projects.\n")
 
     return "\n".join(header_lines + body_lines).rstrip("\n") + "\n"
