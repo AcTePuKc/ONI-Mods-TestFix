@@ -19,7 +19,12 @@ namespace BetterInfoCards
 
             private static HoverTextDrawer.Skin cachedSkin;
             private static TextStyleSetting cachedSkinStyle;
-            private static bool loggedMissingFallbackStyle;
+            internal static bool loggedMissingFallbackStyle;
+
+            internal static void ResetLogging()
+            {
+                loggedMissingFallbackStyle = false;
+            }
 
             private static readonly string[] skinStyleMembers = new[]
             {
@@ -115,7 +120,11 @@ namespace BetterInfoCards
                         return style;
                 }
 
-                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                var fields = type.GetFields(flags);
+                var properties = type.GetProperties(flags);
+
+                foreach (var field in fields)
                 {
                     if (!typeof(TextStyleSetting).IsAssignableFrom(field.FieldType))
                         continue;
@@ -124,7 +133,7 @@ namespace BetterInfoCards
                         return fieldStyle;
                 }
 
-                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                foreach (var property in properties)
                 {
                     if (!property.CanRead || !typeof(TextStyleSetting).IsAssignableFrom(property.PropertyType))
                         continue;
@@ -133,7 +142,7 @@ namespace BetterInfoCards
                         return propertyStyle;
                 }
 
-                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                foreach (var field in fields)
                 {
                     if (!typeof(IEnumerable<TextStyleSetting>).IsAssignableFrom(field.FieldType))
                         continue;
@@ -146,7 +155,7 @@ namespace BetterInfoCards
                     }
                 }
 
-                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                foreach (var property in properties)
                 {
                     if (!property.CanRead || !typeof(IEnumerable<TextStyleSetting>).IsAssignableFrom(property.PropertyType))
                         continue;
