@@ -75,7 +75,7 @@ namespace BetterInfoCards
             static ResetPool<DrawActions.Text> pool = new(ref BeginDrawing.onBeginDrawing);
 
             [HarmonyPriority(Priority.First)]
-            static bool Prefix(string text, TextStyleSetting style, Color color, bool override_color)
+            static bool Prefix(HoverTextDrawer __instance, string text, TextStyleSetting style, Color color, bool override_color)
             {
                 // Null check avoids crashes from drawing multiple empty strings.
                 // This appears to now occur when hovering neutromium tiles.
@@ -87,6 +87,10 @@ namespace BetterInfoCards
 
                 if (!text.IsNullOrWhiteSpace())
                 {
+                    var resolvedStyle = DrawActions.Text.EnsureStyle(style, __instance);
+                    if (resolvedStyle == null)
+                        return ForceVanillaFallback(nameof(DrawText));
+
                     var (id, data) = ExportSelectToolData.ConsumeTextInfo();
                     var ti = TextInfo.Create(id, text, data);
                     if (ti == null)
@@ -96,7 +100,7 @@ namespace BetterInfoCards
                         return true;
                     }
 
-                    curInfoCard.AddDraw(pool.Get().Set(ti, style, color, override_color), ti);
+                    curInfoCard.AddDraw(pool.Get().Set(ti, resolvedStyle, color, override_color), ti);
                 }
                 return false;
             }
