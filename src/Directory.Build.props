@@ -11,7 +11,8 @@
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-    <supportedContent>ALL</supportedContent>
+    <requiredDlcIds>[]</requiredDlcIds>
+    <forbiddenDlcIds>[]</forbiddenDlcIds>
     <minimumSupportedBuild>469369</minimumSupportedBuild>
   </PropertyGroup>
 

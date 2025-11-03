@@ -1,5 +1,6 @@
 staticID: "AcTePuKc.ClaimNewNotification"
-supportedContent: ALL
+requiredDlcIds: []
+forbiddenDlcIds: []
 minimumSupportedBuild: 0
 version: 0.1.0
 APIVersion: 2

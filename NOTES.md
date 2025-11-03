@@ -18,6 +18,10 @@
 - Added persistence for `seen.json`, toast messaging, badge toggles on the Supply Closet button, and per-item “NEW” overlays sourced from `ModAssets/New.png`.
 - Validation remains blocked in this environment: rebuilding the project and exercising the UI in-game both require the ONI toolchain. Manual review confirmed JSON persistence paths, badge creation, and toast formatting.
 
+## 2025-11-03 - Mod metadata schema migration
+- Replaced the `supportedContent` metadata with `requiredDlcIds`/`forbiddenDlcIds` across shared build targets and every tracked `mod_info.yaml` so builds emit the updated schema.
+- Validation blocked: rebuilding the solution and checking Player.log for warning regressions still require the unavailable ONI/.NET toolchain (`dotnet` is not installed). Please rebuild the affected mods locally and confirm the log stays clean.
+
 ## 2025-11-01 - ClaimNewNotification scaffold and planning
 - Scaffolded the `ClaimNewNotification` project, metadata, and asset placeholder so the solution can compile once the .NET toolchain is available locally.
 - Captured design notes covering blueprint claim flow instrumentation, handle-based event subscriptions, persistence in `seen.json`, and Harmony patch targets for toasts, badges, and NEW chips.
