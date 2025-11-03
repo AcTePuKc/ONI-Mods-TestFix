@@ -73,10 +73,10 @@ def detect_hits(path: Path) -> list[ReflectionHit]:
     """Return all reflection hits for ``path``."""
 
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        text = path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
-        lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
-
+        text = path.read_text(encoding="utf-8", errors="ignore")
+    lines = text.splitlines()
     text = "\n".join(lines)
     hits: list[ReflectionHit] = []
     for match in REFLECTION_PATTERN.finditer(text):
