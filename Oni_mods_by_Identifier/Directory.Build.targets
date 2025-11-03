@@ -53,12 +53,16 @@
       <Title Condition=" '$(Configuration)' == 'Debug' ">DEV: $(Title)</Title>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ModFileLines Include="staticID: Aze.$(AssemblyName)" />
+      <ModFileLines Include="description: &quot;$(Description)&quot;" />
+      <ModFileLines Include="title: &quot;$(Title)&quot;" />
+    </ItemGroup>
+
     <WriteLinesToFile
       File="$(ModFile)"
       Overwrite="true"
-      Lines="staticID: Aze.$(AssemblyName);
-                      description: &quot;$(Description)&quot;;
-                      title: &quot;$(Title)&quot;" />
+      Lines="@(ModFileLines)" />
   </Target>
 
   <!--Prevent game assemblies from being copied (and thus merged).-->
