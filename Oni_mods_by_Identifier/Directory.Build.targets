@@ -37,7 +37,8 @@
   <Target Name="WriteModInfoFile" BeforeTargets="PreBuildEvent">
     <WriteLinesToFile File="$(TargetDir)\mod_info.yaml" Overwrite="true" Lines=
                       "APIVersion: 2;
-                      supportedContent: $(supportedContent);
+                      requiredDlcIds: $(requiredDlcIds);
+                      forbiddenDlcIds: $(forbiddenDlcIds);
                       minimumSupportedBuild: $(minimumSupportedBuild);
                       version: &quot;$(Version)&quot;" />
 
