@@ -20,7 +20,7 @@ namespace BetterInfoCards
 
     internal static class HoverTextEntryAccess
     {
-        private static readonly System.Type skinType = AccessTools.Inner(typeof(HoverTextDrawer), "Skin") ?? AccessTools.TypeByName("HoverTextDrawer+Skin");
+        private static readonly System.Type skinType = AccessTools.Inner(typeof(HoverTextDrawer), "Skin");
         public static readonly System.Type PoolType = skinType != null ? AccessTools.Inner(skinType, "Pool`1")?.MakeGenericType(typeof(Image)) : null;
         public static readonly System.Type EntryType = PoolType != null ? AccessTools.Inner(PoolType, "Entry") : null;
 
