@@ -2,6 +2,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BetterInfoCards
 {
@@ -19,13 +20,14 @@ namespace BetterInfoCards
 
     internal static class HoverTextEntryAccess
     {
-        public static readonly System.Type PoolType = AccessTools.Inner(typeof(HoverTextDrawer), "Pool`1")?.MakeGenericType(typeof(MonoBehaviour));
+        private static readonly System.Type skinType = AccessTools.Inner(typeof(HoverTextDrawer), "Skin");
+        public static readonly System.Type PoolType = skinType != null ? AccessTools.Inner(skinType, "Pool`1")?.MakeGenericType(typeof(Image)) : null;
         public static readonly System.Type EntryType = PoolType != null ? AccessTools.Inner(PoolType, "Entry") : null;
 
         private static readonly Dictionary<System.Type, FieldInfo> rectFieldCache = new();
         private static readonly object rectFieldCacheLock = new();
-        private static readonly MethodInfo drawMethod = PoolType != null ? AccessTools.Method(PoolType, "Draw") : null;
-        private static readonly string[] shadowPoolFieldNames = { "shadowBarPool", "shadowBars", "m_ShadowBars" };
+        private static readonly MethodInfo drawMethod = PoolType?.GetMethod("Draw", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new[] { typeof(Vector2) }, null);
+        private static readonly string[] shadowPoolFieldNames = { "shadowBars", "shadowBarPool", "m_ShadowBars" };
         private static volatile FieldInfo shadowPoolField;
         private static volatile bool shadowPoolUnavailable;
         private static readonly object _shadowPoolLock = new();
@@ -50,7 +52,7 @@ namespace BetterInfoCards
                 {
                     if (!shadowPoolUnavailable && shadowPoolField == null)
                     {
-                        var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                        var flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
                         var type = typeof(HoverTextDrawer);
 
                         foreach (var name in shadowPoolFieldNames)
