@@ -1,3 +1,7 @@
+## 2026-01-22 - ContainerTooltips legacy reference exclusion
+- Removed the legacy `Reference/ContainerTooltips/ContainerTooltips/*.cs` sources from the project so the build relies solely on the modern implementations under `src/ContainerTooltips`.
+- Attempted to run `dotnet build src/ContainerTooltips/ContainerTooltips.csproj` to confirm the DLL now compiles with a single `UserMod2` subclass, but the container lacks the .NET/ONI toolchain (`command not found: dotnet`). Please rebuild locally and inspect the output assembly to verify the duplicate entry-point error is resolved.
+
 ## 2026-01-22 - ClaimNewNotification badge persistence fix
 - Cleared the claim tracker cache when the Supply Closet activates and added a shutdown hook so event subscriptions release when the mod unloads, preventing the NEW badge from sticking across sessions.
 - Validation remains blocked: rebuilding or running ONI requires the unavailable .NET/ONI toolchain. Please retest in-game to confirm the badge clears after opening the closet and that disabling the mod no longer logs dangling subscription warnings.
