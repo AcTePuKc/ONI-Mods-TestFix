@@ -12,4 +12,7 @@
   <PropertyGroup>
     <UsesAzeLib>false</UsesAzeLib>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="..\..\Reference\ContainerTooltips\**\*.cs" />
+  </ItemGroup>
 </Project>
