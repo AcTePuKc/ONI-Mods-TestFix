@@ -6,6 +6,15 @@ make todo for this:
 - Acceptance: zero HOT reflection left; no per-call allocations.
 
 ---
+# Task: U57 animation API update
+- Regenerate the U57 publicized ONI assemblies (notably `Assembly-CSharp_public.dll`) using a local
+  workstation with the ONI toolchain, then commit the refreshed binaries to `src/lib`.
+- Rebuild the solution (including PLib) against the new API and update any
+  `KAnimControllerBase.Play` invocations if the overload changed.
+- Launch ONI and trigger a minion reaction to confirm the updated animation path runs without
+  exceptions.
+
+---
 # Task: Replace hot-path reflection with cached delegates (ONI mods)
 (See performance brief; scope must stay tight.)
 
