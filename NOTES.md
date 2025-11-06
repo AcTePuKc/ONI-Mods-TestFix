@@ -643,3 +643,18 @@ lternate language locally to confirm the fallback strings resolve correctly.
 ## 2025-10-10 - ContainerTooltips access modifier exposure
 - Updated `StorageContentsBehaviour` to expose the `OnPrefabInit`, `OnSpawn`, and `OnCleanUp` overrides so external callers can hook the behaviour lifecycle.
 - Attempted to validate with `dotnet build Oni_mods_by_Identifier/ContainerTooltips/ContainerTooltips.csproj`, but the workspace still lacks the `.NET` host (`command not found: dotnet`). Please rebuild locally to confirm the access-modifier change resolves without regressions.
+## 2026-01-23 - U57 publicized assembly + animation audit follow-up
+- Attempted to refresh the U57 publicized assemblies (e.g., `Assembly-CSharp_public.dll`) so the
+  `src/lib` folder carries the updated APIs required by BetterInfoCards, but the hosted workspace
+  still lacks both the ONI installation and accompanying .NET/Unity toolchain. Regeneration must be
+  completed on a workstation with the game installed per `src/README.md`, then the resulting `_public`
+  assemblies can be copied into `src/lib` for source control.
+- Searched the repository (including AzeLib and other shared libraries) for explicit
+  `KAnimControllerBase.Play` calls. The only direct usages live under
+  `Reference/ContainerTooltips/PeterHan.PLib.Buildings/ColoredRangeVisualizer.cs`; no in-repo mods
+  invoke the method directly. Once the regenerated assemblies are available, recompile PLib against
+  the U57 API and confirm whether the overload requires parameter updates.
+- Runtime validation of minion reaction animations remains blocked: the container cannot launch ONI.
+  Please trigger a minion reaction locally after rebuilding to ensure the patched animation plays
+  without exceptions.
+
